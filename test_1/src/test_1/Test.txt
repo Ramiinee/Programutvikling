@@ -1,0 +1,28 @@
+Hei
+
+<<<<<<< HEAD
+Endret av Joachim
+
+hello
+Hei
+
+hello. 
+
+
+
+
+Hei
+dhdj
+ehjhe
+djfjf
+ejfjf¨sjdfksdf
+Hei
+
+hello. 
+wgiuwrgiluhrgliwughwliguhwrlguhwgi hilsen ida. :) 
+=======
+hello
+
+
+hhhh
+>>>>>>> refs/remotes/origin/master
