@@ -1,5 +1,6 @@
 Hei
 
+<<<<<<< HEAD
 Endret av Joachim
 
 hello
@@ -19,3 +20,9 @@ Hei
 
 hello. 
 wgiuwrgiluhrgliwughwliguhwrlguhwgi hilsen ida. :) 
+=======
+hello
+
+
+hhhh
+>>>>>>> refs/remotes/origin/master
