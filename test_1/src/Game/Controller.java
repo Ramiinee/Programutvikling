@@ -40,13 +40,15 @@ public class Controller extends Applet implements Runnable{
     private void test(){
         if (stopCount == 0){
             draw_Array();
+            makeBoard(0);
+
         }
         t = new Thread (this);
         t.start();
 
-        makeBoard(0);
         stopCount = 0;
         Start.setDisable(true);
+        Stop.setDisable(false);
     }
 
     @FXML
@@ -56,6 +58,7 @@ public class Controller extends Applet implements Runnable{
         if (stopCount == 1){
             remove_Array();
             stopCount = 0;
+            Stop.setDisable(true);
         }
         stopCount++;
 
