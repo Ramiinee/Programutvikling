@@ -14,8 +14,10 @@ import javafx.util.Duration;
 
 public class Controller implements Initializable{
 
-    
-    
+
+    private int playCount = 0;
+    private int stopCount = 0;
+
     public int timing = 120;
     Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> draw_Array()));
 
@@ -27,36 +29,48 @@ public class Controller implements Initializable{
     // sette en random størrelse på disse?
     public int kolonner = 50;
     public int rader = 40;
-    
+
     private int[][] board = new int[kolonner][rader];
     public int[][] nextgeneration;
-    
-    
-    
-    
-    
-    
-    public void timeline(){
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(false);
-    }
 
-   
 
     public void startButton(){
-        randomPattern();
-        draw_Array();
-        timeline();
-        timeline.play();
+        if(playCount == 0){
+            randomPattern();
+            timeline();
 
+        }
+        timeline.play();
+        stopCount = 0;
+        playCount++;
+    }
+
+    public void stopButton(){
+        if(stopCount == 0){
+            timeline.stop();
+            stopCount++;
+        }
+        else{
+            remove_Array();
+            timeline.stop();
+            playCount = 0;
+        }
     }
     
     public void randomPattern(){
         for (int i = 0; i < kolonner; i++) {
             for (int j = 0; j < rader ; j++) {
-
                 board[i][j] = (Math.random()<0.5)?0:1;
-            }}}
+            }
+        }
+    }
+
+
+    public void timeline(){
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(false);
+    }
+
     private void draw_Array(){
         for (int i = 0; i < kolonner; i++) {
             for (int j = 0; j < rader ; j++) {
@@ -151,25 +165,18 @@ public class Controller implements Initializable{
 
 
     @FXML private void remove_Array() {
-        gc = Canvas.getGraphicsContext2D();
+
         for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length ; j++) {
+            for (int j = 0; j < board[i].length ; j++) {
 
-                if (board[i][j] == 1){
-
-                    draw( i , j, Color.WHITE );
-
-                }
-
-
+                draw( i , j, Color.WHITE);
             }
-
         }
     }
 
     private void draw( int x, int y, Color c) {
         gc.setFill(c);
-        gc.fillRect(x*9 , y*9, 8, 8);
+        gc.fillRect(x*10 , y*10, 9, 9);
 
     }
 
@@ -179,6 +186,4 @@ public class Controller implements Initializable{
         System.out.println("test");
 
     }
-
-
 }
