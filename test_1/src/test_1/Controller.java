@@ -1,4 +1,4 @@
-package Game;
+package test_1;
 
 
 import java.net.URL;
