@@ -35,7 +35,7 @@
                         <Tooltip text="Start" />
                      </tooltip>
                <GridPane.margin>
-                  <Insets left="50.0" />
+                  <Insets bottom="35.0" left="100.0" />
                </GridPane.margin>
                   </Button>
                   <Button fx:id="Restart" alignment="CENTER" mnemonicParsing="false" onAction="#remove_Array" prefHeight="50.0" prefWidth="150.0" text="Restart" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -43,7 +43,7 @@
                         <Tooltip text="Restart" />
                      </tooltip>
                <GridPane.margin>
-                  <Insets right="50.0" />
+                  <Insets bottom="35.0" right="100.0" />
                </GridPane.margin>
                   </Button>
          </children>
