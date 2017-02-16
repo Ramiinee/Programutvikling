@@ -13,18 +13,20 @@ import javafx.fxml.FXMLLoader;
 
 public class Main extends Application {
 
-
+    public FXMLLoader loader;
 
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("GOL.fxml"));
+		
+            loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
 
-		Scene scene = new Scene(root);
-	    
-		primaryStage.setTitle("Game of Life");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+            primaryStage.setTitle("Game of Life");
+            primaryStage.setScene(scene);
+            primaryStage.show();
 	}
 	
 	public static void main(String[] args) {
