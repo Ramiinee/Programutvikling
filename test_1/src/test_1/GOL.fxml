@@ -30,7 +30,7 @@
          <children>
    
       
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#draw_Array" prefHeight="50.0" prefWidth="150.0" text="Start" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startButton" prefHeight="50.0" prefWidth="150.0" text="Start" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <tooltip>
                         <Tooltip text="Start" />
                      </tooltip>
