@@ -3,41 +3,66 @@ package Game;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.*;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Controller implements Initializable{
+public class Controller implements Initializable {
+
+
+    public Button Stop;
+    public Button Start;
+    public Label Label;
+    public Stage stage;
+    public BorderPane BoarderPane;
+    public Slider timer;
 
 
     private int playCount = 0;
     private int stopCount = 0;
+    private int runCount = 1;
+    private int neighbors;
 
-    public int timing = 120;
-    Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> draw_Array()));
+    private double timing = 120;
+
+    private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
+
+        draw_Array();
+        nextGen();
+        stage.setTitle("Game Of Life : " + runCount++ + " | Timing : " + timing);
+    }
+    ));
+
 
     @FXML
     private Canvas Canvas;
+
     private GraphicsContext gc;
 
 
     // sette en random størrelse på disse?
-    public int kolonner = 50;
-    public int rader = 40;
+    public int kolonner = 105;
+    public int rader = 70;
 
-    private int[][] board = new int[kolonner][rader];
+    public int[][] board = new int[kolonner][rader];
     public int[][] nextgeneration;
+
+
 
 
     public void startButton(){
         if(playCount == 0){
             randomPattern();
             timeline();
+            Stop.setDisable(false);
+
 
         }
         timeline.play();
@@ -49,14 +74,21 @@ public class Controller implements Initializable{
         if(stopCount == 0){
             timeline.stop();
             stopCount++;
+            Stop.setText("Clear");
+
         }
         else{
             remove_Array();
             timeline.stop();
             playCount = 0;
+            runCount = 0;
+            Stop.setText("Stop");
+            Stop.setDisable(true);
+            stage.setTitle("Game Of Life ");
+            //stage.close();
         }
     }
-    
+
     public void randomPattern(){
         for (int i = 0; i < kolonner; i++) {
             for (int j = 0; j < rader ; j++) {
@@ -66,7 +98,7 @@ public class Controller implements Initializable{
     }
 
 
-    public void timeline(){
+    private void timeline(){
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(false);
     }
@@ -74,25 +106,22 @@ public class Controller implements Initializable{
     private void draw_Array(){
         for (int i = 0; i < kolonner; i++) {
             for (int j = 0; j < rader ; j++) {
-
                 if (board[i][j] == 1){
-
                     draw( i , j, Color.BLACK);
-
                 }
                 if (board[i][j] == 0){
                     draw(i, j, Color.WHITE);
                 }
             }
         }
-
         // ----------------------------
+    }
 
-
+    private void nextGen(){
         nextgeneration = new int[kolonner][rader];
         for (int a = 0; a < board.length; a++) {
             for (int b = 0; b < board[a].length; b++) {
-                int neighbors = 0;
+                neighbors = 0;
                 if (a != 0 && b !=0){
                     if (board[a-1][b-1] == 1)
                         neighbors++;
@@ -106,7 +135,9 @@ public class Controller implements Initializable{
                         if (board[a+1][b-1] == 1)
                             neighbors++;
                     }
-                }catch (ArrayIndexOutOfBoundsException e){}
+                }catch (IndexOutOfBoundsException  e){
+
+                }
 
                 if (a != 0){
                     if (board[a-1][b]   == 1)
@@ -117,7 +148,9 @@ public class Controller implements Initializable{
                         if (board[a+1][b]   == 1)
                             neighbors++;
                     }
-                }catch (ArrayIndexOutOfBoundsException e) {}
+                }catch (Exception e) {
+
+                }
 
                 if(a != 0 && b != board[b].length -1){
                     if (board[a-1][b+1] == 1)
@@ -132,7 +165,8 @@ public class Controller implements Initializable{
                         if (board[a+1][b+1] == 1)
                             neighbors++;
                     }
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException  e) {
+
                 }
 
 
@@ -150,19 +184,10 @@ public class Controller implements Initializable{
                 else {
                     nextgeneration[a][b] = board[a][b];
                 }
-                //System.out.print(board[a][b] + "  ");
-
             }
-            //System.out.println();
-
         }
-        //System.out.println();
-
         board = nextgeneration;
-
     }
-
-
 
     @FXML private void remove_Array() {
 
@@ -183,7 +208,12 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = Canvas.getGraphicsContext2D();
-        System.out.println("test");
+        Stop.setDisable(true);
+        stage = Main.getPrimaryStage();
 
     }
+
+
+
+
 }
