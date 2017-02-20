@@ -32,8 +32,14 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
+
+
+
     }
-    
+    private void setPrimaryStage(Stage stage) {
+        Main.stage = stage;
+    }
+
     static public Stage getPrimaryStage() {
         return Main.stage;
     }

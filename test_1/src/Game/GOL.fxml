@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
+
 <?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.geometry.*?>
@@ -27,8 +27,7 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-           <children>
-   
+
    
    
                    <Button fx:id="Start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startButton" prefHeight="50.0" prefWidth="150.0" text="Start" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
@@ -39,7 +38,7 @@
                            <Insets bottom="35.0" left="100.0" />
                        </GridPane.margin>
                    </Button>
-                   <Button fx:id="Stop" alignment="CENTER" mnemonicParsing="false" onAction="#stopButton" prefHeight="50.0" prefWidth="150.0" text="Restart" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                   <Button fx:id="Stop" alignment="CENTER" mnemonicParsing="false" onAction="#stopButton" prefHeight="50.0" prefWidth="150.0" text="Stop" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                        <tooltip>
                            <Tooltip text="Stop" />
                        </tooltip>
@@ -47,13 +46,13 @@
                            <Insets bottom="35.0" right="100.0" />
                        </GridPane.margin>
                    </Button>
-            <Slider fx:id="timer" max="1000.0" maxWidth="200.0" min="200.0"  value="300.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+            <Slider fx:id="timer" max="500.0" maxWidth="200.0" min="10"  value="100.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
             <Slider max="1000.0" maxWidth="200.0" min="200.0"  value="300.0"  GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="50.0" />
                </GridPane.margin>
             </Slider>
-           </children>
+
 
 
 
