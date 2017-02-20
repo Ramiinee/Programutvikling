@@ -1,9 +1,7 @@
 package Game;
 import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,27 +9,44 @@ import javafx.fxml.FXMLLoader;
 
 
 
+
 public class Main extends Application {
 
     public FXMLLoader loader;
+    public static Stage stage;
 
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		
-            loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
-            Parent root = loader.load();
-            
-            Scene scene = new Scene(root);
 
-            primaryStage.setTitle("Game of Life");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
+
+        loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
+        Parent root = loader.load();
+
+
+        Scene scene = new Scene(root);
+
+        stage.setTitle("Game Of Life");
+        stage.setScene(scene);
+        stage.show();
+
+
+
+
+    }
+    private void setPrimaryStage(Stage stage) {
+        Main.stage = stage;
+    }
+
+    static public Stage getPrimaryStage() {
+        return Main.stage;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 
 
