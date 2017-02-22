@@ -1,6 +1,7 @@
 package Game;
 
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.*;
@@ -13,11 +14,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Controller implements Initializable {
 
-    // FXML
+
+
+public class Controller implements Initializable {
+   
+    //FXML
     public Button Stop;
     public Button Start;
+    public ColorPicker colorPicker;
     public Label Label;
     public BorderPane BoarderPane;
     public Slider timer;
@@ -41,7 +46,7 @@ public class Controller implements Initializable {
 
     private double timing = 120;
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
-         gc.setFill(Color.PINK);
+         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,1500,1500);
         draw_Array();
         nextGen();
@@ -61,6 +66,7 @@ public class Controller implements Initializable {
         Stop.setDisable(true);
     }
 
+    @FXML
     public void startButton(){
         if(playCount == 0){
             make_board.randomPattern();
@@ -75,6 +81,7 @@ public class Controller implements Initializable {
         Stop.setText("Stop");
     }
 
+    @FXML
     public void stopButton(){
         Start.setDisable(false);
         if(stopCount == 0){
@@ -94,8 +101,10 @@ public class Controller implements Initializable {
             gc.setFill(Color.WHITE);
             gc.fillRect(0,0,1500,1500);
         }
-    }
-
+        
+       }
+    
+        
     private void timeline(){
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(false);
@@ -105,10 +114,10 @@ public class Controller implements Initializable {
         for (int i = 0; i < make_board.getKolonner(); i++) {
             for (int j = 0; j < make_board.getRader() ; j++) {
                 if (board[i][j] == 1){
-                    draw( i , j, Color.BLACK);
+                    draw( i , j, colorPicker.getValue());
                 }
                 if (board[i][j] == 0){
-                    draw(i, j, Color.WHITE);
+                    draw(i, j, Color.GREY );
                 }
             }
         }
@@ -183,7 +192,7 @@ public class Controller implements Initializable {
         board = nextgeneration;
     }
 
-    @FXML private void remove_Array() {
+    private void remove_Array() {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
@@ -194,7 +203,7 @@ public class Controller implements Initializable {
     }
 
     private void draw( int x, int y, Color c) {
-        gc.setFill(Color.PINK);
+        gc.setFill(Color.WHITE);
         gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);
         gc.setFill(c);
         gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);

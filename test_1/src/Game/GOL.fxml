@@ -1,64 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.scene.text.*?>
-<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane fx:id="BoarderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1100.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
-    <top>
-        <Label fx:id="Label" alignment="CENTER" text="Game of Life" BorderPane.alignment="CENTER">
-            <font>
-                <Font size="40.0" />
-            </font>
-            <BorderPane.margin>
-                <Insets />
-            </BorderPane.margin>
-        </Label>
-    </top>
-    <bottom>
-        <GridPane prefHeight="100.0" prefWidth="700.0" BorderPane.alignment="CENTER">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-
-   
-   
-                   <Button fx:id="Start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startButton" prefHeight="50.0" prefWidth="150.0" text="Start" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
-                       <tooltip>
-                           <Tooltip text="Start" />
-                       </tooltip>
-                       <GridPane.margin>
-                           <Insets bottom="35.0" left="100.0" />
-                       </GridPane.margin>
-                   </Button>
-                   <Button fx:id="Stop" alignment="CENTER" mnemonicParsing="false" onAction="#stopButton" prefHeight="50.0" prefWidth="150.0" text="Stop" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
-                       <tooltip>
-                           <Tooltip text="Stop" />
-                       </tooltip>
-                       <GridPane.margin>
-                           <Insets bottom="35.0" right="100.0" />
-                       </GridPane.margin>
-                   </Button>
-            <Slider fx:id="timer" max="500.0" maxWidth="200.0" min="10"  value="100.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
-            <Slider max="1000.0" maxWidth="200.0" min="200.0"  value="300.0"  GridPane.columnIndex="1" GridPane.halignment="RIGHT">
-               <GridPane.margin>
-                  <Insets right="50.0" />
-               </GridPane.margin>
-            </Slider>
-
-
-
-
-        </GridPane>
-    </bottom>
-    <center>
-        <Canvas fx:id="Canvas" height="700.0" style="-fx-background-color: white;" width="1050.0" BorderPane.alignment="CENTER" />
-    </center>
+<BorderPane fx:id="BoarderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Game.Controller">
+  <bottom>
+    <GridPane prefHeight="100.0" prefWidth="950.0" BorderPane.alignment="CENTER">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <Button fx:id="Start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startButton" prefHeight="50.0" prefWidth="150.0" text="Start" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+        <tooltip>
+          <Tooltip text="Start" />
+        </tooltip>
+        <GridPane.margin>
+          <Insets bottom="35.0" left="200.0" />
+        </GridPane.margin>
+      </Button>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <Button fx:id="Stop" alignment="CENTER" mnemonicParsing="false" onAction="#stopButton" prefHeight="50.0" prefWidth="150.0" text="Stop" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+        <tooltip>
+          <Tooltip text="Stop" />
+        </tooltip>
+        <GridPane.margin>
+          <Insets bottom="35.0" />
+        </GridPane.margin>
+      </Button>
+      <Slider fx:id="timer" max="500.0" maxWidth="200.0" min="10.0" value="100.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+      <Slider max="1000.0" maxWidth="200.0" min="200.0" value="300.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+        <GridPane.margin>
+          <Insets right="50.0" />
+        </GridPane.margin>
+      </Slider>
+      <ColorPicker fx:id="colorPicker" prefHeight="50.0" prefWidth="150.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <GridPane.margin>
+          <Insets bottom="35.0" left="50.0" />
+        </GridPane.margin>
+      </ColorPicker>
+    </GridPane>
+  </bottom>
+  <center>
+    <Canvas fx:id="Canvas" height="500.0" style="-fx-background-color: white;" width="900.0" BorderPane.alignment="CENTER" />
+  </center>
+  <top>
+    <Label fx:id="Label" alignment="CENTER" text="Game of Life" BorderPane.alignment="CENTER">
+      <font>
+        <Font size="40.0" />
+      </font>
+      <BorderPane.margin>
+        <Insets />
+      </BorderPane.margin>
+    </Label>
+  </top>
 </BorderPane>
