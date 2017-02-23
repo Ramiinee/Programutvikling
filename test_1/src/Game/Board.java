@@ -1,18 +1,10 @@
 package Game;
 
 
-import javafx.stage.FileChooser;
-
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.CharArrayReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.*;
-import java.util.Iterator;
 import java.util.Random;
 
 
@@ -26,6 +18,7 @@ public class Board extends Controller{
 
     public void randomPattern(){
         board = new byte[60][60];
+
         Random r = new Random();
 
         for (int i = 0; i < board.length; i++) {
@@ -65,7 +58,9 @@ public class Board extends Controller{
         try {
             System.out.println(byteArray.length);
             int a;
-            if ((Math.sqrt(byteArray.length)%2 == 0)){
+            int sqrt = (int) Math.sqrt(byteArray.length);
+
+            if(sqrt*sqrt == byteArray.length) {
 
                 a = (int) Math.sqrt(byteArray.length);
                 kolonner = a;
