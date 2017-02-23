@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -18,12 +17,16 @@ public class Controller implements Initializable {
     // FXML
     public Button Stop;
     public Button Start;
+    public Button reset;
+    public Button Load;
     public Label Label;
-    public BorderPane BoarderPane;
-    public Slider timer;
+    //public BorderPane BoarderPane;
+    public Slider size;
     public Canvas Canvas;
 
     public Stage stage;
+
+
     private GraphicsContext gc;
 
 
@@ -31,68 +34,91 @@ public class Controller implements Initializable {
     private int playCount = 0;
     private int stopCount = 0;
     private int runCount = 1;
-    private int neighbors;
+
+    public boolean loaded = false;
+
 
     //Board
     public Board make_board;
-    public int[][] board;
-    public int[][] nextgeneration;
+    public byte[][] board;
+    public byte[][] nextGeneration;
 
 
-    private double timing = 120;
+    private double timing = 200;
+    private double StartTimer = timing;
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
-         gc.setFill(Color.PINK);
-        gc.fillRect(0,0,1500,1500);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0,0,1050,700);
         draw_Array();
-        nextGen();
-        stage.setTitle("Game Of Life : " + runCount++ + " | Timing : " + timing);
+        nextGeneration();
+        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/timing) ) + " | Size : " + size.getValue());
 
     }
     ));
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(location);
-        gc = Canvas.getGraphicsContext2D();
 
+        gc = Canvas.getGraphicsContext2D();
+        gc.fillText("Load board",225,250);
         stage = Main.getPrimaryStage();
         make_board = new Board();
 
+
+
+
+
         Stop.setDisable(true);
+        Start.setDisable(true);
     }
 
     public void startButton(){
-        if(playCount == 0){
-            make_board.randomPattern();
-            board = make_board.getBoard();
-            timeline();
-            Stop.setDisable(false);
+        if (loaded) {
+            if (playCount == 0) {
+                board = make_board.getBoard();
+                Load.setDisable(true);
+                //make_board.randomPattern();
+
+                timeline();
+                Stop.setDisable(false);
+            }
+            timeline.play();
+            stopCount = 0;
+            playCount++;
+            Start.setDisable(true);
+            size.setDisable(false);
+            Stop.setText("Stop");
         }
-        timeline.play();
-        stopCount = 0;
-        playCount++;
-        Start.setDisable(true);
-        Stop.setText("Stop");
     }
 
     public void stopButton(){
         Start.setDisable(false);
+        //size.setDisable(true);
         if(stopCount == 0){
             timeline.stop();
             stopCount++;
             Stop.setText("Clear");
 
         }
-        else{
+        else if( stopCount==1){
             remove_Array();
             timeline.stop();
             playCount = 0;
             runCount = 0;
+            size.setValue(100);
             Stop.setText("Stop");
-            Stop.setDisable(true);
+            Load.setDisable(false);
+
             stage.setTitle("Game Of Life ");
             gc.setFill(Color.WHITE);
             gc.fillRect(0,0,1500,1500);
+            // satt inn else if, for å slippe å måtte flytte musen for å lukket programmet... ja, jeg er lat.
+            // når ferdig fjern if( stopCount==1) og stopcount + else under. uncomment stop.
+            //Stop.setDisable(true);
+            stopCount++;
+        }
+        else {
+            stage.close();
         }
     }
 
@@ -101,106 +127,122 @@ public class Controller implements Initializable {
         timeline.setAutoReverse(false);
     }
 
+    public void resetSlider(){
+        size.setValue(100);
+    }
+
     private void draw_Array(){
         for (int i = 0; i < make_board.getKolonner(); i++) {
             for (int j = 0; j < make_board.getRader() ; j++) {
                 if (board[i][j] == 1){
-                    draw( i , j, Color.BLACK);
+                    draw( i  , j , Color.YELLOW);
                 }
-                if (board[i][j] == 0){
-                    draw(i, j, Color.WHITE);
+
+                else {
+                    draw(i , j , Color.PINK);
                 }
+
+
             }
         }
     }
 
-    private void nextGen(){
-        nextgeneration = new int[make_board.getKolonner()][make_board.getRader()];
-        for (int a = 0; a < make_board.getKolonner(); a++) {
-            for (int b = 0; b < make_board.getRader(); b++) {
-                neighbors = 0;
-                if (a != 0 && b !=0){
-                    if (board[a-1][b-1] == 1)
-                        neighbors++;
-                }
-                if (b != 0){
-                    if (board[a][b-1] == 1)
-                        neighbors++;
-                }
-                try {
-                    if (a != board[a].length -1 && b != 0 ){
-                        if (board[a+1][b-1] == 1)
-                            neighbors++;
-                    }
-                }catch (IndexOutOfBoundsException  e){
-
-                }
-                if (a != 0){
-                    if (board[a-1][b]   == 1)
-                        neighbors++;
-                }
-                try {
-                    if (a != board[a].length -1){
-                        if (board[a+1][b]   == 1)
-                            neighbors++;
-                    }
-                }catch (Exception e) {
-
-                }
-                if(a != 0 && b != board[b].length -1){
-                    if (board[a-1][b+1] == 1)
-                        neighbors++;
-                }
-                if(b != board[b].length -1){
-                    if (board[a][b+1] == 1)
-                        neighbors++;
-                }
-                try {
-                    if(a != board[a].length - 1 && b != board[b].length -1){
-                        if (board[a+1][b+1] == 1)
-                            neighbors++;
-                    }
-                } catch (IndexOutOfBoundsException  e) {
-
-                }
-
-                //----------------------------
-
+    private void nextGeneration(){
+        nextGeneration = new byte[make_board.getKolonner()][make_board.getRader()];
+        for (int i = 0; i < make_board.getKolonner(); i++) {
+            for (int j = 0; j < make_board.getRader(); j++) {
+                int neighbors = countNeighbor(i,j);
                 if(neighbors <  2) {
-                    nextgeneration[a][b] = 0;
+                    nextGeneration[i][j] = 0;
                 }
                 else if (neighbors >  3) {
-                    nextgeneration[a][b] = 0;
+                    nextGeneration[i][j] = 0;
                 }
                 else if (neighbors == 3) {
-                    nextgeneration[a][b] = 1;
+                    nextGeneration[i][j] = 1;
                 }
                 else {
-                    nextgeneration[a][b] = board[a][b];
+                    nextGeneration[i][j] = board[i][j];
                 }
+
             }
         }
-        board = nextgeneration;
+        board = nextGeneration;
+    }
+    private int countNeighbor(int i, int j){
+        int neighbors = 0;
+        if (i != 0 && j !=0){
+            if (board[i-1][j-1] == 1)
+                neighbors++;
+        }
+        if (j != 0){
+            if (board[i][j-1] == 1)
+                neighbors++;
+        }
+        try {
+            if (i != board[i].length -1 && j != 0 ){
+                if (board[i+1][j-1] == 1)
+                    neighbors++;
+            }
+        }catch (IndexOutOfBoundsException  e){
+
+        }
+        if (i != 0){
+            if (board[i-1][j]   == 1)
+                neighbors++;
+        }
+        try {
+            if (i != board[i].length -1){
+                if (board[i+1][j]   == 1)
+                    neighbors++;
+            }
+        }catch (Exception e) {
+
+        }
+        if(i != 0 && j != board[j].length -1){
+            if (board[i-1][j+1] == 1)
+                neighbors++;
+        }
+        if(j != board[j].length -1){
+            if (board[i][j+1] == 1)
+                neighbors++;
+        }
+        try {
+            if(i != board[i].length - 1 && j != board[j].length -1){
+                if (board[i+1][j+1] == 1)
+                    neighbors++;
+            }
+        } catch (IndexOutOfBoundsException  e) {
+        }
+        return neighbors;
     }
 
     @FXML private void remove_Array() {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
-
                 draw( i , j, Color.WHITE);
             }
         }
     }
 
     private void draw( int x, int y, Color c) {
-        gc.setFill(Color.PINK);
-        gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);
+        gc.setFill(Color.web("E0E0E0"));
+        //gc.setFill(Color.WHITE);
+        gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
         gc.setFill(c);
-        gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);
+        gc.fillRect((x * (size.getValue()/10))+1 , (y  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
 
 
     }
 
 
+    public void load() {
+        make_board.copyFileBufferedIO();
+
+        loaded = true;
+        Start.setDisable(false);
+
+
+    }
 }
