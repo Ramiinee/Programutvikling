@@ -4,6 +4,7 @@ package Game;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.*;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
@@ -22,8 +23,10 @@ public class Controller implements Initializable {
     public Label Label;
     //public BorderPane BoarderPane;
     public Slider size;
+    public Slider timer;
     public Canvas Canvas;
-
+   
+    
     public Stage stage;
 
 
@@ -51,6 +54,7 @@ public class Controller implements Initializable {
         gc.fillRect(0,0,1050,700);
         draw_Array();
         nextGeneration();
+        timerlistener();
         stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/timing) ) + " | Size : " + size.getValue());
 
     }
@@ -70,6 +74,13 @@ public class Controller implements Initializable {
 
         Stop.setDisable(true);
         Start.setDisable(true);
+    }
+   public void timerlistener(){
+          timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
+              System.out.println(timing);
+              timing = newtime.intValue();
+          timeline.setRate(timing);
+        });
     }
 
     public void startButton(){
