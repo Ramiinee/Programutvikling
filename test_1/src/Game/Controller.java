@@ -41,7 +41,8 @@ public class Controller implements Initializable {
     public int[][] board;
     public int[][] nextgeneration;
     
-    public double timing = 120;
+    public double timing = 33.4;
+    public double startTime = timing;
     
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
          gc.setFill(Color.PINK);
@@ -52,7 +53,7 @@ public class Controller implements Initializable {
  
         
         
-        stage.setTitle("Game Of Life : " + runCount++ + " | Timing : " + timing);
+        stage.setTitle("Game Of Life : " + runCount++ + " | FPS : " + Math.round(1000/(startTime/timing)) + " | " + timing);
         
     }
     ));
@@ -75,7 +76,8 @@ public class Controller implements Initializable {
     
     public void timerlistener(){
           timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
-          timing = newtime.intValue();
+              System.out.println(timing);
+              timing = newtime.intValue();
           timeline.setRate(timing);
         });
     }
