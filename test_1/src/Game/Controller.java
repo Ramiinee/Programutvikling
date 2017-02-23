@@ -4,6 +4,8 @@ package Game;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
@@ -20,6 +22,7 @@ public class Controller implements Initializable {
     public Button Start;
     public Label Label;
     public BorderPane BoarderPane;
+    public Slider size;
     public Slider timer;
     public Canvas Canvas;
 
@@ -37,16 +40,20 @@ public class Controller implements Initializable {
     public Board make_board;
     public int[][] board;
     public int[][] nextgeneration;
-
-
-    private double timing = 120;
+    
+    public double timing = 120;
+    
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
          gc.setFill(Color.PINK);
         gc.fillRect(0,0,1500,1500);
         draw_Array();
         nextGen();
+        timerlistener();
+ 
+        
+        
         stage.setTitle("Game Of Life : " + runCount++ + " | Timing : " + timing);
-
+        
     }
     ));
 
@@ -57,11 +64,26 @@ public class Controller implements Initializable {
 
         stage = Main.getPrimaryStage();
         make_board = new Board();
+       timing = timer.getValue();
 
         Stop.setDisable(true);
+        
+   
+        
+    }
+    
+    
+    public void timerlistener(){
+          timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
+          timing = newtime.intValue();
+          timeline.setRate(timing);
+        });
     }
 
     public void startButton(){
+        timing = timer.getValue();
+        
+        
         if(playCount == 0){
             make_board.randomPattern();
             board = make_board.getBoard();
@@ -180,6 +202,7 @@ public class Controller implements Initializable {
                 }
             }
         }
+
         board = nextgeneration;
     }
 
@@ -195,9 +218,9 @@ public class Controller implements Initializable {
 
     private void draw( int x, int y, Color c) {
         gc.setFill(Color.PINK);
-        gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);
+        gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10) -1), (size.getValue()/10)-1);
         gc.setFill(c);
-        gc.fillRect(x* (timer.getValue()/10) , y*(timer.getValue()/10), ((timer.getValue()/10) -1), (timer.getValue()/10)-1);
+        gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10) -1), (size.getValue()/10)-1);
 
 
     }

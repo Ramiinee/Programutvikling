@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="BoarderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1100.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
+<BorderPane fx:id="BoarderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
     <top>
         <Label fx:id="Label" alignment="CENTER" text="Game of Life" BorderPane.alignment="CENTER">
             <font>
@@ -46,8 +46,8 @@
                            <Insets bottom="35.0" right="100.0" />
                        </GridPane.margin>
                    </Button>
-            <Slider fx:id="timer" max="500.0" maxWidth="200.0" min="10"  value="100.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
-            <Slider max="1000.0" maxWidth="200.0" min="200.0"  value="300.0"  GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+            <Slider fx:id="size" max="500.0" maxWidth="200.0" min="10"  value="100.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+            <Slider fx:id="timer" max="5.0" maxWidth="200.0" min="1.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="50.0" />
                </GridPane.margin>
@@ -59,6 +59,6 @@
         </GridPane>
     </bottom>
     <center>
-        <Canvas fx:id="Canvas" height="700.0" style="-fx-background-color: white;" width="1050.0" BorderPane.alignment="CENTER" />
+        <Canvas fx:id="Canvas" height="500.0" style="-fx-background-color: white;" width="500.0" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>

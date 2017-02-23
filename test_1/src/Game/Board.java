@@ -2,8 +2,8 @@ package Game;
 
 
 public class Board extends Controller{
-    public int kolonner = 105;
-    public int rader = 70;
+    public int kolonner = 50;
+    public int rader = 50;
 
     public int[][] board = new int[kolonner][rader];
 
