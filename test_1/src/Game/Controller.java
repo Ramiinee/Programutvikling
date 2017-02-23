@@ -41,7 +41,7 @@ public class Controller implements Initializable {
     public int[][] board;
     public int[][] nextgeneration;
     
-    public double timing = 33.4;
+    public double timing = 120;
     public double startTime = timing;
     
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
