@@ -53,7 +53,7 @@
                         <Insets top="40.0" />
                     </GridPane.margin>
                 </Slider>
-                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Random" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Button fx:id="Random" onAction="#RandomBoard" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Random" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets right="10.0" />
                     </GridPane.margin>
@@ -77,7 +77,7 @@
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </Button>
-                <ColorPicker prefHeight="50.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                <ColorPicker fx:id="colorPicker" prefHeight="50.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>

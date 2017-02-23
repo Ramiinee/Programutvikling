@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
@@ -20,14 +21,17 @@ public class Controller implements Initializable {
     public Button Start;
     public Button reset;
     public Button Load;
+    public Button Random;
+    public ColorPicker colorPicker;
     public Label Label;
     //public BorderPane BoarderPane;
     public Slider size;
     public Slider timer;
     public Canvas Canvas;
-   
-    
+
+
     public Stage stage;
+
 
 
     private GraphicsContext gc;
@@ -66,20 +70,16 @@ public class Controller implements Initializable {
         gc = Canvas.getGraphicsContext2D();
         gc.fillText("Load board",225,250);
         stage = Main.getPrimaryStage();
+        colorPicker.setValue(Color.BLACK);
         make_board = new Board();
-
-
-
-
 
         Stop.setDisable(true);
         Start.setDisable(true);
     }
-   public void timerlistener(){
-          timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
-              System.out.println(timing);
-              timing = newtime.intValue();
-          timeline.setRate(timing);
+    public void timerlistener(){
+        timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
+            timing = newtime.intValue();
+            timeline.setRate(timing);
         });
     }
 
@@ -88,6 +88,7 @@ public class Controller implements Initializable {
             if (playCount == 0) {
                 board = make_board.getBoard();
                 Load.setDisable(true);
+                Random.setDisable(true);
                 //make_board.randomPattern();
 
                 timeline();
@@ -119,7 +120,7 @@ public class Controller implements Initializable {
             size.setValue(100);
             Stop.setText("Stop");
             Load.setDisable(false);
-
+            Random.setDisable(false);
             stage.setTitle("Game Of Life ");
             gc.setFill(Color.WHITE);
             gc.fillRect(0,0,1500,1500);
@@ -140,28 +141,27 @@ public class Controller implements Initializable {
 
     public void resetSlider(){
         size.setValue(100);
+        timer.setValue(1);
+        colorPicker.setValue(Color.BLACK);
     }
 
     private void draw_Array(){
-        for (int i = 0; i < make_board.getKolonner(); i++) {
-            for (int j = 0; j < make_board.getRader() ; j++) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length ; j++) {
                 if (board[i][j] == 1){
-                    draw( i  , j , Color.YELLOW);
+                    draw( i  , j , colorPicker.getValue());
                 }
-
                 else {
-                    draw(i , j , Color.PINK);
+                    draw(i , j , Color.WHITE);
                 }
-
-
             }
         }
     }
 
     private void nextGeneration(){
-        nextGeneration = new byte[make_board.getKolonner()][make_board.getRader()];
-        for (int i = 0; i < make_board.getKolonner(); i++) {
-            for (int j = 0; j < make_board.getRader(); j++) {
+        nextGeneration = new byte[board.length][board.length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length ; j++) {
                 int neighbors = countNeighbor(i,j);
                 if(neighbors <  2) {
                     nextGeneration[i][j] = 0;
@@ -255,5 +255,11 @@ public class Controller implements Initializable {
         Start.setDisable(false);
 
 
+    }
+
+    public void RandomBoard() {
+        make_board.randomPattern();
+        loaded = true;
+        Start.setDisable(false);
     }
 }
