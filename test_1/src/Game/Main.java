@@ -33,14 +33,8 @@ public class Main extends Application {
 
 
 
-
-
-
     }
-    private void setPrimaryStage(Stage stage) {
-        Main.stage = stage;
-    }
-
+    
     static public Stage getPrimaryStage() {
         return Main.stage;
     }
