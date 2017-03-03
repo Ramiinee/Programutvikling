@@ -107,6 +107,7 @@ public class Controller implements Initializable {
             Start.setDisable(true);
             size.setDisable(false);
             Stop.setText("Stop");
+            Stop.setTooltip(new Tooltip("Stop"));
         }
     }
 
@@ -117,6 +118,7 @@ public class Controller implements Initializable {
             timeline.stop();
             stopCount++;
             Stop.setText("Clear");
+            Stop.setTooltip(new Tooltip("Clear"));
 
         }
         else if( stopCount==1){
