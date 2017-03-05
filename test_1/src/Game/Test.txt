@@ -5,3 +5,6 @@ Her jobber vi
 
 
 Møte med kontaktperson
+
+
+load så viser den mønstret. 
