@@ -98,7 +98,7 @@
     <center>
         <Canvas fx:id="Canvas" height="600.0" style="-fx-background-color: white;" width="600.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets top="15.0" />
+
             </BorderPane.margin></Canvas>
     </center>
 </BorderPane>

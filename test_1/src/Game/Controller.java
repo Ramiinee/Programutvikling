@@ -3,13 +3,16 @@ package Game;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -24,7 +27,7 @@ public class Controller implements Initializable {
     public Button Random;
     public ColorPicker colorPicker;
     public Label Label;
-    //public BorderPane BoarderPane;
+    public BorderPane BoarderPane;
     public Slider size;
     public Slider timer;
     public Canvas Canvas;
@@ -41,6 +44,7 @@ public class Controller implements Initializable {
     private int playCount = 0;
     private int stopCount = 0;
     private int runCount = 1;
+    private int aliveCount = 0;
 
     public boolean loaded = false;
 
@@ -51,7 +55,7 @@ public class Controller implements Initializable {
     public byte[][] nextGeneration;
 
 
-    private double timing = 200;
+    private double timing = 120;
     private double StartTimer = timing;
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
@@ -59,8 +63,9 @@ public class Controller implements Initializable {
         draw_Array();
         nextGeneration();
         timerlistener();
-        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/timing) ) + " | Size : " + size.getValue());
 
+        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
+        aliveCount = 0;
     }
     ));
 
@@ -75,6 +80,8 @@ public class Controller implements Initializable {
 
         Stop.setDisable(true);
         Start.setDisable(true);
+
+
     }
     public void timerlistener(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
@@ -117,7 +124,6 @@ public class Controller implements Initializable {
             timeline.stop();
             playCount = 0;
             runCount = 0;
-            size.setValue(100);
             Stop.setText("Stop");
             Load.setDisable(false);
             Random.setDisable(false);
@@ -150,6 +156,8 @@ public class Controller implements Initializable {
             for (int j = 0; j < board[i].length ; j++) {
                 if (board[i][j] == 1){
                     draw( i  , j , colorPicker.getValue());
+                    aliveCount ++;
+
                 }
                 else {
                     draw(i , j , Color.WHITE);
@@ -243,6 +251,15 @@ public class Controller implements Initializable {
         gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
         gc.setFill(c);
         gc.fillRect((x * (size.getValue()/10))+1 , (y  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
+
+
+    }
+    private void draw_ned( int x, int y, Color c) {
+        gc.setFill(Color.web("E0E0E0"));
+        //gc.setFill(Color.WHITE);
+        gc.fillRect(y* (size.getValue()/10) , x*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
+        gc.setFill(c);
+        gc.fillRect((y * (size.getValue()/10))+1 , (x  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
 
 
     }

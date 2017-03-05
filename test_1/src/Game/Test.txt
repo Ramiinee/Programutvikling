@@ -1,11 +1,7 @@
 Her jobber vi
 
 
-Etter at animasjonen fungerer, burde GUI funksjonalitet relatert til de frie variablene til animasjonen
-implementeres. Eksempler på frie variabler er antall bilder (key frames) per sekund (frames per
-second) og start/pause av animasjon.
 
- 
 
 
 Møte med kontaktperson
