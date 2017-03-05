@@ -4,7 +4,7 @@ package Game;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+import Game.Board;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -60,8 +60,10 @@ public class Controller implements Initializable {
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,1050,700);
-        draw_Array();
+
         nextGeneration();
+        draw_Array();
+
         timerlistener();
 
         stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
@@ -73,13 +75,16 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         gc = Canvas.getGraphicsContext2D();
-        gc.fillText("Load board",225,250);
+
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
         make_board = new Board();
+        showClearBoard();
 
         Stop.setDisable(true);
         Start.setDisable(true);
+
+
 
 
     }
@@ -107,6 +112,7 @@ public class Controller implements Initializable {
             Start.setDisable(true);
             size.setDisable(false);
             Stop.setText("Stop");
+            Stop.setTooltip(new Tooltip("Stop"));
         }
     }
 
@@ -117,6 +123,7 @@ public class Controller implements Initializable {
             timeline.stop();
             stopCount++;
             Stop.setText("Clear");
+            Stop.setTooltip(new Tooltip("Clear"));
 
         }
         else if( stopCount==1){
@@ -128,8 +135,10 @@ public class Controller implements Initializable {
             Load.setDisable(false);
             Random.setDisable(false);
             stage.setTitle("Game Of Life ");
+
             gc.setFill(Color.WHITE);
-            gc.fillRect(0,0,1500,1500);
+            showClearBoard();
+
             // satt inn else if, for å slippe å måtte flytte musen for å lukket programmet... ja, jeg er lat.
             // når ferdig fjern if( stopCount==1) og stopcount + else under. uncomment stop.
             //Stop.setDisable(true);
@@ -155,19 +164,19 @@ public class Controller implements Initializable {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
                 if (board[i][j] == 1){
-                    draw( i  , j , colorPicker.getValue());
+                    draw_ned( i  , j , colorPicker.getValue());
                     aliveCount ++;
 
                 }
                 else {
-                    draw(i , j , Color.WHITE);
+                    draw_ned(i , j , Color.WHITE);
                 }
             }
         }
     }
 
     private void nextGeneration(){
-        nextGeneration = new byte[board.length][board.length];
+        nextGeneration = new byte[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
                 int neighbors = countNeighbor(i,j);
@@ -246,6 +255,7 @@ public class Controller implements Initializable {
     }
 
     private void draw( int x, int y, Color c) {
+        gc = Canvas.getGraphicsContext2D();
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
         gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
@@ -266,17 +276,39 @@ public class Controller implements Initializable {
 
 
     public void load() {
-        make_board.copyFileBufferedIO();
+        gc.clearRect(0,0,600,600);
+        stopCount = 0;
+        Stop.setDisable(true);
+        loaded = make_board.FromFileToBoard();
+        if (loaded){
+            board = make_board.getBoard();
+            System.out.println(board.length + " | " + board[0].length);
+            draw_Array();
 
-        loaded = true;
-        Start.setDisable(false);
-
-
+            Start.setDisable(false);
+        }
+        else {
+            showClearBoard();
+            System.out.println(loaded);
+        }
     }
 
     public void RandomBoard() {
+        stopCount = 0;
+        Stop.setDisable(true);
         make_board.randomPattern();
+        board = make_board.getBoard();
+        draw_Array();
         loaded = true;
         Start.setDisable(false);
+        System.out.println(board.length);
+
     }
+    public void showClearBoard(){
+
+        board = make_board.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
+        draw_Array();
+    }
+
+
 }
