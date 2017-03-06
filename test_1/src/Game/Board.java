@@ -1,14 +1,18 @@
 package Game;
 
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
+import javafx.stage.FileChooser;
+
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.Random;
 
 
-public class Board extends Controller{
+public class Board extends Controller {
     public int kolonner;
     public int rader ;
     public byte[] byteArray;
@@ -47,14 +51,9 @@ public class Board extends Controller{
         return rader;
     }
 
-    public  void copyFileBufferedIO()
-    {
-        Path infile = Paths.get(chooseTextFile());
+    public  void copyFileBufferedIO() {
+        fileChooser();
 
-        try {
-            byteArray = copyFileOneGo(infile);
-
-        }catch (IOException ioe){}
         try {
             System.out.println(byteArray.length);
             int a;
@@ -65,11 +64,9 @@ public class Board extends Controller{
                 a = (int) Math.sqrt(byteArray.length);
                 kolonner = a;
                 rader = a;
-                board = new byte[kolonner][rader];
+                board = new byte[a][a];
 
-                    Con1Dto2D(byteArray,a,a);
-
-
+                Con1Dto2D(byteArray,a,a);
                 try {
                     board = boardConverted();
                 }catch (Exception e){
@@ -78,24 +75,48 @@ public class Board extends Controller{
             }
             else {
                 System.out.println("ingen kravdrat array");
-                stage.close();
+
             }
-
-
 
         }catch (Exception e){
-            System.out.println(e);
+            System.out.println(e + "3");
 
         }
+
 
     }
-    public byte[][] boardConverted (){
-        for (int i = 0; i <board.length ; i++) {
-            for (int j = 0; j <board[i].length ; j++) {
-               board[i][j] = coverted[i][j];
+    public void fileChooser(){
+
+        File recordsDir = new File(System.getProperty("user.dir"));
+        recordsDir.mkdirs();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(recordsDir);
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
+
+
+                while (line != null) {
+                    sb.append(line);
+
+                    line = br.readLine();
+                }
+                String everything = sb.toString();
+
+
+                byteArray = everything.getBytes();
+
+
+
+
+            } catch (IOException e) {
+                System.out.println(e + "2");
             }
+
         }
-        return board;
     }
     public void Con1Dto2D(  byte[] array,  int rows,  int cols ) {
         if (array.length != (rows*cols))
@@ -107,35 +128,18 @@ public class Board extends Controller{
 
 
     }
-
-    private String chooseTextFile() {
-
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Text files", "txt");
-        chooser.addChoosableFileFilter(filter);
-
-
-
-
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION)
-            return chooser.getSelectedFile().getAbsoluteFile().toString();
-        else
-            return "";
-
-    }
-
-    public  byte[] copyFileOneGo(Path infile) throws IOException
-    {
-        byte[] Array = Files.readAllBytes(infile);
-
-        for (int i = 0; i < Array.length; i++) {
-            if (Array[i] == 49) Array[i] = 1;
-            else Array[i] = 0;
-
+    public byte[][] boardConverted (){
+        for (int i = 0; i <board.length ; i++) {
+            for (int j = 0; j <board[i].length ; j++) {
+                board[i][j] = coverted[i][j];
+                if (board[i][j] == 48){
+                    board[i][j] = 0;
+                }
+                else {
+                    board[i][j]= 1;
+                }
+            }
         }
-
-        return Array;
+        return board;
     }
 }

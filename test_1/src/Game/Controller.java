@@ -3,6 +3,8 @@ package Game;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -42,6 +44,7 @@ public class Controller implements Initializable {
     private int playCount = 0;
     private int stopCount = 0;
     private int runCount = 1;
+    private int aliveCount = 0;
 
     public boolean loaded = false;
 
@@ -52,7 +55,7 @@ public class Controller implements Initializable {
     public byte[][] nextGeneration;
 
 
-    private double timing = 1000;
+    private double timing = 120;
     private double StartTimer = timing;
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
@@ -60,8 +63,9 @@ public class Controller implements Initializable {
         draw_Array();
         nextGeneration();
         timerlistener();
-        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/timing) ) + " | Size : " + size.getValue());
 
+        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
+        aliveCount = 0;
     }
     ));
 
@@ -152,6 +156,8 @@ public class Controller implements Initializable {
             for (int j = 0; j < board[i].length ; j++) {
                 if (board[i][j] == 1){
                     draw( i  , j , colorPicker.getValue());
+                    aliveCount ++;
+
                 }
                 else {
                     draw(i , j , Color.WHITE);
