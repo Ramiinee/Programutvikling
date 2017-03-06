@@ -8,3 +8,6 @@ Møte med kontaktperson
 
 
 load så viser den mønstret. 
+
+
+abstract board. statisk og dynamisk arver fra board
