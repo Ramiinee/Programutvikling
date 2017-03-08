@@ -11,3 +11,6 @@ load så viser den mønstret.
 
 
 abstract board. statisk og dynamisk arver fra board
+
+
+lese board read(). ett tegn av gangen.

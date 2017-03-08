@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import Game.Board;
+import Game.StaticBoard;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -48,9 +49,12 @@ public class Controller implements Initializable {
 
     public boolean loaded = false;
 
+    public StaticBoard staticBoard = new StaticBoard();
+    public BoardMaker boardMaker = new BoardMaker(staticBoard);
+    public FileConverter fileConverter = new FileConverter();
 
     //Board
-    public Board make_board;
+
     public byte[][] board;
     public byte[][] nextGeneration;
 
@@ -78,8 +82,8 @@ public class Controller implements Initializable {
 
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
-        make_board = new Board();
-        showClearBoard();
+
+        //showClearBoard();
 
         Stop.setDisable(true);
         Start.setDisable(true);
@@ -98,7 +102,7 @@ public class Controller implements Initializable {
     public void startButton(){
         if (loaded) {
             if (playCount == 0) {
-                board = make_board.getBoard();
+                board = staticBoard.getBoard();
                 Load.setDisable(true);
                 Random.setDisable(true);
                 //make_board.randomPattern();
@@ -276,13 +280,16 @@ public class Controller implements Initializable {
 
 
     public void load() {
+        boardMaker.makeClearBoard();
+        board = staticBoard.getBoard();
+        draw_Array();
         gc.clearRect(0,0,600,600);
         stopCount = 0;
         Stop.setDisable(true);
-        loaded = make_board.FromFileToBoard();
+        loaded = fileConverter.FromFileToBoard(staticBoard,boardMaker);
         if (loaded){
-            board = make_board.getBoard();
-            System.out.println(board.length + " | " + board[0].length);
+            board = staticBoard.getBoard();
+
             draw_Array();
 
             Start.setDisable(false);
@@ -294,10 +301,13 @@ public class Controller implements Initializable {
     }
 
     public void RandomBoard() {
+        boardMaker.makeClearBoard();
+        board = staticBoard.getBoard();
+        draw_Array();
         stopCount = 0;
         Stop.setDisable(true);
-        make_board.randomPattern();
-        board = make_board.getBoard();
+        boardMaker.randomPattern(staticBoard);
+        board = staticBoard.getBoard();
         draw_Array();
         loaded = true;
         Start.setDisable(false);
@@ -306,7 +316,8 @@ public class Controller implements Initializable {
     }
     public void showClearBoard(){
 
-        board = make_board.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
+        boardMaker.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
+        board = staticBoard.getBoard();
         draw_Array();
     }
 
