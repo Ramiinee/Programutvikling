@@ -121,15 +121,7 @@ public class Controller implements Initializable {
         }
     }
     
-    public void DynStartButton(){
-        if(loaded){
-            if(playCount == 0){
-                board = dynamicBoard.getBoard();
-                Load.setDisable(true);
-                Random.setDisable(true);
-            }
-        }
-    }
+    
 
     public void stopButton(){
         Start.setDisable(false);
@@ -332,5 +324,47 @@ public class Controller implements Initializable {
         draw_Array();
     }
 
+    
+    
+    // isrjgisjsorigjsorigjsogijosrigjosrigjosigjosrigjsrogijsroijoigjsosigjosgijrso
+   
+     private Timeline Dyntimeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0,0,1050,700);
 
+        nextGeneration();
+        draw_Array();
+
+        timerlistener();
+
+        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
+        aliveCount = 0;
+    }
+    ));
+    
+     private void dyntimeline(){
+        Dyntimeline.setCycleCount(Timeline.INDEFINITE);
+        Dyntimeline.setAutoReverse(false);
+    }
+    
+public void DynStartButton(){
+        if (loaded) {
+            if (playCount == 0) {
+                board = staticBoard.getBoard();
+                Load.setDisable(true);
+                Random.setDisable(true);
+                //make_board.randomPattern();
+
+                dyntimeline();
+                Stop.setDisable(false);
+            }
+            Dyntimeline.play();
+            stopCount = 0;
+            playCount++;
+            Start.setDisable(true);
+            size.setDisable(false);
+            Stop.setText("Stop");
+            Stop.setTooltip(new Tooltip("Stop"));
+        }
+    }
 }

@@ -53,7 +53,7 @@
                         <Insets top="40.0" />
                     </GridPane.margin>
                 </Slider>
-                <Button fx:id="Random" onAction="#RandomBoard" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Random" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Button fx:id="Random" mnemonicParsing="false" onAction="#RandomBoard" prefHeight="50.0" prefWidth="80.0" text="Random" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets right="10.0" />
                     </GridPane.margin>
@@ -92,6 +92,7 @@
                         <Insets top="70.0" />
                     </GridPane.margin>
                 </Label>
+            <Button fx:id="Dynstart" text="Dynamictest" onAction="#DynStartButton" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             </children>
         </GridPane>
     </left>
