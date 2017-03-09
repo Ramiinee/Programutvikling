@@ -14,3 +14,9 @@ abstract board. statisk og dynamisk arver fra board
 
 
 lese board read(). ett tegn av gangen.
+
+
+programet kjører hele tiden, men nextgen() kjører bare når aktiv. 
+
+
+hente fil fra nett. URL
