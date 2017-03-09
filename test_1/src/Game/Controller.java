@@ -52,6 +52,7 @@ public class Controller implements Initializable {
     public StaticBoard staticBoard = new StaticBoard();
     public BoardMaker boardMaker = new BoardMaker(staticBoard);
     public FileConverter fileConverter = new FileConverter();
+    public DynamicBoard dynamicBoard = new DynamicBoard();
 
     //Board
 
@@ -117,6 +118,16 @@ public class Controller implements Initializable {
             size.setDisable(false);
             Stop.setText("Stop");
             Stop.setTooltip(new Tooltip("Stop"));
+        }
+    }
+    
+    public void DynStartButton(){
+        if(loaded){
+            if(playCount == 0){
+                board = dynamicBoard.getBoard();
+                Load.setDisable(true);
+                Random.setDisable(true);
+            }
         }
     }
 
