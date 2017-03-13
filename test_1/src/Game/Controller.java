@@ -62,6 +62,7 @@ public class Controller implements Initializable {
     public StaticBoard staticBoard;
     public BoardMaker boardMaker;
     public FileConverter fileConverter;
+    public Mouse mouse;
 
     //Board
 
@@ -155,11 +156,7 @@ public class Controller implements Initializable {
         timeline.setAutoReverse(false);
     }
 
-    public void resetSlider(){
-        size.setValue(100);
-        timer.setValue(1);
-        colorPicker.setValue(Color.BLACK);
-    }
+
 
     private void draw_Array(){
         for (int i = 0; i < board.length; i++) {
@@ -323,6 +320,19 @@ public class Controller implements Initializable {
     public javafx.scene.canvas.Canvas getCanvas() {
         return Canvas;
     }
+    public void resetSlider(){
+        size.setValue(100);
+        timer.setValue(1);
+        colorPicker.setValue(Color.BLACK);
+        try {
+
+            Canvas.getTransforms().retainAll();
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+    }
 
 
 
@@ -346,45 +356,21 @@ public class Controller implements Initializable {
         scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setPannable(true);
-        SceneGestures sceneGestures = new SceneGestures();
 
 
+        //SceneGestures sceneGestures = new SceneGestures();
+        //scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
+        System.out.println(scrollpane.getHvalue());
+        System.out.println(scrollpane.getVvalue());
 
-        scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+        System.out.println(Canvas.getTransforms());
 
-        System.out.println(Canvas.getHeight()/10);
-        System.out.println(Canvas.getWidth()/10);
-
-    Delta initial_mouse_pos = new Delta();
-
-        Canvas.setOnScroll(event -> {
-            double zoom_fac = 1.05;
-            double zoom_fc_old = zoom_fac;
-            if(initial_mouse_pos.y < 0) {
-                zoom_fac = 2.0 - zoom_fac;
-
-            }
-
-            Scale newScale = new Scale();
-            newScale.setPivotX(event.getX());
-            newScale.setPivotY(event.getY());
-            if (event.getDeltaY() > 0){
-                newScale.setX( Canvas.getScaleX() * zoom_fac );
-                newScale.setY( Canvas.getScaleY() * zoom_fac );
-            }else {
-                newScale.setX( Canvas.getScaleX() / zoom_fac );
-                newScale.setY( Canvas.getScaleY() / zoom_fac );
-            }
-
-
-            Canvas.getTransforms().add(newScale);
-
-            event.consume();
-        });
+        mouse = new Mouse(Canvas);
+        mouse.scroll();
 
     }
-    private class Delta { double x, y; }
+    /*
     public class SceneGestures {
 
         public EventHandler<ScrollEvent> getOnScrollEventHandler() {
@@ -397,17 +383,18 @@ public class Controller implements Initializable {
             @Override
             public void handle(ScrollEvent event) {
 
-                /*
+
                 System.out.println(event.getX());
                 double test = (event.getX() +event.getY())/2;
                 size.setValue(test);
-            */
+
             }
         };
 
 
 
     }
+    */
     public void onScrollEventHandler(ScrollEvent scrollEvent) {
 /*
         if (scrollEvent.getDeltaY() > 0){
