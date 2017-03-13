@@ -10,20 +10,21 @@ public class BoardMaker {
     public StaticBoard staticBoard;
     private byte[] byteArray;
     private byte[][] board;
-    private byte[][] coverted;
+    private byte[][] converted;
     private byte[][] clearBoard;
+    private int testSize = 200;
 
     public BoardMaker(StaticBoard staticBoard) {
         this.staticBoard = staticBoard;
     }
 
     public void makeClearBoard(){
-        clearBoard= new byte[60][60];
+        clearBoard= new byte[testSize][testSize];
         staticBoard.setBoard(clearBoard);
     }
     public void randomPattern(StaticBoard staBoard){
         staticBoard = staBoard;
-        board = new byte[60][60];
+        board = new byte[testSize][testSize];
 
 
         Random r = new Random();
@@ -61,18 +62,18 @@ public class BoardMaker {
     }
     public void InsertRleIntoBoard(  String everything){
         board = staticBoard.getBoard();
-        int kolonner = staticBoard.getKolonner();
-        int rader = staticBoard.getRader();
-        System.out.println(kolonner + " | " + rader);
+        int column = staticBoard.getColumn();
+        int row = staticBoard.getRow();
+        System.out.println(column + " | " + row);
         try {
             String s = decode(everything);
             String start = s;
             s = s.replaceAll("b","0");
             s = s.replaceAll("o","1");
 
-            if (s.length() != (kolonner*rader)){
+            if (s.length() != (column*row)){
                 int i;
-                for (i = 0; i <((kolonner*rader)-(start.length())) ; i++) {
+                for (i = 0; i <((column*row)-(start.length())) ; i++) {
                     s = s + "0";
 
                 }
@@ -85,32 +86,32 @@ public class BoardMaker {
 
 
             try {
-                Convert1DTo2D(rader,kolonner);
+                Convert1DTo2D(row,column);
             }catch (Exception e){
-                System.out.println(e + " 44");
+                System.out.println(e + " Convertering fra 1D til 2D gikk ikke som planlagt");
             }
 
-            for (int i = 0; i <coverted.length ; i++) {
-                for (int j = 0; j <coverted[i].length ; j++) {
-                    if (coverted[i][j] == 48){
-                        coverted[i][j] = 0;
+            for (int i = 0; i < converted.length ; i++) {
+                for (int j = 0; j < converted[i].length ; j++) {
+                    if (converted[i][j] == 48){
+                        converted[i][j] = 0;
                     }
                     else {
-                        coverted[i][j]= 1;
+                        converted[i][j]= 1;
                     }
 
-                    board[i+10][j+10] = coverted[i][j];
+                    board[i+50][j+50] = converted[i][j];
 
                 }
 
             }
 
-            for (int i = 0; i < coverted.length; i++) {
-                for (int j = 0; j < coverted[i].length; j++) {
-                    if (coverted[j][i] == 0){
+            for (int i = 0; i < converted.length; i++) {
+                for (int j = 0; j < converted[i].length; j++) {
+                    if (converted[j][i] == 0){
                         System.out.print("-");
                     }
-                    else System.out.print(coverted[j][i]);
+                    else System.out.print(converted[j][i]);
                 }
                 System.out.println();
             }
@@ -118,7 +119,7 @@ public class BoardMaker {
 
             staticBoard.setBoard(board);
         }catch (Exception e){
-            System.out.println(e + " InsertRleIntoBoard");
+            System.out.println(e + " | Det går ikke å legge rle inn i array");
         }
     }
 
@@ -163,13 +164,13 @@ public class BoardMaker {
 
         if (sqrt * sqrt == byteArray.length) {
             int a = sqrt;
-            staticBoard.setKolonner(a);
-            staticBoard.setRader(a);
+            staticBoard.setColumn(a);
+            staticBoard.setRow(a);
 
-            board = new byte[staticBoard.getKolonner()][staticBoard.getRader()];
+            board = new byte[staticBoard.getColumn()][staticBoard.getRow()];
 
-            Convert1DTo2D(staticBoard.getKolonner(), staticBoard.getRader());
-            board = boardConvertedTXT(board,coverted);
+            Convert1DTo2D(staticBoard.getColumn(), staticBoard.getRow());
+            board = boardConvertedTXT(board, converted);
             staticBoard.setBoard(board);
             return true;
         } else {
@@ -180,13 +181,13 @@ public class BoardMaker {
 
 
     public void Convert1DTo2D(int rows, int cols){
-        coverted = new byte[rows][cols];
+        converted = new byte[rows][cols];
 
-        for (int i = 0; i < coverted.length; i++) {
-            for (int j = 0; j < coverted[i].length; j++) {
+        for (int i = 0; i < converted.length; i++) {
+            for (int j = 0; j < converted[i].length; j++) {
                 //System.out.println("index" + ((i * arr.length) + j));
-                coverted[i][j] = byteArray[(i * coverted[i].length) + j];
-                System.out.print("  " + coverted[i][j]);
+                converted[i][j] = byteArray[(i * converted[i].length) + j];
+                System.out.print("  " + converted[i][j]);
 
             }
             System.out.println();

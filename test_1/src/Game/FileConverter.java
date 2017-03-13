@@ -15,6 +15,7 @@ public class FileConverter {
     public StaticBoard staticBoard;
     private boolean rleFile;
     private String everything;
+    private String[] test;
 
     public  boolean FromFileToBoard(StaticBoard staBoard, BoardMaker boaker) {
         staticBoard = staBoard;
@@ -51,7 +52,7 @@ public class FileConverter {
             selectedFile = fileChooser.showOpenDialog(null);
 
         }catch (NullPointerException e){
-            System.out.println(e);
+            System.out.println(e + " | Velger fil");
         }
 
 
@@ -77,15 +78,23 @@ public class FileConverter {
                         else {
                             Waring w = new Waring();
                             w.warning("Wrong Rule","The file you selected does not have the correct rule","This program uses rule = B3/S23. It will still work, but not the way the file is made for.");
+
+                            line = line.replaceAll(",rule=[a-zA-Z0-9]+/[a-zA-Z0-9]+", "");
+                            System.out.println(line);  // for testing
                         }
                         String StringToX = line;
                         String StringToY = line;
                         StringToX = StringToX.replaceAll("x=","");
                         StringToX = StringToX.replaceAll(",y=[0-99]+","");
                         StringToY = StringToY.replaceAll("x=[0-99]+,y=","");
+                        try {
+                            staticBoard.setColumn(Integer.parseInt(StringToX));
+                            staticBoard.setRow(Integer.parseInt(StringToY));
+                        }
+                        catch (Exception e){
+                            System.out.println(e);
+                        }
 
-                        staticBoard.setKolonner(Integer.parseInt(StringToX));
-                        staticBoard.setRader(Integer.parseInt(StringToY));
                     }
                     else {
                         sb.append(line);
@@ -95,10 +104,14 @@ public class FileConverter {
                 }
 
                 everything  = sb.toString();
+                test = everything.split(Pattern.quote("$"));
 
+                for (int i = 0; i <test.length ; i++) {
+                    System.out.println(test[i] + " | " + i);
+                }
 
             } catch (IOException e) {
-                System.out.println(e + "2");
+                System.out.println(e + " | bufferReader");
             }
             rleFile = isRleFile(selectedFile);
 

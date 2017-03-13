@@ -1,20 +1,31 @@
 package Game;
 
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import Game.Board;
+
 import Game.StaticBoard;
 import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
 
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -27,7 +38,6 @@ public class Controller implements Initializable {
     public Button Load;
     public Button Random;
     public ColorPicker colorPicker;
-    public Label Label;
     public BorderPane BoarderPane;
     public Slider size;
     public Slider timer;
@@ -35,7 +45,7 @@ public class Controller implements Initializable {
 
 
     public Stage stage;
-
+    public ScrollPane scrollpane;
 
 
     private GraphicsContext gc;
@@ -49,9 +59,9 @@ public class Controller implements Initializable {
 
     public boolean loaded = false;
 
-    public StaticBoard staticBoard = new StaticBoard();
-    public BoardMaker boardMaker = new BoardMaker(staticBoard);
-    public FileConverter fileConverter = new FileConverter();
+    public StaticBoard staticBoard;
+    public BoardMaker boardMaker;
+    public FileConverter fileConverter;
 
     //Board
 
@@ -63,7 +73,7 @@ public class Controller implements Initializable {
     private double StartTimer = timing;
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
-        gc.fillRect(0,0,1050,700);
+        gc.fillRect(0,0,2000,2000);
 
         nextGeneration();
         draw_Array();
@@ -75,29 +85,16 @@ public class Controller implements Initializable {
     }
     ));
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
 
-        gc = Canvas.getGraphicsContext2D();
-
-        stage = Main.getPrimaryStage();
-        colorPicker.setValue(Color.BLACK);
-
-        //showClearBoard();
-
-        Stop.setDisable(true);
-        Start.setDisable(true);
-
-
-
-
-    }
     public void timerlistener(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
             timing = newtime.intValue();
             timeline.setRate(timing);
         });
     }
+
+
+
 
     public void startButton(){
         if (loaded) {
@@ -218,6 +215,7 @@ public class Controller implements Initializable {
             }
         }catch (IndexOutOfBoundsException  e){
 
+
         }
         if (i != 0){
             if (board[i-1][j]   == 1)
@@ -253,7 +251,7 @@ public class Controller implements Initializable {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
-                draw( i , j, Color.WHITE);
+                draw_ned( i , j, Color.WHITE);
             }
         }
     }
@@ -271,9 +269,9 @@ public class Controller implements Initializable {
     private void draw_ned( int x, int y, Color c) {
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
-        gc.fillRect(y* (size.getValue()/10) , x*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
+        gc.fillRect(y* (size.getValue()/20) , x*(size.getValue()/20), ((size.getValue()/20)), (size.getValue()/20));
         gc.setFill(c);
-        gc.fillRect((y * (size.getValue()/10))+1 , (x  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
+        gc.fillRect((y * (size.getValue()/20))+1 , (x  * (size.getValue()/20))+1, ((size.getValue()/20) -2), (size.getValue()/20)-2);
 
 
     }
@@ -301,6 +299,7 @@ public class Controller implements Initializable {
     }
 
     public void RandomBoard() {
+
         boardMaker.makeClearBoard();
         board = staticBoard.getBoard();
         draw_Array();
@@ -321,5 +320,105 @@ public class Controller implements Initializable {
         draw_Array();
     }
 
+    public javafx.scene.canvas.Canvas getCanvas() {
+        return Canvas;
+    }
+
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        staticBoard = new StaticBoard();
+        boardMaker = new BoardMaker(staticBoard);
+        fileConverter = new FileConverter();
+        gc = Canvas.getGraphicsContext2D();
+
+        stage = Main.getPrimaryStage();
+        colorPicker.setValue(Color.BLACK);
+
+        //showClearBoard();
+
+        Stop.setDisable(true);
+        Start.setDisable(true);
+
+
+        scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollpane.setPannable(true);
+        SceneGestures sceneGestures = new SceneGestures();
+
+
+
+
+        scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+
+        System.out.println(Canvas.getHeight()/10);
+        System.out.println(Canvas.getWidth()/10);
+
+    Delta initial_mouse_pos = new Delta();
+
+        Canvas.setOnScroll(event -> {
+            double zoom_fac = 1.05;
+            double zoom_fc_old = zoom_fac;
+            if(initial_mouse_pos.y < 0) {
+                zoom_fac = 2.0 - zoom_fac;
+
+            }
+
+            Scale newScale = new Scale();
+            newScale.setPivotX(event.getX());
+            newScale.setPivotY(event.getY());
+            if (event.getDeltaY() > 0){
+                newScale.setX( Canvas.getScaleX() * zoom_fac );
+                newScale.setY( Canvas.getScaleY() * zoom_fac );
+            }else {
+                newScale.setX( Canvas.getScaleX() / zoom_fac );
+                newScale.setY( Canvas.getScaleY() / zoom_fac );
+            }
+
+
+            Canvas.getTransforms().add(newScale);
+
+            event.consume();
+        });
+
+    }
+    private class Delta { double x, y; }
+    public class SceneGestures {
+
+        public EventHandler<ScrollEvent> getOnScrollEventHandler() {
+            return onScrollEventHandler;
+        }
+
+
+        private EventHandler<ScrollEvent> onScrollEventHandler = new EventHandler<ScrollEvent>() {
+
+            @Override
+            public void handle(ScrollEvent event) {
+
+                /*
+                System.out.println(event.getX());
+                double test = (event.getX() +event.getY())/2;
+                size.setValue(test);
+            */
+            }
+        };
+
+
+
+    }
+    public void onScrollEventHandler(ScrollEvent scrollEvent) {
+/*
+        if (scrollEvent.getDeltaY() > 0){
+            System.out.println("inn");
+        }
+        else System.out.println("ut");
+
+
+        System.out.println(scrollEvent.getX());
+        System.out.println(scrollEvent.getY());
+        */
+    }
 
 }

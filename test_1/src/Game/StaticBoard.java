@@ -2,25 +2,26 @@ package Game;
 
 public class StaticBoard extends Board{
 
-    public int Rader;
-    public int Kolonner;
+    public int Column;
+    public int Row;
 
     public byte[][] board;
 
-    public int getRader() {
-        return Rader;
+
+    public int getRow() {
+        return Row;
     }
 
-    public void setRader(int rader) {
-        Rader = rader;
+    public void setRow(int row) {
+        this.Row = row;
     }
 
-    public int getKolonner() {
-        return Kolonner;
+    public int getColumn() {
+        return Column;
     }
 
-    public void setKolonner(int kolonner) {
-        Kolonner = kolonner;
+    public void setColumn(int column) {
+        this.Column = column;
     }
 
     public byte[][] getBoard() {
