@@ -20,3 +20,6 @@ programet kjører hele tiden, men nextgen() kjører bare når aktiv.
 
 
 hente fil fra nett. URL
+
+
+zoom ut setter tegne størelse for å enklere se hva som blir tegnet. er uklart nå.
