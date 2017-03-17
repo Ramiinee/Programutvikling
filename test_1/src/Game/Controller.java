@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 
 import Game.Board;
 import Game.StaticBoard;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ public class Controller implements Initializable {
     // FXML
     public Button Stop;
     public Button Start;
+    public Button Dynstart;
     public Button reset;
     public Button Load;
     public Button Random;
@@ -50,15 +53,18 @@ public class Controller implements Initializable {
     public boolean loaded = false;
 
     public StaticBoard staticBoard = new StaticBoard();
-    public BoardMaker boardMaker = new BoardMaker(staticBoard);
-    public FileConverter fileConverter = new FileConverter();
     public DynamicBoard dynamicBoard = new DynamicBoard();
+    public BoardMaker boardMaker = new BoardMaker(staticBoard);
+    public DynamicBoardMaker dynboardMaker = new DynamicBoardMaker(dynamicBoard);
+    public FileConverter fileConverter = new FileConverter();
+    
 
     //Board
 
     public byte[][] board;
     public byte[][] nextGeneration;
-
+    ArrayList<List<Byte>> arraylist = new ArrayList<>();
+    ArrayList<List<Byte>> dynnextgen = new ArrayList<>();
 
     private double timing = 120;
     private double StartTimer = timing;
@@ -105,6 +111,7 @@ public class Controller implements Initializable {
             if (playCount == 0) {
                 board = staticBoard.getBoard();
                 Load.setDisable(true);
+                
                 Random.setDisable(true);
                 //make_board.randomPattern();
 
@@ -116,6 +123,7 @@ public class Controller implements Initializable {
             playCount++;
             Start.setDisable(true);
             size.setDisable(false);
+            Dynstart.setDisable(true);
             Stop.setText("Stop");
             Stop.setTooltip(new Tooltip("Stop"));
         }
@@ -125,9 +133,11 @@ public class Controller implements Initializable {
 
     public void stopButton(){
         Start.setDisable(false);
+        Dynstart.setDisable(false);
         //size.setDisable(true);
         if(stopCount == 0){
             timeline.stop();
+            Dyntimeline.stop();
             stopCount++;
             Stop.setText("Clear");
             Stop.setTooltip(new Tooltip("Clear"));
@@ -136,6 +146,7 @@ public class Controller implements Initializable {
         else if( stopCount==1){
             remove_Array();
             timeline.stop();
+            Dyntimeline.stop();
             playCount = 0;
             runCount = 0;
             Stop.setText("Stop");
@@ -166,7 +177,7 @@ public class Controller implements Initializable {
         timer.setValue(1);
         colorPicker.setValue(Color.BLACK);
     }
-
+   
     private void draw_Array(){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
@@ -204,6 +215,7 @@ public class Controller implements Initializable {
         }
         board = nextGeneration;
     }
+    
     private int countNeighbor(int i, int j){
         int neighbors = 0;
         if (i != 0 && j !=0){
@@ -248,6 +260,7 @@ public class Controller implements Initializable {
                     neighbors++;
             }
         } catch (IndexOutOfBoundsException  e) {
+            System.out.println("indexoutofbound når de når nederst i høyre hjørnet. ");
         }
         return neighbors;
     }
@@ -284,6 +297,7 @@ public class Controller implements Initializable {
 
     public void load() {
         boardMaker.makeClearBoard();
+        dynboardMaker.makeClearBoard();
         board = staticBoard.getBoard();
         draw_Array();
         gc.clearRect(0,0,600,600);
@@ -292,7 +306,7 @@ public class Controller implements Initializable {
         loaded = fileConverter.FromFileToBoard(staticBoard,boardMaker);
         if (loaded){
             board = staticBoard.getBoard();
-
+            
             draw_Array();
 
             Start.setDisable(false);
@@ -305,11 +319,13 @@ public class Controller implements Initializable {
 
     public void RandomBoard() {
         boardMaker.makeClearBoard();
+        dynboardMaker.makeClearBoard();
         board = staticBoard.getBoard();
         draw_Array();
         stopCount = 0;
         Stop.setDisable(true);
         boardMaker.randomPattern(staticBoard);
+        dynboardMaker.randomPattern(dynamicBoard);
         board = staticBoard.getBoard();
         draw_Array();
         loaded = true;
@@ -319,20 +335,21 @@ public class Controller implements Initializable {
     }
     public void showClearBoard(){
 
-        boardMaker.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
+        boardMaker.makeClearBoard();
+        dynboardMaker.makeClearBoard();// vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
         board = staticBoard.getBoard();
         draw_Array();
     }
 
     
     
-    // isrjgisjsorigjsorigjsogijosrigjosrigjosigjosrigjsrogijsroijoigjsosigjosgijrso
+    // isrjgisjsorigjsorigjsogijosrigjosrigjosigjosrigjsrogijsroijoigjsosigjosgijrsoz
    
      private Timeline Dyntimeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,1050,700);
 
-        nextGeneration();
+        DynNextGen();
         draw_Array();
 
         timerlistener();
@@ -350,7 +367,7 @@ public class Controller implements Initializable {
 public void DynStartButton(){
         if (loaded) {
             if (playCount == 0) {
-                board = staticBoard.getBoard();
+                arraylist = dynamicBoard.getarrayList();
                 Load.setDisable(true);
                 Random.setDisable(true);
                 //make_board.randomPattern();
@@ -367,4 +384,78 @@ public void DynStartButton(){
             Stop.setTooltip(new Tooltip("Stop"));
         }
     }
+        private void DynNextGen(){
+            
+        dynnextgen = new ArrayList<List<Byte>>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length ; j++) {
+                int neighbors = 0;
+                
+                Byte nu = 0;
+                Byte en = 1;
+                Byte same = board[i][j];
+                if(neighbors <  2) {
+                   dynnextgen.get(i).set(j, nu);
+                }
+                else if (neighbors >  3) {
+                   dynnextgen.get(i).set(j, nu); 
+                }
+                else if (neighbors == 3) {
+                   dynnextgen.get(i).set(j, en);
+                }
+                else {
+                   dynnextgen.get(i).set(j, same);
+                }
+
+            }
+        }
+        board = nextGeneration;
+    }
+        private int countfordynamic(int i, int j){
+        int neighbors = 0;
+        
+
+        
+        
+        for( int y = 0; y < board.length; y++){
+            arraylist.add(new ArrayList<Byte>());
+            for(int u = 0; u < board[y].length;  u++){
+                
+            Byte tall = board[y][u];
+            arraylist.get(y).set(u, tall);         
+        }
+
+        }
+        
+        
+        
+            if (arraylist.get(i).get(j) == 1)
+                neighbors++;
+        
+            else if (arraylist.get(i).get(j-1) == 1)
+                neighbors++;
+        
+            else if (arraylist.get(i+1).get(j-1) == 1)
+                    neighbors++;
+
+            else if (arraylist.get(i-1).get(j)   == 1)
+                neighbors++;
+
+            else if (arraylist.get(i+1).get(j)   == 1)
+                    neighbors++;
+
+            else if (arraylist.get(i-1).get(j+1) == 1)
+                neighbors++;
+ 
+            else if (arraylist.get(i).get(j+1) == 1)
+                neighbors++;
+   
+            else if(arraylist.get(i+1).get(j+1) == 1)
+                    neighbors++;
+           
+
+        return neighbors;
+    }
+
+
 }
