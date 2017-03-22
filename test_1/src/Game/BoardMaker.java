@@ -29,14 +29,14 @@ public class BoardMaker {
 
         Random r = new Random();
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length ; j++) {
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length ; row++) {
                 int a = r.nextInt(2);
 
                 if ( a== 0){
-                    board[i][j] = 1;
+                    board[col][row] = 1;
                 }else {
-                    board[i][j] = 0;
+                    board[col][row] = 0;
                 }
 
             }
@@ -47,14 +47,14 @@ public class BoardMaker {
 
     public byte[][] boardConvertedTXT (byte[][] board,byte[][] coverted){
 
-        for (int i = 0; i <board.length ; i++) {
-            for (int j = 0; j <board[i].length ; j++) {
-                board[i][j] = coverted[i][j];
-                if (board[i][j] == 48){
-                    board[i][j] = 0;
+        for (int col = 0; col <board.length ; col++) {
+            for (int row = 0; row <board[col].length ; row++) {
+                board[col][row] = coverted[col][row];
+                if (board[col][row] == 48){
+                    board[col][row] = 0;
                 }
                 else {
-                    board[i][j]= 1;
+                    board[col][row]= 1;
                 }
             }
         }
@@ -91,27 +91,27 @@ public class BoardMaker {
                 System.out.println(e + " Convertering fra 1D til 2D gikk ikke som planlagt");
             }
 
-            for (int i = 0; i < converted.length ; i++) {
-                for (int j = 0; j < converted[i].length ; j++) {
-                    if (converted[i][j] == 48){
-                        converted[i][j] = 0;
+            for (int col = 0; col < converted.length ; col++) {
+                for (int Row = 0; Row < converted[col].length ; Row++) {
+                    if (converted[col][Row] == 48){
+                        converted[col][Row] = 0;
                     }
                     else {
-                        converted[i][j]= 1;
+                        converted[col][Row]= 1;
                     }
 
-                    board[i+50][j+50] = converted[i][j];
+                    board[col+50][Row+50] = converted[col][Row];
 
                 }
 
             }
 
-            for (int i = 0; i < converted.length; i++) {
-                for (int j = 0; j < converted[i].length; j++) {
-                    if (converted[j][i] == 0){
+            for (int col = 0; col < converted.length; col++) {
+                for (int Row = 0; Row < converted[col].length; Row++) {
+                    if (converted[Row][col] == 0){
                         System.out.print("-");
                     }
-                    else System.out.print(converted[j][i]);
+                    else System.out.print(converted[Row][col]);
                 }
                 System.out.println();
             }
@@ -183,11 +183,11 @@ public class BoardMaker {
     public void Convert1DTo2D(int rows, int cols){
         converted = new byte[rows][cols];
 
-        for (int i = 0; i < converted.length; i++) {
-            for (int j = 0; j < converted[i].length; j++) {
+        for (int col = 0; col < converted.length; col++) {
+            for (int row = 0; row < converted[col].length; row++) {
                 //System.out.println("index" + ((i * arr.length) + j));
-                converted[i][j] = byteArray[(i * converted[i].length) + j];
-                System.out.print("  " + converted[i][j]);
+                converted[col][row] = byteArray[(col * converted[col].length) + row];
+                System.out.print("  " + converted[col][row]);
 
             }
             System.out.println();

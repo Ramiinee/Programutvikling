@@ -21,7 +21,7 @@ public class FileConverter {
         staticBoard = staBoard;
         boardMaker = boaker;
         rleFile = false;
-        boolean ruleBoard = fileChooser();
+        boolean ruleBoard = readGameBoard();
         if (ruleBoard) {
             if (rleFile){
                 System.out.println("Rle file = " + rleFile);
@@ -36,7 +36,7 @@ public class FileConverter {
         else return false;
     }
 
-    public boolean fileChooser(){
+    public boolean readGameBoard(){
 
         File selectedFile = null;
         try {

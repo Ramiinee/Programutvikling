@@ -175,68 +175,68 @@ public class Controller implements Initializable {
 
     private void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length ; j++) {
-                int neighbors = countNeighbor(i,j);
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length ; row++) {
+                int neighbors = countNeighbor(col,row);
                 if(neighbors <  2) {
-                    nextGeneration[i][j] = 0;
+                    nextGeneration[col][row] = 0;
                 }
                 else if (neighbors >  3) {
-                    nextGeneration[i][j] = 0;
+                    nextGeneration[col][row] = 0;
                 }
                 else if (neighbors == 3) {
-                    nextGeneration[i][j] = 1;
+                    nextGeneration[col][row] = 1;
                 }
                 else {
-                    nextGeneration[i][j] = board[i][j];
+                    nextGeneration[col][row] = board[col][row];
                 }
 
             }
         }
         board = nextGeneration;
     }
-    private int countNeighbor(int i, int j){
+    private int countNeighbor(int col, int row){
         int neighbors = 0;
-        if (i != 0 && j !=0){
-            if (board[i-1][j-1] == 1)
+        if (col != 0 && row !=0){
+            if (board[col-1][row-1] == 1)
                 neighbors++;
         }
-        if (j != 0){
-            if (board[i][j-1] == 1)
+        if (row != 0){
+            if (board[col][row-1] == 1)
                 neighbors++;
         }
         try {
-            if (i != board[i].length -1 && j != 0 ){
-                if (board[i+1][j-1] == 1)
+            if (col != board[col].length -1 && row != 0 ){
+                if (board[col+1][row-1] == 1)
                     neighbors++;
             }
         }catch (IndexOutOfBoundsException  e){
 
 
         }
-        if (i != 0){
-            if (board[i-1][j]   == 1)
+        if (col != 0){
+            if (board[col-1][row]   == 1)
                 neighbors++;
         }
         try {
-            if (i != board[i].length -1){
-                if (board[i+1][j]   == 1)
+            if (col != board[col].length -1){
+                if (board[col+1][row]   == 1)
                     neighbors++;
             }
         }catch (Exception e) {
 
         }
-        if(i != 0 && j != board[j].length -1){
-            if (board[i-1][j+1] == 1)
+        if(col != 0 && row != board[row].length -1){
+            if (board[col-1][row+1] == 1)
                 neighbors++;
         }
-        if(j != board[j].length -1){
-            if (board[i][j+1] == 1)
+        if(row != board[row].length -1){
+            if (board[col][row+1] == 1)
                 neighbors++;
         }
         try {
-            if(i != board[i].length - 1 && j != board[j].length -1){
-                if (board[i+1][j+1] == 1)
+            if(col != board[col].length - 1 && row != board[row].length -1){
+                if (board[col+1][row+1] == 1)
                     neighbors++;
             }
         } catch (IndexOutOfBoundsException  e) {
@@ -246,29 +246,29 @@ public class Controller implements Initializable {
 
     @FXML private void remove_Array() {
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length ; j++) {
-                draw_ned( i , j, Color.WHITE);
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length ; row++) {
+                draw_ned(col , row, Color.WHITE);
             }
         }
     }
 
-    private void draw( int x, int y, Color c) {
+    private void draw( int col, int row, Color c) {
         gc = Canvas.getGraphicsContext2D();
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
-        gc.fillRect(x* (size.getValue()/10) , y*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
+        gc.fillRect(col* (size.getValue()/10) , row*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
         gc.setFill(c);
-        gc.fillRect((x * (size.getValue()/10))+1 , (y  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
+        gc.fillRect((col * (size.getValue()/10))+1 , (row  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
 
 
     }
-    private void draw_ned( int x, int y, Color c) {
+    private void draw_ned( int col, int row, Color c) {
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
-        gc.fillRect(y* (size.getValue()/20) , x*(size.getValue()/20), ((size.getValue()/20)), (size.getValue()/20));
+        gc.fillRect(row* (size.getValue()/20) , col*(size.getValue()/20), ((size.getValue()/20)), (size.getValue()/20));
         gc.setFill(c);
-        gc.fillRect((y * (size.getValue()/20))+1 , (x  * (size.getValue()/20))+1, ((size.getValue()/20) -2), (size.getValue()/20)-2);
+        gc.fillRect((row * (size.getValue()/20))+1 , (col  * (size.getValue()/20))+1, ((size.getValue()/20) -2), (size.getValue()/20)-2);
 
 
     }
