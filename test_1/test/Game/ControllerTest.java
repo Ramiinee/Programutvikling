@@ -7,8 +7,11 @@ package Game;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.ScrollEvent;
+import javafx.util.Duration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,22 +27,7 @@ public class ControllerTest {
     
     public ControllerTest() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+
 
     //tester om next generation funker som den skal. 
     @Test
@@ -57,6 +45,26 @@ public class ControllerTest {
         gol.nextGeneration();
         org.junit.Assert.assertEquals(gol.toString(),"0010001000100000");
 
+    }
+    //om isAlive teller riktig ( denne funker ikke enda)
+    /*   @Test
+    public void testisAlive(){
+    byte[][] board = {
+    {0,0,0,0,0},
+    {0,0,1,1,0},
+    {0,1,1,0,0},
+    {0,0,1,0,0}
+    };
+    Controller gol = new Controller();
+    gol.setBoard(board);
+    gol.nextGeneration();
+    gol.draw_Array();
+    org.junit.Assert.assertEquals(6, gol.getAlivecount());
+    }
+    */
+    @Test
+    public void testLoad(){
+        
     }
    
 }

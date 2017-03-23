@@ -112,7 +112,10 @@ public class Controller implements Initializable {
     }
 
  public void setBoard(byte[][] gameBoard){
-    board = gameBoard; // vet ikke om det var dette han mente. 
+    board = gameBoard;  
+ }
+ public int getAlivecount(){
+     return aliveCount;
  }
 
  //----------------------------------------
@@ -179,7 +182,7 @@ public class Controller implements Initializable {
 
 
 
-    private void draw_Array(){
+    public void draw_Array(){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
                 if (board[i][j] == 1){
