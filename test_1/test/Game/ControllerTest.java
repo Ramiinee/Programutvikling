@@ -46,22 +46,7 @@ public class ControllerTest {
         org.junit.Assert.assertEquals(gol.toString(),"0010001000100000");
 
     }
-    //om isAlive teller riktig ( denne funker ikke enda)
-    /*   @Test
-    public void testisAlive(){
-    byte[][] board = {
-    {0,0,0,0,0},
-    {0,0,1,1,0},
-    {0,1,1,0,0},
-    {0,0,1,0,0}
-    };
-    Controller gol = new Controller();
-    gol.setBoard(board);
-    gol.nextGeneration();
-    gol.draw_Array();
-    org.junit.Assert.assertEquals(6, gol.getAlivecount());
-    }
-    */
+
     @Test
     public void testLoad(){
         
