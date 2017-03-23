@@ -41,21 +41,16 @@ public class ControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of timerlistener method, of class Controller.
-     */
-    @Test
+    /* @Test
     public void testTimerlistener() {
-        System.out.println("timerlistener");
-        Controller instance = new Controller();
-        instance.timerlistener();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("det ble en fail. ");
+    System.out.println("timerlistener");
+    Controller instance = new Controller();
+    instance.timerlistener();
+    // TODO review the generated test code and remove the default call to fail.
+    fail("det ble en fail. ");
     }
+    
 
-    /**
-     * Test of startButton method, of class Controller.
-     */
     @Test
     public void testStartButton() {
         System.out.println("startButton");
@@ -64,10 +59,8 @@ public class ControllerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("vet egentlig ikke hva jeg skal skrive her enda, men fail");
     }
+    
 
-    /**
-     * Test of stopButton method, of class Controller.
-     */
     @Test
     public void testStopButton() {
         System.out.println("stopButton");
@@ -77,9 +70,6 @@ public class ControllerTest {
         fail("noe er galt");
     }
 
-    /**
-     * Test of load method, of class Controller.
-     */
     @Test
     public void testLoad() {
         System.out.println("load");
@@ -89,9 +79,6 @@ public class ControllerTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of RandomBoard method, of class Controller.
-     */
     @Test
     public void testRandomBoard() {
         System.out.println("RandomBoard");
@@ -101,9 +88,6 @@ public class ControllerTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of showClearBoard method, of class Controller.
-     */
     @Test
     public void testShowClearBoard() {
         System.out.println("showClearBoard");
@@ -112,10 +96,8 @@ public class ControllerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("vet ikke om testen funker");
     }
+    
 
-    /**
-     * Test of getCanvas method, of class Controller.
-     */
     @Test
     public void testGetCanvas() {
         System.out.println("getCanvas");
@@ -137,10 +119,8 @@ public class ControllerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("what am i doing with my life");
     }
+    
 
-    /**
-     * Test of resetSlider method, of class Controller.
-     */
     @Test
     public void testResetSlider() {
         System.out.println("resetSlider");
@@ -149,43 +129,36 @@ public class ControllerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("ugh");
     }
+    
 
-    /**
-     * Test of initialize method, of class Controller.
-     */
-    
+    */
     @Test
-    public void countNeighboursTest(){
-        System.out.print("countneighbors");
-        Controller instance = new Controller();
-        
-        
+    public void testnextgeneration(){
+        byte[][] board = {
+            {0,0,0,0},
+            {0,1,1,0},
+            {0,1,1,0},
+            {0,0,0,0}   
+        };
+        Controller gol = new Controller();
+        gol.setBoard(board);
+        gol.nextGeneration();
+        org.junit.Assert.assertEquals(gol.toString(), "0000011001100000");
     }
     
-    
-    @Test
-    public void toStringtest(){
-        System.out.print("toString");
-        Controller instance = new Controller();
-        int alive = 1;
-        int dead = 0;
-        
-    }
-    
-    @Test
+    /*@Test
     public void testInitialize() {
-        System.out.println("initialize");
-        URL location = null;
-        ResourceBundle resources = null;
-        Controller instance = new Controller();
-        instance.initialize(location, resources);
-        // TODO review the generated test code and remove the default call to fail.
-        fail(" =^.^= fail");
+    System.out.println("initialize");
+    URL location = null;
+    ResourceBundle resources = null;
+    Controller instance = new Controller();
+    instance.initialize(location, resources);
+    // TODO review the generated test code and remove the default call to fail.
+    fail(" =^.^= fail");
     }
-
-    /**
-     * Test of onScrollEventHandler method, of class Controller.
-     */
+    
+    Test of onScrollEventHandler method, of class Controller.
+    
     @Test
     public void testOnScrollEventHandler() {
         System.out.println("onScrollEventHandler");
@@ -195,5 +168,5 @@ public class ControllerTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("ahhah fail");
     }
-    
+    */
 }

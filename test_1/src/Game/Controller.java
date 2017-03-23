@@ -93,10 +93,31 @@ public class Controller implements Initializable {
             timeline.setRate(timing);
         });
     }
+    
+    //----for testing--------------------
+    
+      @Override
+    public String toString(){
+        
+     String RowMajor = new String();
 
+        for (int a = 0; a < board.length; a++) {
+       for (int b = 0; b < board[a].length; b++) {
+          
+           RowMajor += board[a][b];
+       }
+        }
 
+        return RowMajor;
+    }
 
+ public void setBoard(byte[][] gameBoard){
+    board = gameBoard; // vet ikke om det var dette han mente. 
+ }
 
+ //----------------------------------------
+ 
+ 
     public void startButton(){
         if (loaded) {
             if (playCount == 0) {
@@ -173,7 +194,7 @@ public class Controller implements Initializable {
         }
     }
 
-    private void nextGeneration(){
+    public void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
         for (int col = 0; col < board.length; col++) {
             for (int row = 0; row < board[col].length ; row++) {
