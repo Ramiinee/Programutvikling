@@ -46,10 +46,5 @@ public class ControllerTest {
         org.junit.Assert.assertEquals(gol.toString(),"0010001000100000");
 
     }
-
-    @Test
-    public void testLoad(){
-        
-    }
    
 }
