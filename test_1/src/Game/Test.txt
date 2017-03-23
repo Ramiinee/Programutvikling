@@ -23,3 +23,5 @@ hente fil fra nett. URL
 
 
 zoom ut setter tegne størelse for å enklere se hva som blir tegnet. er uklart nå.
+
+endre regler underveis
