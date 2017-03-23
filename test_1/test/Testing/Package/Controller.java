@@ -35,21 +35,7 @@ public class Controller implements Initializable{
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(false);
     }
-    @Override
-    public String toString(){
-        
-     String RowMajor = new String();
-
-        for (a = 0; a < board.length; a++) {
-       for (b = 0; b < board[a].length; b++) {
-          
-           RowMajor += board[a][b];
-       }
-        }
-
-        return RowMajor;
-    }
-
+  
     private int[][] board = new int[kolonner][rader];
    
     public void startButton(){
