@@ -135,15 +135,15 @@ public class ControllerTest {
     @Test
     public void testnextgeneration(){
         byte[][] board = {
-            {0,0,0,0},
-            {0,1,1,0},
-            {0,1,1,0},
+            {0,0,1,0},
+            {0,0,1,0},
+            {0,0,1,0},
             {0,0,0,0}   
         };
         Controller gol = new Controller();
         gol.setBoard(board);
         gol.nextGeneration();
-        org.junit.Assert.assertEquals(gol.toString(), "0000011001100000");
+        org.junit.Assert.assertEquals(gol.toString(), "0000011100000000");
     }
     
     /*@Test
