@@ -3,8 +3,7 @@ package Game;
 import Game.StaticBoard;
 
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 public class BoardMaker {
     public StaticBoard staticBoard;
@@ -32,7 +31,6 @@ public class BoardMaker {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
                 int a = r.nextInt(2);
-
                 if ( a== 0){
                     board[i][j] = 1;
                 }else {
@@ -66,23 +64,23 @@ public class BoardMaker {
         int row = staticBoard.getRow();
         System.out.println(column + " | " + row);
         try {
-            String s = decode(everything);
-            String start = s;
-            s = s.replaceAll("b","0");
-            s = s.replaceAll("o","1");
 
-            if (s.length() != (column*row)){
-                int i;
-                for (i = 0; i <((column*row)-(start.length())) ; i++) {
-                    s = s + "0";
+            String[] dd = everything.split(Pattern.quote("$"));
 
+            String k = "";
+            for (int i = 0; i <dd.length ; i++) {
+                dd[i] = decode(dd[i]);
+                if (dd[i].length() < staticBoard.getRow()){
+                    for (int j = 0; j <= staticBoard.getRow() - dd[i].length(); j++) {
+                        dd[i] += "b";
+                    }
                 }
-                System.out.println(i + " 0 lagt til");
-                System.out.println(s);
-
+                k += dd[i];
             }
 
-            byteArray = s.getBytes();
+            k = k.replaceAll("b","0");
+            k = k.replaceAll("o","1");
+            byteArray = k.getBytes();
 
 
             try {
@@ -150,8 +148,7 @@ public class BoardMaker {
 
         }
 
-        System.out.println(dest.toString());
-        System.out.println(dest.length());
+
         return dest.toString();
     }
 

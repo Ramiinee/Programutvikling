@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class FileConverter {
     public BoardMaker boardMaker;
     public StaticBoard staticBoard;
@@ -102,13 +103,45 @@ public class FileConverter {
 
                     line = br.readLine();
                 }
+                String ev =sb.toString();
+                System.out.println(ev);
+                String[] ss = ev.split(Pattern.quote("$"));
 
-                everything  = sb.toString();
-                test = everything.split(Pattern.quote("$"));
+                StringBuilder stringBuilder = new StringBuilder();
 
-                for (int i = 0; i <test.length ; i++) {
-                    System.out.println(test[i] + " | " + i);
+
+
+                for (int i = 0; i < ss.length; i++) {
+                    String c = ss[i].substring(ss[i].length() -1);
+                    char[] cc = c.toCharArray();
+
+                    if (ss[i].endsWith("!")){
+                        ss[i] = ss[i].replaceAll("!","");
+                        System.out.println(ss[i] + " | !");
+                        stringBuilder.append(ss[i]);
+
+                    }else if (Character.isDigit(cc[0])){
+                        int a = Integer.parseInt(c);
+                        System.out.println(ss[i] +  " | number");
+                        ss[i] = ss[i].substring(0,ss[i].length()-1);
+                        stringBuilder.append(ss[i]+ "$");
+                        for (int j = 0; j <a ; j++) {
+                            String e = "";
+                            for (int k = 0; k < staticBoard.getRow(); k++) {
+                                e += "b";
+                            }
+                            stringBuilder.append(e+"$");
+                        }
+
+                    }
+                    else {
+
+                        stringBuilder.append(ss[i] + "$");
+                    }
                 }
+                everything = stringBuilder.toString();
+
+
 
             } catch (IOException e) {
                 System.out.println(e + " | bufferReader");
