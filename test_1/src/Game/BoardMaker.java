@@ -1,28 +1,47 @@
 package Game;
 
-import Game.StaticBoard;
+
 
 import java.util.Random;
 import java.util.regex.*;
 
+/**
+ *
+ * @author Joachim-Privat
+ */
 public class BoardMaker {
+
+    /**
+     *
+     */
     public StaticBoard staticBoard;
     private byte[] byteArray;
     private byte[][] board;
     private byte[][] converted;
     private byte[][] clearBoard;
-    private int testSize = 200;
+    private int testSize = 121;
 
+    /**
+     *
+     * @param staticBoard
+     */
     public BoardMaker(StaticBoard staticBoard) {
         this.staticBoard = staticBoard;
     }
 
+    /**
+     * Her generer vi ett klart brett hvor alle verider er 0.
+     */
     public void makeClearBoard(){
         clearBoard= new byte[testSize][testSize];
         staticBoard.setBoard(clearBoard);
     }
-    public void randomPattern(StaticBoard staBoard){
-        staticBoard = staBoard;
+
+    /**
+     * Her genrerer vi ett random brett
+     */
+    public void randomPattern(){
+
         board = new byte[testSize][testSize];
 
 
@@ -43,11 +62,18 @@ public class BoardMaker {
 
     }
 
-    public byte[][] boardConvertedTXT (byte[][] board,byte[][] coverted){
+    /**
+     * Her setter vi converted til å bli board.
+     * @param board
+     * @param converted
+     * @return
+     * ett konvertert brett
+     */
+    public byte[][] boardConvertedTXT (byte[][] board,byte[][] converted){
 
         for (int i = 0; i <board.length ; i++) {
             for (int j = 0; j <board[i].length ; j++) {
-                board[i][j] = coverted[i][j];
+                board[i][j] = converted[i][j];
                 if (board[i][j] == 48){
                     board[i][j] = 0;
                 }
@@ -58,6 +84,13 @@ public class BoardMaker {
         }
         return board;
     }
+
+    /**
+     * Her blir .rle fila omgjort til ett board som kan vises.
+     * .rle fila er komposert av o,b og $, hvor o er 1 og b er 0. $ er ny linje.
+     * vi gjør om den komprimerte stringen (.rle) om til 0 og 1 og gjennom decode så får vi decomprimert den.
+     * @param everything
+     */
     public void InsertRleIntoBoard(  String everything){
         board = staticBoard.getBoard();
         int column = staticBoard.getColumn();
@@ -121,6 +154,12 @@ public class BoardMaker {
         }
     }
 
+    /**
+     * Her blir en komprimert string, decomprimert med satte regler om at bokstaven etter ett tall blir lagt på ant. ganger det tallet er. 3o = ooo.
+     * Er det ikke noe tall forran så blir det bare lagret bokstaven selv.
+     * @param source
+     * @return
+     */
     public String decode(String source) {
 
         StringBuffer dest = new StringBuffer();
@@ -153,6 +192,13 @@ public class BoardMaker {
     }
 
 
+    /**
+     * Her får vi inn en .txt fil og konverterer den til ett brett.
+     * Vi sjkeker også om brettet er kvadratisk for å få matten til å gå.
+     * @param everything
+     * @param staBoard
+     * @return
+     */
     public boolean FileToBoardSquare(String everything, StaticBoard staBoard){
         staticBoard = staBoard;
         byteArray = everything.getBytes();
@@ -177,6 +223,11 @@ public class BoardMaker {
     }
 
 
+    /**
+     * Her konverterer vi ett 1D brett til ett 2D brett, med hjelp av ant. kolloner og rader.
+     * @param rows
+     * @param cols
+     */
     public void Convert1DTo2D(int rows, int cols){
         converted = new byte[rows][cols];
 

@@ -6,46 +6,85 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-import Game.StaticBoard;
+
 import javafx.animation.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
-
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ *
+ * @author Joachim-Privat
+ */
 public class Controller implements Initializable {
 
     // FXML
+
+    /**
+     *
+     */
     public Button Stop;
+
+    /**
+     *
+     */
     public Button Start;
+
+    /**
+     *
+     */
     public Button reset;
+
+    /**
+     *
+     */
     public Button Load;
+
+    /**
+     *
+     */
     public Button Random;
+
+    /**
+     *
+     */
     public ColorPicker colorPicker;
+
+    /**
+     *
+     */
     public BorderPane BoarderPane;
+
+    /**
+     *
+     */
     public Slider size;
+
+    /**
+     *
+     */
     public Slider timer;
+
+    /**
+     *
+     */
     public Canvas Canvas;
 
-
+    /**
+     *
+     */
     public Stage stage;
+
+    /**
+     *
+     */
     public ScrollPane scrollpane;
 
 
@@ -58,21 +97,50 @@ public class Controller implements Initializable {
     private int runCount = 1;
     private int aliveCount = 0;
 
+    /**
+     *
+     */
     public boolean loaded = false;
 
+    /**
+     *
+     */
     public StaticBoard staticBoard;
+
+    /**
+     *
+     */
     public BoardMaker boardMaker;
+
+    /**
+     *
+     */
     public FileConverter fileConverter;
+
+    /**
+     *
+     */
     public Mouse mouse;
 
     //Board
 
+    /**
+     *
+     */
+
     public byte[][] board;
+
+    /**
+     *
+     */
     public byte[][] nextGeneration;
 
 
     private double timing = 120;
     private double StartTimer = timing;
+    /**
+     * Her styres hvert frame, og hva som skal skje i det framet.
+     */
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,2000,2000);
@@ -88,6 +156,9 @@ public class Controller implements Initializable {
     ));
 
 
+    /**
+     * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
+     */
     public void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
             timing = newtime.intValue();
@@ -113,8 +184,11 @@ public class Controller implements Initializable {
     }
 
 
-
-
+    /**
+     * Når start knappen i guiet blir trykket på kaller den på denne funksjonen.
+     * Den setter i gang videre prosesser som henter board og setter i gang animasjonen.
+     * Start kan ikke kjørers med mindre man har vært innom load eller randomboard.
+     */
     public void startButton(){
         if (loaded) {
             if (playCount == 0) {
@@ -136,6 +210,10 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Når stopp knappen i guiet blir trykket på kaller den på denne funksjonen.
+     * Den stopper animasjonen og setter knappen klar for å cleare canvaset. Ved trykk 2 så cleres brettet.
+     */
     public void stopButton(){
         Start.setDisable(false);
         //size.setDisable(true);
@@ -175,7 +253,11 @@ public class Controller implements Initializable {
     }
 
 
-
+    /**
+     * Draw array kjører gjennom brettet og bestemmer om det skal tegnes den valgte fargen eller om det skal tegnes hvit.
+     * den kaller på draw_ned eller draw, for visning på skjerm.
+     * Samtidig så setter den antall celler som er i livet i hver generation.
+     */
     private void draw_Array(){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
@@ -191,6 +273,10 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * NextGeneration styrer hvordan neste genereasjon skal se ut. Med hjelp av countNeighbor så settes neste generasjons
+     * brett til rett verdi.
+     */
     private void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
         for (int col = 0; col < board.length; col++) {
@@ -213,6 +299,14 @@ public class Controller implements Initializable {
         }
         board = nextGeneration;
     }
+
+    /**
+     * countNeighbor avgjør for hver enkelt celle om den skal få leve eller ikke. Reglene styres her inne.
+     * @param col
+     * @param row
+     * row and col controll the position of the cell.
+     * @return amount of neighbors per cell
+     */
     private int countNeighbor(int col, int row){
         int neighbors = 0;
         if (col != 0 && row !=0){
@@ -262,6 +356,9 @@ public class Controller implements Initializable {
         return neighbors;
     }
 
+    /**
+     * Blir kalt på når boardet skal bli klart. Den kjører over alt og setter alle verdier til å være hvite.
+     */
     @FXML private void remove_Array() {
 
         for (int col = 0; col < board.length; col++) {
@@ -271,6 +368,12 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Draw får posisjonen til celle opp i mot resten og tegner den så proposjonalt ut på skjermen.
+     * @param col
+     * @param row
+     * @param c
+     */
     private void draw( int col, int row, Color c) {
         gc = Canvas.getGraphicsContext2D();
         gc.setFill(Color.web("E0E0E0"));
@@ -281,6 +384,13 @@ public class Controller implements Initializable {
 
 
     }
+
+    /**
+     * Draw får posisjonen til celle opp i mot resten og tegner den så proposjonalt ut på skjermen.
+     * @param col
+     * @param row
+     * @param c
+     */
     private void draw_ned( int col, int row, Color c) {
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
@@ -292,6 +402,10 @@ public class Controller implements Initializable {
     }
 
 
+    /**
+     * Load setter i gang en rekke andre funksjoner nedover linja, samt fler sjekker for å se at brettet blir lastet inn riktig.
+     * Her må alt før ha gått greit for at vi skal få klar beskjed til å kunne kjøre.
+     */
     public void load() {
         boardMaker.makeClearBoard();
         board = staticBoard.getBoard();
@@ -299,7 +413,7 @@ public class Controller implements Initializable {
         gc.clearRect(0,0,600,600);
         stopCount = 0;
         Stop.setDisable(true);
-        loaded = fileConverter.FromFileToBoard(staticBoard,boardMaker);
+        loaded = fileConverter.FromFileToBoard();
         if (loaded){
             board = staticBoard.getBoard();
 
@@ -313,6 +427,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * RandomBoard setter i gang flere funksjoner som generer ett random brett som så blir vist.
+     */
     public void RandomBoard() {
 
         boardMaker.makeClearBoard();
@@ -320,7 +437,7 @@ public class Controller implements Initializable {
         draw_Array();
         stopCount = 0;
         Stop.setDisable(true);
-        boardMaker.randomPattern(staticBoard);
+        boardMaker.randomPattern();
         board = staticBoard.getBoard();
         draw_Array();
         loaded = true;
@@ -328,6 +445,10 @@ public class Controller implements Initializable {
         System.out.println(board.length);
 
     }
+
+    /**
+     * Generer ett blankt brett for så å tegne det.
+     */
     public void showClearBoard(){
 
         boardMaker.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
@@ -335,10 +456,18 @@ public class Controller implements Initializable {
         draw_Array();
     }
 
+    /**
+     *
+     * @return
+     */
     public Canvas getCanvas() {
         return Canvas;
     }
-    public void resetSlider(){
+
+    /**
+     * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
+     */
+    public void reset(){
         size.setValue(100);
         timer.setValue(1);
         colorPicker.setValue(Color.BLACK);
@@ -354,12 +483,16 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Her blir objekter laget og regler for hvordan guiet skal oppføre seg strammet inn.
+     * Det setter også i gang listners og mouse input.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         staticBoard = new StaticBoard();
         boardMaker = new BoardMaker(staticBoard);
-        fileConverter = new FileConverter();
+        fileConverter = new FileConverter(staticBoard,boardMaker);
         gc = Canvas.getGraphicsContext2D();
 
         stage = Main.getPrimaryStage();
@@ -379,26 +512,33 @@ public class Controller implements Initializable {
         //SceneGestures sceneGestures = new SceneGestures();
         //scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
-        System.out.println(scrollpane.getHvalue());
-        System.out.println(scrollpane.getVvalue());
 
-        System.out.println(Canvas.getTransforms());
-
-        mouse = new Mouse(Canvas,size);
+        mouse = new Mouse(Canvas, staticBoard);
         mouse.scroll();
         listeners();
 
     }
 
+    /**
+     *
+     * @return
+     */
     public Slider getSize() {
         return size;
     }
 
+    /**
+     *
+     * @param size
+     */
     public void setSize(Slider size) {
         this.size = size;
     }
 
-
+    /**
+     *
+     * @param scrollEvent
+     */
     public void onScrollEventHandler(ScrollEvent scrollEvent) {
          /*
         public class SceneGestures {

@@ -1,6 +1,6 @@
 package Game;
 
-import Game.StaticBoard;
+
 import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
@@ -10,17 +10,41 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ *
+ * @author Joachim-Privat
+ */
 public class FileConverter {
+
+    /**
+     *
+     */
     public BoardMaker boardMaker;
+
+    /**
+     *
+     */
     public StaticBoard staticBoard;
     private boolean rleFile;
     private String everything;
     private String[] test;
 
-    public  boolean FromFileToBoard(StaticBoard staBoard, BoardMaker boaker) {
-        staticBoard = staBoard;
-        boardMaker = boaker;
+    /**
+     *
+     * @param staticBoard
+     * @param boardMaker
+     */
+    public FileConverter( StaticBoard staticBoard,BoardMaker boardMaker) {
+        this.boardMaker = boardMaker;
+        this.staticBoard = staticBoard;
+    }
+
+    /**
+     * FromFileToBoard henter inn fila gjennom filechooser, og sjekker om fila blir lastet inn. hvis ja så sjekker vi om fila er en txt fil eller om den er en rle fil.
+     * @return true/false
+     * Skulle alt gå feil så skal programmet returnerer false for at ikke flere funksjoner bakover skal kjøres.
+     */
+    public  boolean FromFileToBoard() {
         rleFile = false;
         boolean ruleBoard = fileChooser();
         if (ruleBoard) {
@@ -37,6 +61,12 @@ public class FileConverter {
         else return false;
     }
 
+    /**
+     * Her henter jeg inn fila og direkte fra mappa programmet ligger i. Her er det satt en begrensning om at du bare kan velge .rle og .txt filer.
+     * Videre så leser vi over fila og henter det vi er interisert i.
+     * Til slutt så blir det lagt til ekstra rader der det er nødvendig.
+     * @return
+     */
     public boolean fileChooser(){
 
         File selectedFile = null;
@@ -103,6 +133,9 @@ public class FileConverter {
 
                     line = br.readLine();
                 }
+
+                //everything = sb.toString();
+                //Dette under burde deles opp og bli kaldt på. evnt lagt inn i boardMaker. passer bedre der.
                 String ev =sb.toString();
                 System.out.println(ev);
                 String[] ss = ev.split(Pattern.quote("$"));
@@ -155,6 +188,12 @@ public class FileConverter {
         }
 
     }
+
+    /**
+     * Her sjekker vi om filtypen er .rle, hvis den er det bir det kjørt spesifikke funksjoner lengre bak.
+     * @param selectedFile
+     * @return
+     */
     public boolean isRleFile( File selectedFile ){
         String REGEX = "[a-zA-Z0-9]+.rle";
         Pattern p = Pattern.compile(REGEX);
