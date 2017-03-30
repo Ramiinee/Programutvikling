@@ -199,8 +199,8 @@ public class Controller implements Initializable {
 
     public void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 0; col < board.length; col++) {
-            for (int row = 0; row < board[col].length ; row++) {
+        for (int col = 1; col < board.length-1; col++) {
+            for (int row = 1; row < board[col].length -1 ; row++) {
                 int neighbors = countNeighbor(col,row);
                 if(neighbors <  2) {
                     nextGeneration[col][row] = 0;
@@ -221,50 +221,12 @@ public class Controller implements Initializable {
     }
     private int countNeighbor(int col, int row){
         int neighbors = 0;
-        if (col != 0 && row !=0){
-            if (board[col-1][row-1] == 1)
-                neighbors++;
-        }
-        if (row != 0){
-            if (board[col][row-1] == 1)
-                neighbors++;
-        }
-        try {
-            if (col != board[col].length -1 && row != 0 ){
-                if (board[col+1][row-1] == 1)
-                    neighbors++;
-            }
-        }catch (IndexOutOfBoundsException  e){
-
-
-        }
-        if (col != 0){
-            if (board[col-1][row]   == 1)
-                neighbors++;
-        }
-        try {
-            if (col != board[col].length -1){
-                if (board[col+1][row]   == 1)
-                    neighbors++;
-            }
-        }catch (Exception e) {
-
-        }
-        if(col != 0 && row != board[row].length -1){
-            if (board[col-1][row+1] == 1)
-                neighbors++;
-        }
-        if(row != board[row].length -1){
-            if (board[col][row+1] == 1)
-                neighbors++;
-        }
-        try {
-            if(col != board[col].length - 1 && row != board[row].length -1){
-                if (board[col+1][row+1] == 1)
-                    neighbors++;
-            }
-        } catch (IndexOutOfBoundsException  e) {
-        }
+        for (int i = -1; i <= 1; i++) {
+      for (int j = -1; j <= 1; j++) {
+        neighbors += board[col+i][row+j];
+      }
+    }
+        neighbors -= board[col][row];
         return neighbors;
     }
 
