@@ -6,17 +6,23 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-
+import Game.StaticBoard;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -26,68 +32,55 @@ import javafx.util.Duration;
 public class Controller implements Initializable {
 
     // FXML
-
     /**
      *
      */
     public Button Stop;
-
     /**
      *
      */
     public Button Start;
-
     /**
      *
      */
     public Button reset;
-
     /**
      *
      */
     public Button Load;
-
     /**
      *
      */
     public Button Random;
-
     /**
      *
      */
     public ColorPicker colorPicker;
-
     /**
      *
      */
     public BorderPane BoarderPane;
-
     /**
      *
      */
     public Slider size;
-
     /**
      *
      */
     public Slider timer;
-
     /**
      *
      */
     public Canvas Canvas;
-
     /**
      *
      */
     public Stage stage;
-
+    public Stage stage1;
     /**
      *
      */
     public ScrollPane scrollpane;
-
-
     private GraphicsContext gc;
 
 
@@ -97,11 +90,7 @@ public class Controller implements Initializable {
     private int runCount = 1;
     private int aliveCount = 0;
 
-    /**
-     *
-     */
     public boolean loaded = false;
-
     /**
      *
      */
@@ -128,12 +117,6 @@ public class Controller implements Initializable {
      *
      */
 
-    public byte[][] board;
-
-    /**
-     *
-     */
-    public byte[][] nextGeneration;
 
 
     private double timing = 120;
@@ -145,7 +128,8 @@ public class Controller implements Initializable {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,2000,2000);
 
-        nextGeneration();
+        staticBoard.nextGeneration();
+
         draw_Array();
 
 
@@ -166,6 +150,8 @@ public class Controller implements Initializable {
         });
         size.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
             try {
+                gc.setFill(Color.WHITE);
+                gc.fillRect(0,0,2000,2000);
                 draw_Array();
             }
             catch (Exception e){
@@ -174,6 +160,8 @@ public class Controller implements Initializable {
         });
         colorPicker.valueProperty().addListener((ObservableValue<? extends Color> timerlistener, Color oldColor, Color newColor) -> {
             try {
+                gc.setFill(Color.WHITE);
+                gc.fillRect(0,0,2000,2000);
                 draw_Array();
             }
             catch (Exception e){
@@ -192,7 +180,7 @@ public class Controller implements Initializable {
     public void startButton(){
         if (loaded) {
             if (playCount == 0) {
-                board = staticBoard.getBoard();
+
                 Load.setDisable(true);
                 Random.setDisable(true);
                 //make_board.randomPattern();
@@ -259,12 +247,11 @@ public class Controller implements Initializable {
      * Samtidig så setter den antall celler som er i livet i hver generation.
      */
     private void draw_Array(){
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length ; j++) {
-                if (board[i][j] == 1){
+        for (int i = 0; i < staticBoard.getBoard().length; i++) {
+            for (int j = 0; j < staticBoard.getBoard()[i].length ; j++) {
+                if (staticBoard.getBoard()[i][j] == 1){
                     draw_ned( i  , j , colorPicker.getValue());
                     aliveCount ++;
-
                 }
                 else {
                     draw_ned(i , j , Color.WHITE);
@@ -273,96 +260,15 @@ public class Controller implements Initializable {
         }
     }
 
-    /**
-     * NextGeneration styrer hvordan neste genereasjon skal se ut. Med hjelp av countNeighbor så settes neste generasjons
-     * brett til rett verdi.
-     */
-    private void nextGeneration(){
-        nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 0; col < board.length; col++) {
-            for (int row = 0; row < board[col].length ; row++) {
-                int neighbors = countNeighbor(col,row);
-                if(neighbors <  2) {
-                    nextGeneration[col][row] = 0;
-                }
-                else if (neighbors >  3) {
-                    nextGeneration[col][row] = 0;
-                }
-                else if (neighbors == 3) {
-                    nextGeneration[col][row] = 1;
-                }
-                else {
-                    nextGeneration[col][row] = board[col][row];
-                }
 
-            }
-        }
-        board = nextGeneration;
-    }
-
-    /**
-     * countNeighbor avgjør for hver enkelt celle om den skal få leve eller ikke. Reglene styres her inne.
-     * @param col
-     * @param row
-     * row and col controll the position of the cell.
-     * @return amount of neighbors per cell
-     */
-    private int countNeighbor(int col, int row){
-        int neighbors = 0;
-        if (col != 0 && row !=0){
-            if (board[col-1][row-1] == 1)
-                neighbors++;
-        }
-        if (row != 0){
-            if (board[col][row-1] == 1)
-                neighbors++;
-        }
-        try {
-            if (col != board[col].length -1 && row != 0 ){
-                if (board[col+1][row-1] == 1)
-                    neighbors++;
-            }
-        }catch (IndexOutOfBoundsException  e){
-
-
-        }
-        if (col != 0){
-            if (board[col-1][row]   == 1)
-                neighbors++;
-        }
-        try {
-            if (col != board[col].length -1){
-                if (board[col+1][row]   == 1)
-                    neighbors++;
-            }
-        }catch (Exception e) {
-
-        }
-        if(col != 0 && row != board[row].length -1){
-            if (board[col-1][row+1] == 1)
-                neighbors++;
-        }
-        if(row != board[row].length -1){
-            if (board[col][row+1] == 1)
-                neighbors++;
-        }
-        try {
-            if(col != board[col].length - 1 && row != board[row].length -1){
-                if (board[col+1][row+1] == 1)
-                    neighbors++;
-            }
-        } catch (IndexOutOfBoundsException  e) {
-        }
-        return neighbors;
-    }
 
     /**
      * Blir kalt på når boardet skal bli klart. Den kjører over alt og setter alle verdier til å være hvite.
      */
     @FXML private void remove_Array() {
 
-        for (int col = 0; col < board.length; col++) {
-            for (int row = 0; row < board[col].length ; row++) {
+        for (int col = 0; col < staticBoard.getBoard().length; col++) {
+            for (int row = 0; row < staticBoard.getBoard()[col].length ; row++) {
                 draw_ned(col , row, Color.WHITE);
             }
         }
@@ -381,8 +287,6 @@ public class Controller implements Initializable {
         gc.fillRect(col* (size.getValue()/10) , row*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
         gc.setFill(c);
         gc.fillRect((col * (size.getValue()/10))+1 , (row  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
-
-
     }
 
     /**
@@ -408,15 +312,13 @@ public class Controller implements Initializable {
      */
     public void load() {
         boardMaker.makeClearBoard();
-        board = staticBoard.getBoard();
+        
         draw_Array();
         gc.clearRect(0,0,600,600);
         stopCount = 0;
         Stop.setDisable(true);
         loaded = fileConverter.FromFileToBoard();
         if (loaded){
-            board = staticBoard.getBoard();
-
             draw_Array();
 
             Start.setDisable(false);
@@ -427,22 +329,21 @@ public class Controller implements Initializable {
         }
     }
 
+
+
     /**
      * RandomBoard setter i gang flere funksjoner som generer ett random brett som så blir vist.
      */
     public void RandomBoard() {
 
         boardMaker.makeClearBoard();
-        board = staticBoard.getBoard();
         draw_Array();
         stopCount = 0;
         Stop.setDisable(true);
         boardMaker.randomPattern();
-        board = staticBoard.getBoard();
         draw_Array();
         loaded = true;
         Start.setDisable(false);
-        System.out.println(board.length);
 
     }
 
@@ -450,19 +351,11 @@ public class Controller implements Initializable {
      * Generer ett blankt brett for så å tegne det.
      */
     public void showClearBoard(){
-
         boardMaker.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
-        board = staticBoard.getBoard();
         draw_Array();
     }
 
-    /**
-     *
-     * @return
-     */
-    public Canvas getCanvas() {
-        return Canvas;
-    }
+
 
     /**
      * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
@@ -535,6 +428,26 @@ public class Controller implements Initializable {
         this.size = size;
     }
 
+    public BoardMaker getBoardMaker() {
+        return boardMaker;
+    }
+
+    public StaticBoard getStaticBoard() {
+
+        return staticBoard;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Canvas getCanvas() {
+        return Canvas;
+    }
     /**
      *
      * @param scrollEvent

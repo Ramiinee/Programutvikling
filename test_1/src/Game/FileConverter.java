@@ -1,12 +1,11 @@
 package Game;
 
 
+import Game.StaticBoard;
 import javafx.stage.FileChooser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,7 +66,7 @@ public class FileConverter {
      * Til slutt så blir det lagt til ekstra rader der det er nødvendig.
      * @return
      */
-    public boolean fileChooser(){
+    public boolean fileChooser() {
 
         File selectedFile = null;
         try {
@@ -82,10 +81,31 @@ public class FileConverter {
 
             selectedFile = fileChooser.showOpenDialog(null);
 
-        }catch (NullPointerException e){
+            return readFromFile(selectedFile);
+
+
+        } catch (NullPointerException e) {
             System.out.println(e + " | Velger fil");
         }
+        return false;
+    }
+    public boolean fileFromUrl(){
+        try {
+            URL oracle = new URL("http://www.conwaylife.com/patterns/ak94.rle");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(oracle.openStream()));
 
+            String inputLine;
+            while ((inputLine = in.readLine()) != null)
+                System.out.println(inputLine);
+            in.close();
+            return true;
+        }catch (IOException e){
+            System.out.println(e);
+        }
+        return false;
+    }
+    public boolean readFromFile(File selectedFile){
 
         if (selectedFile != null) {
             try{
@@ -119,11 +139,15 @@ public class FileConverter {
                         StringToX = StringToX.replaceAll(",y=[0-99]+","");
                         StringToY = StringToY.replaceAll("x=[0-99]+,y=","");
                         try {
+                            System.out.println(Integer.parseInt(StringToX));
+                            System.out.println(Integer.parseInt(StringToY));
                             staticBoard.setColumn(Integer.parseInt(StringToX));
+
                             staticBoard.setRow(Integer.parseInt(StringToY));
+
                         }
                         catch (Exception e){
-                            System.out.println(e);
+                            System.out.println(e + " d");
                         }
 
                     }
