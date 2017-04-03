@@ -2,6 +2,7 @@ package Game;
 
 
 
+import Game.StaticBoard;
 import java.util.Random;
 import java.util.regex.*;
 
@@ -11,9 +12,7 @@ import java.util.regex.*;
  */
 public class BoardMaker {
 
-    /**
-     *
-     */
+
     public StaticBoard staticBoard;
     private byte[] byteArray;
     private byte[][] board;
@@ -41,12 +40,8 @@ public class BoardMaker {
      * Her genrerer vi ett random brett
      */
     public void randomPattern(){
-
         board = new byte[testSize][testSize];
-
-
         Random r = new Random();
-
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
                 int a = r.nextInt(2);
@@ -55,11 +50,9 @@ public class BoardMaker {
                 }else {
                     board[i][j] = 0;
                 }
-
             }
         }
         staticBoard.setBoard(board);
-
     }
 
     /**
@@ -70,7 +63,6 @@ public class BoardMaker {
      * ett konvertert brett
      */
     public byte[][] boardConvertedTXT (byte[][] board,byte[][] converted){
-
         for (int i = 0; i <board.length ; i++) {
             for (int j = 0; j <board[i].length ; j++) {
                 board[i][j] = converted[i][j];
@@ -96,32 +88,32 @@ public class BoardMaker {
         int column = staticBoard.getColumn();
         int row = staticBoard.getRow();
         System.out.println(column + " | " + row);
+
         try {
-
             String[] dd = everything.split(Pattern.quote("$"));
-
+            System.out.println(dd.length);
             String k = "";
             for (int i = 0; i <dd.length ; i++) {
                 dd[i] = decode(dd[i]);
                 if (dd[i].length() < staticBoard.getRow()){
-                    for (int j = 0; j <= staticBoard.getRow() - dd[i].length(); j++) {
+                    for (int j = 0; j <= (staticBoard.getRow() - dd[i].length()); j++) {
                         dd[i] += "b";
                     }
                 }
                 k += dd[i];
             }
-
+            if (k.length() != row*column){
+                k+="b";
+            }
             k = k.replaceAll("b","0");
             k = k.replaceAll("o","1");
             byteArray = k.getBytes();
-
-
+            System.out.println(byteArray.length);
             try {
                 Convert1DTo2D(row,column);
             }catch (Exception e){
                 System.out.println(e + " Convertering fra 1D til 2D gikk ikke som planlagt");
             }
-
             for (int i = 0; i < converted.length ; i++) {
                 for (int j = 0; j < converted[i].length ; j++) {
                     if (converted[i][j] == 48){
@@ -130,13 +122,9 @@ public class BoardMaker {
                     else {
                         converted[i][j]= 1;
                     }
-
                     board[i+50][j+50] = converted[i][j];
-
                 }
-
             }
-
             for (int i = 0; i < converted.length; i++) {
                 for (int j = 0; j < converted[i].length; j++) {
                     if (converted[j][i] == 0){
@@ -146,8 +134,6 @@ public class BoardMaker {
                 }
                 System.out.println();
             }
-
-
             staticBoard.setBoard(board);
         }catch (Exception e){
             System.out.println(e + " | Det går ikke å legge rle inn i array");
@@ -165,32 +151,20 @@ public class BoardMaker {
         StringBuffer dest = new StringBuffer();
         Pattern pattern = Pattern.compile("[0-99]+|[a-zA-Z]|$");
         Matcher matcher = pattern.matcher(source);
-
         while (matcher.find()) {
             //System.out.println(dest);
-
             try {
                 int number = Integer.parseInt(matcher.group());
                 matcher.find();
-
                 while (number-- != 0) {
-
                     dest.append(matcher.group());
-
                 }
-
             }catch (Exception e){
-
                 dest.append(matcher.group());
             }
-
-
         }
-
-
         return dest.toString();
     }
-
 
     /**
      * Her får vi inn en .txt fil og konverterer den til ett brett.
@@ -204,14 +178,11 @@ public class BoardMaker {
         byteArray = everything.getBytes();
         System.out.println(byteArray.length + " | " + Math.sqrt(byteArray.length ));
         int sqrt = (int) Math.sqrt(byteArray.length);
-
         if (sqrt * sqrt == byteArray.length) {
             int a = sqrt;
             staticBoard.setColumn(a);
             staticBoard.setRow(a);
-
             board = new byte[staticBoard.getColumn()][staticBoard.getRow()];
-
             Convert1DTo2D(staticBoard.getColumn(), staticBoard.getRow());
             board = boardConvertedTXT(board, converted);
             staticBoard.setBoard(board);
@@ -222,21 +193,23 @@ public class BoardMaker {
         }
     }
 
-
     /**
      * Her konverterer vi ett 1D brett til ett 2D brett, med hjelp av ant. kolloner og rader.
      * @param rows
      * @param cols
      */
     public void Convert1DTo2D(int rows, int cols){
-        converted = new byte[rows][cols];
 
+        converted = new byte[rows][cols];
         for (int i = 0; i < converted.length; i++) {
             for (int j = 0; j < converted[i].length; j++) {
                 //System.out.println("index" + ((i * arr.length) + j));
                 converted[i][j] = byteArray[(i * converted[i].length) + j];
-                System.out.print("  " + converted[i][j]);
-
+                if (converted[i][j] == 48){
+                    System.out.print("  -");
+                }else {
+                    System.out.print("  " + converted[i][j]);
+                }
             }
             System.out.println();
         }

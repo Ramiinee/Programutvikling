@@ -88,7 +88,7 @@
    <center>
       <ScrollPane fx:id="scrollpane" prefHeight="1000.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <content>
-              <Canvas fx:id="Canvas" height="1000.0" onScroll="#onScrollEventHandler" style="-fx-background-color: white;" width="1000.0" />
+              <Canvas fx:id="Canvas" height="600.0"  style="-fx-background-color: white;" width="600.0" />
          </content></ScrollPane>
    </center>
 </BorderPane>

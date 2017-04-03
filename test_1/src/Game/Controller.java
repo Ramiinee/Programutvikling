@@ -9,9 +9,11 @@ import java.util.ResourceBundle;
 import Game.StaticBoard;
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
@@ -19,10 +21,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import javafx.util.Duration;
 
 /**
@@ -81,6 +82,8 @@ public class Controller implements Initializable {
      *
      */
     public ScrollPane scrollpane;
+    public TextField Url_Text;
+    public Button Url_button;
     private GraphicsContext gc;
 
 
@@ -91,31 +94,16 @@ public class Controller implements Initializable {
     private int aliveCount = 0;
 
     public boolean loaded = false;
-    /**
-     *
-     */
     public StaticBoard staticBoard;
-
-    /**
-     *
-     */
     public BoardMaker boardMaker;
-
-    /**
-     *
-     */
     public FileConverter fileConverter;
 
-    /**
-     *
-     */
+
     public Mouse mouse;
 
     //Board
 
-    /**
-     *
-     */
+
 
 
 
@@ -138,7 +126,6 @@ public class Controller implements Initializable {
         aliveCount = 0;
     }
     ));
-
 
     /**
      * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
@@ -170,8 +157,6 @@ public class Controller implements Initializable {
         });
 
     }
-
-
     /**
      * Når start knappen i guiet blir trykket på kaller den på denne funksjonen.
      * Den setter i gang videre prosesser som henter board og setter i gang animasjonen.
@@ -197,7 +182,6 @@ public class Controller implements Initializable {
             Stop.setTooltip(new Tooltip("Stop"));
         }
     }
-
     /**
      * Når stopp knappen i guiet blir trykket på kaller den på denne funksjonen.
      * Den stopper animasjonen og setter knappen klar for å cleare canvaset. Ved trykk 2 så cleres brettet.
@@ -234,12 +218,10 @@ public class Controller implements Initializable {
             stage.close();
         }
     }
-
     private void timeline(){
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(false);
     }
-
 
     /**
      * Draw array kjører gjennom brettet og bestemmer om det skal tegnes den valgte fargen eller om det skal tegnes hvit.
@@ -311,16 +293,46 @@ public class Controller implements Initializable {
      * Her må alt før ha gått greit for at vi skal få klar beskjed til å kunne kjøre.
      */
     public void load() {
-        boardMaker.makeClearBoard();
-        
+        Stage popupwindow=new Stage();
+        popupwindow.initModality(Modality.APPLICATION_MODAL);
+        popupwindow.setTitle("Load");
+        Label label1= new Label("How do you want to load?");
+        TextField textField = new TextField();
+        Button button1= new Button("Load from selected Url");
+        Button button2= new Button("Load from file");
+        button1.setOnAction(e -> {
+            if (!textField.getText().isEmpty()){
+                loaded = fileConverter.ReadFromUrl(textField.getText());
+                loaded(loaded);
+                popupwindow.close();
+            }else {
+                label1.setText("There is a error in your Url");
+            }
+        });
+        button2.setOnAction(e -> {
+            loadAction();
+            popupwindow.close();
+        });
+
+        VBox layout= new VBox(15);
+        layout.getChildren().addAll(label1,textField, button1, button2);
+        layout.setAlignment(Pos.CENTER);
+        Scene scene1= new Scene(layout, 200, 200);
+        popupwindow.setScene(scene1);
+        popupwindow.showAndWait();
+
+    }
+    public void loadAction(){
         draw_Array();
         gc.clearRect(0,0,600,600);
         stopCount = 0;
         Stop.setDisable(true);
         loaded = fileConverter.FromFileToBoard();
+        loaded(loaded);
+    }
+    public void loaded(boolean loaded){
         if (loaded){
             draw_Array();
-
             Start.setDisable(false);
         }
         else {
@@ -330,13 +342,11 @@ public class Controller implements Initializable {
     }
 
 
-
     /**
      * RandomBoard setter i gang flere funksjoner som generer ett random brett som så blir vist.
      */
     public void RandomBoard() {
 
-        boardMaker.makeClearBoard();
         draw_Array();
         stopCount = 0;
         Stop.setDisable(true);
@@ -344,6 +354,7 @@ public class Controller implements Initializable {
         draw_Array();
         loaded = true;
         Start.setDisable(false);
+
 
     }
 
@@ -356,11 +367,11 @@ public class Controller implements Initializable {
     }
 
 
-
     /**
      * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
      */
     public void reset(){
+
         size.setValue(100);
         timer.setValue(1);
         colorPicker.setValue(Color.BLACK);
@@ -391,105 +402,20 @@ public class Controller implements Initializable {
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
 
-        //showClearBoard();
+
+        boardMaker.makeClearBoard();
 
         Stop.setDisable(true);
         Start.setDisable(true);
-
-
         scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setPannable(true);
-
-
-        //SceneGestures sceneGestures = new SceneGestures();
-        //scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
-
 
         mouse = new Mouse(Canvas, staticBoard);
         mouse.scroll();
         listeners();
 
     }
-
-    /**
-     *
-     * @return
-     */
-    public Slider getSize() {
-        return size;
-    }
-
-    /**
-     *
-     * @param size
-     */
-    public void setSize(Slider size) {
-        this.size = size;
-    }
-
-    public BoardMaker getBoardMaker() {
-        return boardMaker;
-    }
-
-    public StaticBoard getStaticBoard() {
-
-        return staticBoard;
-    }
-
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Canvas getCanvas() {
-        return Canvas;
-    }
-    /**
-     *
-     * @param scrollEvent
-     */
-    public void onScrollEventHandler(ScrollEvent scrollEvent) {
-         /*
-        public class SceneGestures {
-
-            public EventHandler<ScrollEvent> getOnScrollEventHandler() {
-                return onScrollEventHandler;
-            }
-
-
-            private EventHandler<ScrollEvent> onScrollEventHandler = new EventHandler<ScrollEvent>() {
-
-                @Override
-                public void handle(ScrollEvent event) {
-
-
-                    System.out.println(event.getX());
-                    double test = (event.getX() +event.getY())/2;
-                    size.setValue(test);
-
-                }
-            };
-
-
-
-        }
-        */
-/*
-        if (scrollEvent.getDeltaY() > 0){
-            System.out.println("inn");
-        }
-        else System.out.println("ut");
-
-
-        System.out.println(scrollEvent.getX());
-        System.out.println(scrollEvent.getY());
-        */
-    }
-
 
 
 }
