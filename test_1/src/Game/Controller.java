@@ -199,16 +199,16 @@ public class Controller implements Initializable {
 
     public void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 1; col < board.length-1; col++) {
-            for (int row = 1; row < board[col].length -1 ; row++) {
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length; row++) {
                 int neighbors = countNeighbor(col,row);
-                if(neighbors <  2) {
+                if((board[col][row] == 1) && (neighbors <  2)) {
                     nextGeneration[col][row] = 0;
                 }
-                else if (neighbors >  3) {
+                else if ((board[col][row] == 1) && (neighbors >  3)) {
                     nextGeneration[col][row] = 0;
                 }
-                else if (neighbors == 3) {
+                else if (board[col][row] == 0 && (neighbors == 3)) {
                     nextGeneration[col][row] = 1;
                 }
                 else {
@@ -220,14 +220,18 @@ public class Controller implements Initializable {
         board = nextGeneration;
     }
     private int countNeighbor(int col, int row){
-        int neighbors = 0;
-        for (int i = -1; i <= 1; i++) {
-      for (int j = -1; j <= 1; j++) {
-        neighbors += board[col+i][row+j];
-      }
-    }
-        neighbors -= board[col][row];
+         int neighbors = 0;
+
+        if (board[(col-1+board.length)%board.length][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
+        if (board[(col-1+board.length)%board.length][row] == 1){ neighbors++;}
+        if (board[(col-1+board.length)%board.length][(row+1)%board[row].length] == 1){ neighbors++;}
+        if (board[col][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
+        if (board[col][(row+1)%board[row].length] == 1){ neighbors++;}
+        if (board[(col+1)%board.length][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
+        if (board[(col+1)%board.length][row] == 1){ neighbors++;}
+        if (board[(col+1)%board.length][(row+1)%board[row].length] == 1){ neighbors++;}
         return neighbors;
+    
     }
 
     @FXML private void remove_Array() {
