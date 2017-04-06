@@ -19,7 +19,6 @@ public class BoardMaker {
     private byte[][] converted;
     private byte[][] clearBoard;
     private int testSize = 121;
-
     /**
      *
      * @param staticBoard

@@ -55,7 +55,6 @@ public class StaticBoard extends Board{
     public void setBoard(byte[][] board) {
         this.board = board;
     }
-
     public byte[][] board;
     /**
      * NextGeneration styrer hvordan neste genereasjon skal se ut. Med hjelp av countNeighbor så settes neste generasjons

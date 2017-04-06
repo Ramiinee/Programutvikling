@@ -27,7 +27,6 @@ public class FileConverter {
     private boolean rleFile;
     private String everything;
 
-
     /**
      *
      * @param staticBoard

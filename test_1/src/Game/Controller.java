@@ -341,7 +341,6 @@ public class Controller implements Initializable {
         }
     }
 
-
     /**
      * RandomBoard setter i gang flere funksjoner som generer ett random brett som så blir vist.
      */
