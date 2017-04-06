@@ -11,6 +11,9 @@ import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +34,8 @@ import javafx.util.Duration;
 
 public class Controller implements Initializable {
 
+    
+    ObservableList<String> ChangeRules = FXCollections.observableArrayList("game of life", "No deaths", "Cover");
     // FXML
     public Button Stop;
     public Button Start;
@@ -45,7 +50,7 @@ public class Controller implements Initializable {
     @FXML
     public ComboBox RuleDropDown;
 
-
+    public ComboBox changerules;
     public Stage stage;
     public ScrollPane scrollpane;
 
@@ -78,14 +83,23 @@ public class Controller implements Initializable {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,2000,2000);
 
+        if(RuleDropDown.getValue() == "game of life"){
         nextGeneration();
+        }
+        else if(RuleDropDown.getValue() == "No deaths"){
+            nodeadcellsrule();
+        }
+        else if(RuleDropDown.getValue() == "Cover"){
+            slowlycover();
+        }
+        
+        
         draw_Array();
 
         timerlistener();
 
         stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
         aliveCount = 0;
-        System.out.println(timing);
     }
     ));
 
@@ -200,6 +214,24 @@ public class Controller implements Initializable {
             }
         }
     }
+    
+    public void nodeadcellsrule(){
+        nextGeneration = new byte[board.length][board[0].length];
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length; row++) {
+                int neighbors = countNeighbor(col,row);
+
+                if (board[col][row] == 0 && (neighbors == 3)) {
+                    nextGeneration[col][row] = 1;
+                }
+                else {
+                    nextGeneration[col][row] = board[col][row];
+                }
+
+            }
+        }
+        board = nextGeneration;
+    }
 
     public void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
@@ -220,9 +252,34 @@ public class Controller implements Initializable {
                 }
 
             }
+            
         }
         board = nextGeneration;
     }
+     public void slowlycover(){
+        nextGeneration = new byte[board.length][board[0].length];
+        for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length; row++) {
+                int neighbors = countNeighbor(col,row);
+                if((board[col][row] == 1)) {
+                    nextGeneration[col][row] = 1;
+                }
+                else if ((neighbors >  3)) {
+                    nextGeneration[col][row] = 1;
+                }
+                else if ((neighbors == 3)) {
+                    nextGeneration[col][row] = 0;
+                }
+                else {
+                    nextGeneration[col][row] = board[col][row];
+                }
+
+            }
+            
+        }
+        board = nextGeneration;
+    }
+    
     private int countNeighbor(int col, int row){
          int neighbors = 0;
 
@@ -293,7 +350,7 @@ public class Controller implements Initializable {
         draw_Array();
         loaded = true;
         Start.setDisable(false);
-        System.out.println(board.length);
+
 
     }
     public void showClearBoard(){
@@ -337,6 +394,11 @@ public class Controller implements Initializable {
 
         Stop.setDisable(true);
         Start.setDisable(true);
+        
+        RuleDropDown.setValue("game of life");
+        RuleDropDown.setItems(ChangeRules);
+       
+        
 
 
         /* scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -362,12 +424,10 @@ public class Controller implements Initializable {
 			int x = (int)(e.getY()/size.getValue());
 			if(board[x][y]==1){
 				board[x][y] = 0;
-                                System.out.print("hello");
 				draw_ned(x,y,Color.WHITE);
 			}
 			else { 
 				board[x][y] = 1;
-                                System.out.print("ugh");
 				draw_ned(x,y,colorPicker.getValue());
 			}
 		});
