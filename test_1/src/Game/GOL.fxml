@@ -81,12 +81,7 @@
                            <Insets top="70.0" />
                        </GridPane.margin>
                    </Label>
-            <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="1" GridPane.rowIndex="4">
-              <items>
-                <MenuItem mnemonicParsing="false" text="En regel" onAction="#RandomBoard"/>
-                <MenuItem mnemonicParsing="false" text="En annen regel" onAction="#startButton" />
-              </items>
-            </MenuButton>
+            <ComboBox fx:id="RuleDropDown" prefWidth="150.0" promptText="Game of life" GridPane.columnIndex="1" GridPane.rowIndex="4" />
            </children>
 
         </GridPane>
