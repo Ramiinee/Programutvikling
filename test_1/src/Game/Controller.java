@@ -42,6 +42,8 @@ public class Controller implements Initializable {
     public Slider size;
     public Slider timer;
     public Canvas Canvas;
+    @FXML
+    public ComboBox RuleDropDown;
 
 
     public Stage stage;
@@ -83,6 +85,7 @@ public class Controller implements Initializable {
 
         stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
         aliveCount = 0;
+        System.out.println(timing);
     }
     ));
 
@@ -122,6 +125,7 @@ public class Controller implements Initializable {
  
  
     public void startButton(){
+        
         if (loaded) {
             if (playCount == 0) {
                 board = staticBoard.getBoard();
@@ -243,22 +247,14 @@ public class Controller implements Initializable {
         }
     }
 
-    private void draw( int col, int row, Color c) {
-        gc = Canvas.getGraphicsContext2D();
-        gc.setFill(Color.web("E0E0E0"));
-        //gc.setFill(Color.WHITE);
-        gc.fillRect(col* (size.getValue()/10) , row*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
-        gc.setFill(c);
-        gc.fillRect((col * (size.getValue()/10))+1 , (row  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
 
 
-    }
     private void draw_ned( int col, int row, Color c) {
         gc.setFill(Color.web("E0E0E0"));
         //gc.setFill(Color.WHITE);
-        gc.fillRect(row* (size.getValue()/20) , col*(size.getValue()/20), ((size.getValue()/20)), (size.getValue()/20));
+        gc.fillRect(row* (size.getValue())-1 , col*(size.getValue())-1, ((size.getValue()))-1, (size.getValue())-1);
         gc.setFill(c);
-        gc.fillRect((row * (size.getValue()/20))+1 , (col  * (size.getValue()/20))+1, ((size.getValue()/20) -2), (size.getValue()/20)-2);
+        gc.fillRect((row * (size.getValue()))-1 , (col  * (size.getValue()))-1, ((size.getValue()))-1, (size.getValue())-1);
 
 
     }
@@ -311,7 +307,7 @@ public class Controller implements Initializable {
         return Canvas;
     }
     public void resetSlider(){
-        size.setValue(100);
+        size.setValue(400);
         timer.setValue(1);
         colorPicker.setValue(Color.BLACK);
         try {
@@ -328,7 +324,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        timing =(timer.getValue());
         staticBoard = new StaticBoard();
         boardMaker = new BoardMaker(staticBoard);
         fileConverter = new FileConverter();
@@ -343,22 +339,49 @@ public class Controller implements Initializable {
         Start.setDisable(true);
 
 
-        scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        /* scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollpane.setPannable(true);
-
+        scrollpane.setPannable(true);*/
 
         //SceneGestures sceneGestures = new SceneGestures();
         //scrollpane.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
-        System.out.println(scrollpane.getHvalue());
-        System.out.println(scrollpane.getVvalue());
-
-        System.out.println(Canvas.getTransforms());
-
+      
+        /*
+        
         mouse = new Mouse(Canvas);
         mouse.scroll();
+        */
+        
+        
+        /***** Mouse onClick logic ******
+		  Changes the location in the array on mouseclick and draws a new box
+		 */
+		Canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
+			int y = (int)(e.getX()/size.getValue());
+			int x = (int)(e.getY()/size.getValue());
+			if(board[x][y]==1){
+				board[x][y] = 0;
+                                System.out.print("hello");
+				draw_ned(x,y,Color.WHITE);
+			}
+			else { 
+				board[x][y] = 1;
+                                System.out.print("ugh");
+				draw_ned(x,y,colorPicker.getValue());
+			}
+		});
 
+                	Canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,(MouseEvent e) ->{
+			int y = (int)(e.getX()/size.getValue());
+			int x = (int)(e.getY()/size.getValue());
+			
+				board[x][y] = 1;
+
+				draw_ned(x,y,colorPicker.getValue());
+			
+		});
+        
     }
     /*
     public class SceneGestures {

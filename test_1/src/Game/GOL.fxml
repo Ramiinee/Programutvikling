@@ -32,7 +32,7 @@
                            <Insets right="10.0" />
                        </GridPane.margin>
                    </Button>
-                   <Slider fx:id="size" max="500.0" maxWidth="150.0" min="100" value="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                   <Slider fx:id="size" max="200.0" maxWidth="150.0" min="5" value="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                        <GridPane.margin>
                            <Insets top="90.0" />
                        </GridPane.margin>
@@ -81,6 +81,12 @@
                            <Insets top="70.0" />
                        </GridPane.margin>
                    </Label>
+            <MenuButton mnemonicParsing="false" text="MenuButton" GridPane.columnIndex="1" GridPane.rowIndex="4">
+              <items>
+                <MenuItem mnemonicParsing="false" text="En regel" onAction="#RandomBoard"/>
+                <MenuItem mnemonicParsing="false" text="En annen regel" onAction="#startButton" />
+              </items>
+            </MenuButton>
            </children>
 
         </GridPane>

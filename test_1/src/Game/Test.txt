@@ -25,3 +25,10 @@ hente fil fra nett. URL
 zoom ut setter tegne størelse for å enklere se hva som blir tegnet. er uklart nå.
 
 endre regler underveis
+
+ 
+javadoc. 
+nye regler. 
+testing
+tulle med farger :) 
+catch exceptions. gi ordentlige setninger som gir mening. 
