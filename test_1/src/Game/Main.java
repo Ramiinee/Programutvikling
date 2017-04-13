@@ -1,5 +1,7 @@
 package Game;
 import javafx.application.Application;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ public class Main extends Application {
 
     public FXMLLoader loader;
     public static Stage stage;
+    public Scene scene;
 
 
 
@@ -21,28 +24,37 @@ public class Main extends Application {
 
         stage = primaryStage;
 
+
         loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
         Parent root = loader.load();
 
 
-        Scene scene = new Scene(root);
+
+        scene = new Scene(root);
+
+
+
         stage.setResizable(false);
         stage.setTitle("Game Of Life");
         stage.setScene(scene);
         stage.show();
 
 
-
     }
-    
+
     static public Stage getPrimaryStage() {
         return Main.stage;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     public static void main(String[] args) {
 
         launch(args);
     }
+
 
 
 

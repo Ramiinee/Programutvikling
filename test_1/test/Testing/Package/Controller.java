@@ -2,6 +2,8 @@ package Testing.Package;
 
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,8 +16,8 @@ import javafx.util.Duration;
 
 public class Controller implements Initializable{
     
-    public int i; 
-    public int j;
+    public int row; 
+    public int col;
     public int a;
     public int b;
     public int[][] nextgeneration;
@@ -33,8 +35,7 @@ public class Controller implements Initializable{
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(false);
     }
-
-
+  
     private int[][] board = new int[kolonner][rader];
    
     public void startButton(){
@@ -47,22 +48,22 @@ public class Controller implements Initializable{
     private GraphicsContext gc;
 
     public void randomPattern(){
-         for (i = 0; i < kolonner; i++) {
-            for (j = 0; j < rader ; j++) {
+         for (row = 0; row < kolonner; row++) {
+            for (col = 0; col < rader ; col++) {
                 
-        board[i][j] = (Math.random()<0.5)?0:1;
+        board[row][col] = (Math.random()<0.5)?0:1;
     }}}
     private void draw_Array(){
-        for (i = 0; i < kolonner; i++) {
-            for (j = 0; j < rader ; j++) {
+        for (row = 0; row < kolonner; row++) {
+            for (col = 0; col < rader ; col++) {
                 
-                if (board[i][j] == 1){
+                if (board[row][col] == 1){
 
-                    draw( i , j, Color.BLACK);
+                    draw(row , col, Color.BLACK);
 
                 }
-                if (board[i][j] == 0){
-                    draw(i, j, Color.WHITE);
+                if (board[row][col] == 0){
+                    draw(row, col, Color.WHITE);
                 }
             }
         }
@@ -70,7 +71,7 @@ public class Controller implements Initializable{
        // ----------------------------
         
         
-        nextgeneration = new int[100][100];
+        nextgeneration = new int[kolonner][rader];
      for (a = 0; a < board.length; a++) {
        for (b = 0; b < board[a].length; b++) {
         int neighbors = 0;
@@ -139,12 +140,12 @@ public class Controller implements Initializable{
                     
     @FXML private void remove_Array() {
         gc = graphics.getGraphicsContext2D();
-        for ( i = 0; i < board.length; i++) {
-            for (j = 0; j < board.length ; j++) {
+        for ( row = 0; row < board.length; row++) {
+            for (col = 0; col < board.length ; col++) {
                 
-                if (board[i][j] == 1){
+                if (board[row][col] == 1){
 
-                    draw( i , j, Color.WHITE );
+                    draw(row , col, Color.WHITE );
 
                 }
 
