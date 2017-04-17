@@ -2,10 +2,13 @@ package Game;
 
 
 
+import Game.StaticBoard;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollToEvent;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
@@ -17,6 +20,7 @@ import javafx.scene.transform.Scale;
 public class Mouse {
     private Canvas Canvas;
     private StaticBoard staticBoard;
+    private ScrollPane scrollpane;
 
     private Scale newScale;
     private double zoom_fac = 1.05;
@@ -27,9 +31,10 @@ public class Mouse {
      * @param canvas
      * @param staticBoard
      */
-    public Mouse(Canvas canvas, StaticBoard staticBoard) {
+    public Mouse(Canvas canvas, StaticBoard staticBoard, ScrollPane scrollPane) {
         this.Canvas = canvas;
         this.staticBoard = staticBoard;
+        this.scrollpane = scrollPane;
 
     }
 
@@ -54,28 +59,15 @@ public class Mouse {
      */
     public void scroll(){
 
-        Canvas.setOnMouseClicked(event -> {
-            System.out.println((int)event.getX()/5);
-            System.out.println((int)event.getY()/5);
-
-            try {
-                System.out.println("---------------------------");
-                System.out.println(staticBoard.getBoard()[(int)event.getX()/5][(int)event.getY()/5]);
-                System.out.println("---------------------------");
-            }catch (Exception e){
+        Canvas.setOnScroll((ScrollEvent event) -> {
+            if (event.isControlDown()){
 
             }
-        });
-
-
-
-        Canvas.setOnScroll((ScrollEvent event) -> {
-
             newScale = new Scale();
             newScale.setPivotX(event.getX());
             newScale.setPivotY(event.getY());
 
-            if (zoomValue < 20 && zoomValue > -10){
+            if (zoomValue < 20 && zoomValue > -11){
                 if (event.getDeltaY() > 0){
                     zoomValue++;
                     newScale.setX( Canvas.getScaleX() * zoom_fac );
@@ -113,7 +105,7 @@ public class Mouse {
                     zoomValue--;
                     newScale.setX(Canvas.getScaleX() / zoom_fac);
                     newScale.setY(Canvas.getScaleY() / zoom_fac);
-                } else if (zoomValue <= -10 && event.getDeltaY() > 0) {
+                } else if (zoomValue <= -11 && event.getDeltaY() > 0) {
                     zoomValue++;
                     newScale.setX(Canvas.getScaleX() * zoom_fac);
                     newScale.setY(Canvas.getScaleY() * zoom_fac);

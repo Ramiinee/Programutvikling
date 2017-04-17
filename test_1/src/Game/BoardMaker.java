@@ -18,7 +18,8 @@ public class BoardMaker {
     private byte[][] board;
     private byte[][] converted;
     private byte[][] clearBoard;
-    private int testSize = 121;
+    private int testSize = 200;
+
     /**
      *
      * @param staticBoard
@@ -31,6 +32,8 @@ public class BoardMaker {
      * Her generer vi ett klart brett hvor alle verider er 0.
      */
     public void makeClearBoard(){
+        staticBoard.setColumn(testSize);
+        staticBoard.setRow(testSize);
         clearBoard= new byte[testSize][testSize];
         staticBoard.setBoard(clearBoard);
     }
@@ -40,6 +43,8 @@ public class BoardMaker {
      */
     public void randomPattern(){
         board = new byte[testSize][testSize];
+        staticBoard.setColumn(testSize);
+        staticBoard.setRow(testSize);
         Random r = new Random();
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length ; j++) {
@@ -108,6 +113,7 @@ public class BoardMaker {
             k = k.replaceAll("o","1");
             byteArray = k.getBytes();
             System.out.println(byteArray.length);
+
             try {
                 Convert1DTo2D(row,column);
             }catch (Exception e){

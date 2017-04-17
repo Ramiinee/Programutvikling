@@ -1,22 +1,12 @@
 package Game;
 
 public abstract class Board{
-   public int Column;
-   public int Row;
 
-   public int getColumn() {
-      return Column;
-   }
+   public abstract int getColumn();
 
-   public void setColumn(int column) {
-      Column = column;
-   }
+   public abstract void setColumn(int column);
 
-   public int getRow() {
-      return Row;
-   }
+   public abstract int getRow();
 
-   public void setRow(int row) {
-      Row = row;
-   }
+   public abstract void setRow(int row);
 }

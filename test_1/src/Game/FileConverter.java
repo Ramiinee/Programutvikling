@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Joachim-Privat
+ * @author Joachim
  */
 public class FileConverter {
 
@@ -26,6 +26,7 @@ public class FileConverter {
     public StaticBoard staticBoard;
     private boolean rleFile;
     private String everything;
+
 
     /**
      *
@@ -72,6 +73,7 @@ public class FileConverter {
 
         }catch (IOException e){
             System.out.println(e);
+            e.printStackTrace();
         }
         return false;
     }
@@ -152,7 +154,7 @@ public class FileConverter {
 
             selectedFile = fileChooser.showOpenDialog(null);
 
-        }catch (NullPointerException e){
+        }catch (NullPointerException e) {
             System.out.println(e + " | Velger fil");
         }
         if (selectedFile != null) {
@@ -162,6 +164,9 @@ public class FileConverter {
                 br.close();
             } catch (IOException e) {
                 System.out.println(e + " | bufferReader");
+            } catch (Exception e){
+                System.out.println(e);
+
             }
             rleFile = isRleFile(selectedFile);
 
