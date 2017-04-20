@@ -83,10 +83,10 @@ public class Controller implements Initializable {
                 dynamicBoard.nextGeneration();
             }
             else if(RuleDropDown.getValue() == "No deaths"){
-
+                dynamicBoard.noDeadCellsRule();
             }
             else if(RuleDropDown.getValue() == "Cover"){
-
+                dynamicBoard.slowlyCover();
             }
         }else {
             if(RuleDropDown.getValue() == "Game of Life"){
