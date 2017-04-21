@@ -31,18 +31,7 @@ public abstract class Decoder {
      */
     public abstract void decode() throws IOException;
 
-    /**
-     * Method that returns the board contained in this class
-     * @return board Returns the boolean[][] board contained in this class
-     */
-    public byte[][] getBoard() {
-        return board;
-    }
-
-    /**
-     * Method that returns the associated MetaData object that we read from the RLE files
-     * @return metadata A MetaData object that contains relevant metadata about the board
-     */
+    
 
 }
 
