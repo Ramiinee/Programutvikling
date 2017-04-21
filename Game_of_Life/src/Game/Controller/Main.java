@@ -27,9 +27,6 @@ public class Main extends Application {
 
         loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
         Parent root = loader.load();
-
-
-
         scene = new Scene(root);
 
 

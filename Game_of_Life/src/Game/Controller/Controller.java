@@ -386,7 +386,6 @@ public class Controller implements Initializable {
         });
 
 
-
         VBox layout= new VBox(15);
         HBox disk = new HBox(10);
         HBox url = new HBox(10);
