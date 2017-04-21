@@ -1,4 +1,4 @@
-package Game;
+package Game.Controller;
 import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.ScrollEvent;
@@ -25,7 +25,7 @@ public class Main extends Application {
         stage = primaryStage;
 
 
-        loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
+        loader = new FXMLLoader(getClass().getResource("../view/GOL.fxml"));
         Parent root = loader.load();
 
 
@@ -34,7 +34,7 @@ public class Main extends Application {
 
 
 
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.setTitle("Game Of Life");
         stage.setScene(scene);
         stage.show();
@@ -42,7 +42,7 @@ public class Main extends Application {
 
     }
 
-    static public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return Main.stage;
     }
 

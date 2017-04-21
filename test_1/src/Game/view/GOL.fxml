@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="BoarderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller.Controller">
+    <left>
+        <GridPane prefHeight="600.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="139.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="332.0" minHeight="10.0" prefHeight="130.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="171.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="105.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+
+                <Button fx:id="Load" mnemonicParsing="false" onAction="#load" prefHeight="50.0" prefWidth="90.0" text="Load" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Button>
+                <Button fx:id="reset" mnemonicParsing="false" onAction="#reset" prefHeight="50.0" prefWidth="80.0" text="Reset" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets right="10.0" />
+                    </GridPane.margin>
+                </Button>
+                <Slider fx:id="size" max="200.0" maxWidth="150.0" min="5" value="5.0" blockIncrement="0.1" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets top="90.0" />
+                    </GridPane.margin>
+                </Slider>
+                <Slider fx:id="timer" blockIncrement="0.1" max="5.0" maxWidth="150.0" min="1.0" value="1.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets top="40.0" />
+                    </GridPane.margin>
+                </Slider>
+                <Button fx:id="Random" mnemonicParsing="false" onAction="#RandomBoard" prefHeight="50.0" prefWidth="80.0" text="Random" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <GridPane.margin>
+                        <Insets right="10.0" />
+                    </GridPane.margin>
+                </Button>
+                <Button fx:id="Stop" alignment="CENTER" mnemonicParsing="false" onAction="#stopButton" prefHeight="50.0" prefWidth="80.0" text="Stop" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+                    <tooltip>
+                        <Tooltip text="Stop" />
+                    </tooltip>
+                    <GridPane.margin>
+                        <Insets right="10.0" />
+                    </GridPane.margin>
+                </Button>
+
+
+
+                <Button fx:id="Start" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startButton" prefHeight="50.0" prefWidth="90.0" text="Start" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+                    <tooltip>
+                        <Tooltip text="Start" />
+                    </tooltip>
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Button>
+                <ColorPicker fx:id="colorPicker" prefHeight="50.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </ColorPicker>
+                <Label text="Timing" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets top="20.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="Size" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets top="70.0" />
+                    </GridPane.margin>
+                </Label>
+                <ComboBox fx:id="RuleDropDown" prefWidth="150.0" promptText="Game of life" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <CheckBox fx:id="dynamic" mnemonicParsing="false" text="Dynamic" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            </children>
+
+        </GridPane>
+    </left>
+    <center>
+        <ScrollPane fx:id="scrollpane" prefHeight="1000.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <content>
+                <Canvas fx:id="Canvas" height="1000.0" style="-fx-background-color: white;" width="1000.0" />
+            </content></ScrollPane>
+    </center>
+</BorderPane>
