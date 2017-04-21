@@ -6,12 +6,12 @@ Her jobber vi
 
 Møte med kontaktperson
 
-<<<<<<< HEAD
+
 fargene på rutene i spillebrettet
 tiden på timeren. 
 
 feilmelding. 
-=======
+
 
 load så viser den mønstret. 
->>>>>>> origin/master
+
