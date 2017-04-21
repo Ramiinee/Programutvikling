@@ -334,7 +334,7 @@ public class Controller implements Initializable {
      * Her må alt før ha gått greit for at vi skal få klar beskjed til å kunne kjøre.
      */
     public void load() {
-        Stage popupwindow=new Stage();
+       Stage popupwindow=new Stage();
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
         final ToggleGroup group = new ToggleGroup();
@@ -355,7 +355,8 @@ public class Controller implements Initializable {
         urlField.setDisable(true);
         CheckBox checkBox = new CheckBox("Dynamisk");
 
-
+        Button ok = new Button("Load");
+        Button cancle = new Button("Cancle");
 
         radioDisk.setOnAction(event -> {
             fileField.setDisable(false);
@@ -368,13 +369,32 @@ public class Controller implements Initializable {
             urlField.setDisable(false);
         });
 
+        browse.setOnAction(event -> {
+            loadAction();
+            popupwindow.close();
+        });
+        ok.setOnAction(event -> {
+            if (!urlField.getText().isEmpty()){
+                loaded = fileLoader.ReadFromUrl(urlField.getText());
+                loaded(loaded);
+                popupwindow.close();
+            }
+        });
+        cancle.setOnAction(event -> {
+            loaded=false;
+            popupwindow.close();
+        });
+
+
 
         VBox layout= new VBox(15);
         HBox disk = new HBox(10);
         HBox url = new HBox(10);
+        HBox okCancle = new HBox(10);
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
-        layout.getChildren().addAll(label1, disk, url, checkBox);
+        okCancle.getChildren().addAll(ok,cancle);
+        layout.getChildren().addAll(label1, disk, url, checkBox,okCancle);
         layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 300);
         popupwindow.setScene(scene1);
