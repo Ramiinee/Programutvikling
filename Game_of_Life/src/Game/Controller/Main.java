@@ -25,7 +25,7 @@ public class Main extends Application {
         stage = primaryStage;
 
 
-        loader = new FXMLLoader(getClass().getResource("../view/GOL.fxml"));
+        loader = new FXMLLoader(getClass().getResource("../View/GOL.fxml"));
         Parent root = loader.load();
 
 
@@ -40,17 +40,9 @@ public class Main extends Application {
         stage.show();
 
 
-
-
-
-
-
-    }
-    private void setPrimaryStage(Stage stage) {
-        Main.stage = stage;
     }
 
-    static public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return Main.stage;
     }
 
