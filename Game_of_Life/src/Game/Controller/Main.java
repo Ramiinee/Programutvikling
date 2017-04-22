@@ -23,13 +23,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        Image anotherIcon = new Image("https://upload.wikimedia.org/wikipedia/commons/1/1c/Game_of_life_beacon.gif");
-        primaryStage.getIcons().add(anotherIcon);
-
         stage = primaryStage;
-
+        
 
         loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
+        Image anotherIcon = new Image("https://upload.wikimedia.org/wikipedia/commons/1/1c/Game_of_life_beacon.gif");
+        primaryStage.getIcons().add(anotherIcon);
+        
         Parent root = loader.load();
         scene = new Scene(root);
 
