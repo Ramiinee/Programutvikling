@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Game.Controller.LoadController">
+  <children>
+    <AnchorPane disable="false" focusTraversable="false" layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="600.0" visible="true">
+      <children>
+        <Label layoutX="126.0" layoutY="103.0" prefHeight="21.0" prefWidth="374.0" text="How do you want to load?" textAlignment="RIGHT" textOverrun="CENTER_ELLIPSIS" wrapText="false">
+          <font>
+            <Font size="20.0" />
+          </font>
+        </Label>
+        <RadioButton layoutX="23.0" layoutY="207.0" mnemonicParsing="false" text="From disk" />
+        <RadioButton layoutX="23.0" layoutY="252.0" mnemonicParsing="false" text="From disk" />
+        <TextField layoutX="126.0" layoutY="207.0" opacity="1.0" prefWidth="200.0" promptText="Browse from files" text="" />
+        <TextField layoutX="126.0" layoutY="246.0" prefWidth="200.0" promptText="Enter Url" />
+        <Button layoutX="360.0" layoutY="209.0" mnemonicParsing="false" text="Browse" />
+        <Button layoutX="23.0" layoutY="321.0" mnemonicParsing="false" text="Load" />
+        <Button layoutX="98.0" layoutY="322.0" mnemonicParsing="false" text="Cancel" />
+        <CheckBox layoutX="126.0" layoutY="285.0" mnemonicParsing="false" text="Dynamisk" />
+      </children>
+    </AnchorPane>
+  </children>
+</AnchorPane>

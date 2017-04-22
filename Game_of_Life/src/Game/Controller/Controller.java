@@ -13,12 +13,16 @@ import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -50,8 +54,27 @@ public class Controller implements Initializable {
     public Button Url_button;
     public ComboBox RuleDropDown;
     public CheckBox dynamic;
-
-
+    
+   
+      @FXML
+    void load(ActionEvent event) {
+        try{
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Load.fxml"));    
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage1 = new Stage();
+        stage1.initModality(Modality.APPLICATION_MODAL);
+        
+        Image anotherIcon = new Image("https://upload.wikimedia.org/wikipedia/commons/1/1c/Game_of_life_beacon.gif");
+        stage1.getIcons().add(anotherIcon);
+        
+        stage1.setTitle("Load");
+        stage1.setScene(new Scene(root1));
+        stage1.show();
+        } catch (Exception e){
+            System.out.println("Cant load new window");
+            
+        }
+    }
     private Stage stage;
     private GraphicsContext gc;
     private ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
@@ -398,6 +421,7 @@ public class Controller implements Initializable {
         Scene scene1= new Scene(layout, 300, 300);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
+
 
     }
     public void loadAction(){
