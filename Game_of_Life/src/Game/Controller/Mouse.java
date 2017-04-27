@@ -2,10 +2,7 @@ package Game.Controller;
 
 
 
-import Game.model.Boards.Board;
-import Game.model.Boards.StaticBoard;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
 

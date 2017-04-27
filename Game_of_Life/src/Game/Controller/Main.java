@@ -1,7 +1,5 @@
 package Game.Controller;
 import javafx.application.Application;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,7 +23,7 @@ public class Main extends Application {
         stage = primaryStage;
 
 
-        loader = new FXMLLoader(getClass().getResource("../view/GOL_new.fxml"));
+        loader = new FXMLLoader(getClass().getResource("GOL_new.fxml"));
         Parent root = loader.load();
 
 

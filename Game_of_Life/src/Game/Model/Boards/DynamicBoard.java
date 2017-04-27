@@ -1,4 +1,4 @@
-package Game.model.Boards;
+package Game.Model.Boards;
 
 
 

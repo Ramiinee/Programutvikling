@@ -2,15 +2,13 @@ package Game.Controller;
 
 
 
-import Game.model.Boards.Board;
-import Game.model.Boards.StaticBoard;
-import Game.model.Decoders.Decoder;
-import Game.model.Decoders.RLEDecoder;
+import Game.Model.Boards.Board;
+import Game.Model.Decoders.Decoder;
+import Game.Model.Decoders.RLEDecoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Random;
-import java.util.regex.*;
 
 /**
  *

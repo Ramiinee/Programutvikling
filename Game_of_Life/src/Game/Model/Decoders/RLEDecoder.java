@@ -1,6 +1,6 @@
-package Game.model.Decoders;
+package Game.Model.Decoders;
 
-import Game.model.Boards.Board;
+import Game.Model.Boards.Board;
 
 import java.io.BufferedReader;
 import java.io.IOException;

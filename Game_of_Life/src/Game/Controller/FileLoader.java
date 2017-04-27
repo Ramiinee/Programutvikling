@@ -1,8 +1,6 @@
 package Game.Controller;
 
 
-import Game.model.Boards.Board;
-import Game.model.Boards.StaticBoard;
 import javafx.stage.FileChooser;
 
 import java.io.*;
