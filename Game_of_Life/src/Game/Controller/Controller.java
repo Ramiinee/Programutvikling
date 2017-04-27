@@ -94,11 +94,8 @@ public class Controller implements Initializable {
                 board.slowlyCover();
             }
 
-            if (!(Canvas.getWidth() == board.getRow()*size.getValue() && Canvas.getHeight() == board.getColumn()*size.getValue())){
-                Canvas.setWidth(board.getColumn()*size.getValue());
-                Canvas.setHeight(board.getRow()*size.getValue());
-            }
 
+        updateCanvas();
         draw_Array();
 
         stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
@@ -360,7 +357,9 @@ public class Controller implements Initializable {
     public void loaded(boolean loaded){
         if (loaded){
             gc.clearRect(0,0,Canvas.getWidth(),Canvas.getHeight());
+            updateCanvas();
             draw_Array();
+
             StartStop.setDisable(false);
         }
         else {
@@ -413,6 +412,13 @@ public class Controller implements Initializable {
         gc.fillRect((row * (size.getValue()))+1 , (col  * (size.getValue()))+1, ((size.getValue()))-2, (size.getValue())-2);
 
 
+    }
+
+    private void updateCanvas(){
+        if (!(Canvas.getWidth() == board.getRow()*size.getValue() && Canvas.getHeight() == board.getColumn()*size.getValue())){
+            Canvas.setWidth(board.getColumn()*size.getValue());
+            Canvas.setHeight(board.getRow()*size.getValue());
+        }
     }
 
 
@@ -490,7 +496,7 @@ public class Controller implements Initializable {
         RuleDropDown.setValue("Game of Life");
         RuleDropDown.setItems(ChangeRules);
 
-        mouse = new Mouse(Canvas,scrollpane);
+        mouse = new Mouse(Canvas);
         mouse.scroll();
 
         listeners();

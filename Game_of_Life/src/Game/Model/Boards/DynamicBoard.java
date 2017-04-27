@@ -28,7 +28,7 @@ public class DynamicBoard extends Board{
     }
 
     public void nextGeneration(){
-
+        //addTopRow(10);
         makeNextGen();
 
         for (int row = 0; row < board.size(); row++) {

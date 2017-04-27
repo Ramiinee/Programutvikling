@@ -16,7 +16,7 @@ import javafx.scene.transform.Scale;
 public class Mouse {
     private Canvas Canvas;
 
-    private ScrollPane scrollpane;
+
 
     private Scale newScale;
     private double zoom_fac = 1.05;
@@ -26,10 +26,9 @@ public class Mouse {
      *
      * @param canvas
      */
-    public Mouse(Canvas canvas,  ScrollPane scrollPane) {
+    public Mouse(Canvas canvas) {
         this.Canvas = canvas;
 
-        this.scrollpane = scrollPane;
 
     }
 

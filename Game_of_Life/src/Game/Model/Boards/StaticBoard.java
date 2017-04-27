@@ -106,15 +106,46 @@ public class StaticBoard extends Board{
 
     protected int countNeighbor(int col, int row){
         int neighbors = 0;
+        // Check cell on the right.
+        if (row != board.length - 1)
+            if (board[row + 1][col] == 1)
+                neighbors++;
 
-        if (board[(col-1+board.length)%board.length][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
-        if (board[(col-1+board.length)%board.length][row] == 1){ neighbors++;}
-        if (board[(col-1+board.length)%board.length][(row+1)%board[row].length] == 1){ neighbors++;}
-        if (board[col][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
-        if (board[col][(row+1)%board[row].length] == 1){ neighbors++;}
-        if (board[(col+1)%board.length][(row-1+board[row].length)%board[row].length] == 1){ neighbors++;}
-        if (board[(col+1)%board.length][row] == 1){ neighbors++;}
-        if (board[(col+1)%board.length][(row+1)%board[row].length] == 1){ neighbors++;}
+        // Check cell on the bottom right.
+        if (row != board.length - 1 && col != board[row].length - 1)
+            if (board[row + 1][col + 1] == 1)
+                neighbors++;
+
+        // Check cell on the bottom.
+        if (col != board[row].length - 1)
+            if (board[row][col + 1] == 1)
+                neighbors++;
+
+        // Check cell on the bottom left.
+        if (row != 0 && col != board[row].length - 1)
+            if (board[row - 1][col + 1]== 1)
+                neighbors++;
+
+        // Check cell on the left.
+        if (row != 0)
+            if (board[row - 1][col] == 1)
+                neighbors++;
+
+        // Check cell on the top left.
+        if (row != 0 && col != 0)
+            if (board[row - 1][col - 1] == 1)
+                neighbors++;
+
+        // Check cell on the top.
+        if (col != 0)
+            if (board[row][col - 1] == 1)
+                neighbors++;
+
+        // Check cell on the top right.
+        if (row != board.length - 1 && col != 0)
+            if (board[row +1][col - 1] == 1)
+                neighbors++;
+
         return neighbors;
 
     }
