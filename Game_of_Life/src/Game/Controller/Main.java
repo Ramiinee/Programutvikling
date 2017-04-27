@@ -25,8 +25,11 @@ public class Main extends Application {
         stage = primaryStage;
 
 
-        loader = new FXMLLoader(getClass().getResource("GOL.fxml"));
+        loader = new FXMLLoader(getClass().getResource("Gol_new.fxml"));
         Parent root = loader.load();
+
+
+
         scene = new Scene(root);
 
 

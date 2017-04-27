@@ -10,20 +10,19 @@ import java.io.IOException;
 
 public abstract class Decoder {
 
-    
-    protected Board staticBoard;
+
+    protected Board board;
     protected final BufferedReader reader;
 
-    
-    public Decoder(BufferedReader reader, Board staticBoard) {
+
+    public Decoder(BufferedReader reader, Board board) {
         this.reader = reader;
-        this.staticBoard = staticBoard;
+        this.board = board;
     }
+
 
     public abstract void decode() throws IOException;
 
-    
-   
 
 }
 

@@ -2,6 +2,7 @@ package Game.model.Boards;
 
 
 
+
 public abstract class Board{
 
    public abstract int getColumn();
@@ -18,12 +19,6 @@ public abstract class Board{
    protected abstract int countNeighbor(int col, int row);
    public abstract byte getCellAliveState(int row, int column);
    public abstract void setCellAliveState(int row, int column, byte aliveState);
-   public abstract void resetBoard();
-
-   public enum BoardType {
-      FIXED,
-      DYNAMIC
-   }
-
+   public abstract void makeBoard(int row, int col);
 
 }

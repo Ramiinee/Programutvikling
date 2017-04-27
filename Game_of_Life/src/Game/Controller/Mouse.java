@@ -15,7 +15,7 @@ import javafx.scene.transform.Scale;
  */
 public class Mouse {
     private Canvas Canvas;
-    private Board staticBoard;
+
     private ScrollPane scrollpane;
 
     private Scale newScale;
@@ -25,11 +25,10 @@ public class Mouse {
     /**
      *
      * @param canvas
-     * @param staticBoard
      */
-    public Mouse(Canvas canvas, Board staticBoard, ScrollPane scrollPane) {
+    public Mouse(Canvas canvas,  ScrollPane scrollPane) {
         this.Canvas = canvas;
-        this.staticBoard = staticBoard;
+
         this.scrollpane = scrollPane;
 
     }
@@ -63,7 +62,7 @@ public class Mouse {
             newScale.setPivotX(event.getX());
             newScale.setPivotY(event.getY());
 
-            if (zoomValue < 20 && zoomValue > -12){
+            if (zoomValue < 30 && zoomValue > -12){
                 if (event.getDeltaY() > 0){
                     zoomValue++;
                     newScale.setX( Canvas.getScaleX() * zoom_fac );
@@ -97,7 +96,7 @@ public class Mouse {
                 }
             }
             else {
-                if (zoomValue >= 20 && event.getDeltaY() < 0) {
+                if (zoomValue >= 30&& event.getDeltaY() < 0) {
                     zoomValue--;
                     newScale.setX(Canvas.getScaleX() / zoom_fac);
                     newScale.setY(Canvas.getScaleY() / zoom_fac);

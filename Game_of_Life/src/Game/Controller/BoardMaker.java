@@ -19,39 +19,31 @@ import java.util.regex.*;
 public class BoardMaker {
 
 
-    private Board staticBoard;
-    private Board dynamicBoard;
+    private Board board;
     private byte[] byteArray;
     private Decoder decoder;
     private byte[][] converted;
-    private byte[][] clearBoard;
 
 
-    /**
-     *
-     * @param staticBoard
-     */
-    public BoardMaker(Board staticBoard, Board dynamicBoard) {
-        this.staticBoard = staticBoard;
-        this.dynamicBoard = dynamicBoard;
-    }
+
 
     /**
      * Her generer vi ett klart brett hvor alle verider er 0.
      */
-    public void makeClearBoard(){
-        staticBoard.resetBoard();
+    public void makeClearBoard(int Row, int Col){
+        board.makeBoard(Row,Col);
     }
 
     /**
      * Her genrerer vi ett random brett
      */
-    public void randomPattern(){
+    public void randomPattern(int Row, int Col){
+        board.makeBoard(Row,Col);
         Random r = new Random();
-        for (int row = 0; row <staticBoard.getRow() ; row++) {
-            for (int col = 0; col <staticBoard.getColumn() ; col++) {
+        for (int row = 0; row <board.getRow() ; row++) {
+            for (int col = 0; col <board.getColumn() ; col++) {
                 int a = r.nextInt(2);
-                staticBoard.setCellAliveState(row,col,(byte)a);
+                board.setCellAliveState(row,col,(byte)a);
             }
         }
 
@@ -71,10 +63,10 @@ public class BoardMaker {
         int sqrt = (int) Math.sqrt(byteArray.length);
         if (sqrt * sqrt == byteArray.length) {
             int a = sqrt;
-            staticBoard.setColumn(a);
-            staticBoard.setRow(a);
+            board.setColumn(a);
+            board.setRow(a);
 
-            Convert1DTo2D(staticBoard.getColumn(), staticBoard.getRow());
+            Convert1DTo2D(board.getColumn(), board.getRow());
             boardConvertedTXT(converted);
 
             return true;
@@ -92,8 +84,8 @@ public class BoardMaker {
      * ett konvertert brett
      */
     public void boardConvertedTXT (byte[][] converted){
-        for (int i = 0; i <staticBoard.getRow() ; i++) {
-            for (int j = 0; j <staticBoard.getColumn() ; j++) {
+        for (int i = 0; i <board.getRow() ; i++) {
+            for (int j = 0; j <board.getColumn() ; j++) {
 
                 if (converted[i][j] == 48){
                     converted[i][j] = 0;
@@ -101,7 +93,7 @@ public class BoardMaker {
                 else {
                     converted[i][j]= 1;
                 }
-                staticBoard.setCellAliveState(i,j,converted[i][j]);
+                board.setCellAliveState(i,j,converted[i][j]);
             }
         }
     }
@@ -124,18 +116,13 @@ public class BoardMaker {
 
 
     public boolean InsertRleIntoBoard( BufferedReader reader) throws IOException{
-        decoder = new RLEDecoder(reader,staticBoard);
+        decoder = new RLEDecoder(reader,board);
         decoder.decode();
         return true;
     }
 
 
-    /**
-     * Her konverterer vi ett 1D brett til ett 2D brett, med hjelp av ant. kolloner og rader.
-     * @param rows
-     * @param cols
-     */
-
-
-
+    public void setBoardType(Board board) {
+        this.board = board;
+    }
 }

@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class RLEDecoder extends Decoder{
 
-    public RLEDecoder(BufferedReader reader, Board staticBoard) {
-        super(reader,staticBoard);
+    public RLEDecoder(BufferedReader reader, Board board) {
+        super(reader,board);
     }
     @Override
     public void decode() throws IOException {
@@ -67,6 +67,7 @@ public class RLEDecoder extends Decoder{
                 }
 
                 if (foundRows && foundColumns) {
+                    board.makeBoard(rows*5,columns*5);
                     return;
 
                 }
@@ -97,12 +98,12 @@ public class RLEDecoder extends Decoder{
                 } else if (line.charAt(j) == 'o' || line.charAt(j) == 'O') {
                     if (charNumber != 0) { //Iterer gjennom antall forekomster og sett celle til levende
                         while (charNumber != 0) {
-                            staticBoard.setCellAliveState(row+1,col+1,(byte)1);
+                            board.setCellAliveState(row+2,col+2,(byte)1);
                             charNumber--;
                             col++;
                         }
                     } else {
-                        staticBoard.setCellAliveState(row+1,col+1,(byte)1);
+                        board.setCellAliveState(row+2,col+2,(byte)1);
                         col++;
                     }
                 } else if (line.charAt(j) == 'b' || line.charAt(j) == 'B') {

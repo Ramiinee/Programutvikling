@@ -1,25 +1,20 @@
 package Game.model.Boards;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
 /**
  *
  * @author Joachim-Privat
  */
 public class StaticBoard extends Board{
 
-    private int startColum;
     private int Column;
-    private int startRow;
     private int Row;
     public byte[][] board;
     private byte[][] nextGeneration;
 
-    public StaticBoard(int column, int row) {
-        this.startColum = column;
-        this.Column = this.startColum;
-        this.startRow = row;
-        this.Row = this.startRow;
-        this.board = new byte[startRow][startColum];
-    }
+
 
     @Override
     public int getColumn() {
@@ -33,7 +28,7 @@ public class StaticBoard extends Board{
 
     @Override
     public int getRow() {
-        return Row;
+        return board.length;
     }
 
     @Override
@@ -64,25 +59,23 @@ public class StaticBoard extends Board{
 
     public void nextGeneration(){
         nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 0; col < board.length; col++) {
-            for (int row = 0; row < board[col].length; row++) {
-                int neighbors = countNeighbor(col,row);
-                if((board[col][row] == 1) && (neighbors <  2)) {
-                    nextGeneration[col][row] = 0;
-                }
-                else if ((board[col][row] == 1) && (neighbors >  3)) {
-                    nextGeneration[col][row] = 0;
-                }
-                else if (board[col][row] == 0 && (neighbors == 3)) {
-                    nextGeneration[col][row] = 1;
-                }
-                else {
-                    nextGeneration[col][row] = board[col][row];
+        for (int row = 0; row <Row ; row++) {
+            for (int col = 0; col <Column; col++) {
+                int neighbors = countNeighbor(row, col);
+                if ((board[row][col] == 1) && (neighbors < 2)) {
+                    nextGeneration[row][col] = 0;
+                } else if ((board[row][col] == 1) && (neighbors > 3)) {
+                    nextGeneration[row][col] = 0;
+                } else if (board[row][col] == 0 && (neighbors == 3)) {
+                    nextGeneration[row][col] = 1;
+                } else {
+                    nextGeneration[row][col] = board[row][col];
                 }
 
             }
-
         }
+
+
         board = nextGeneration;
     }
 
@@ -149,11 +142,14 @@ public class StaticBoard extends Board{
         }
     }
 
-    @Override
-    public void resetBoard() {
-        board = null;
-        System.gc();
-        this.board = new byte[startRow][startColum];
 
+
+    @Override
+    public void makeBoard(int row, int col) {
+        this.Row = row;
+        this.Column = col;
+        board = new byte[Row][Column];
     }
+
+
 }

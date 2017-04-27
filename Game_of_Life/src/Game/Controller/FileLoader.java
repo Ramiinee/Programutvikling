@@ -18,16 +18,13 @@ public class FileLoader {
 
 
     public BoardMaker boardMaker;
-    public Board staticBoard;
-    private Board dynamicBoard;
     private boolean rleFile = false;
 
 
 
-    public FileLoader( Board staticBoard, Board dynamicBoard,BoardMaker boardMaker) {
+    public FileLoader(BoardMaker boardMaker) {
         this.boardMaker = boardMaker;
-        this.staticBoard = staticBoard;
-        this.dynamicBoard = dynamicBoard;
+
     }
 
     public boolean ReadFromUrl(String url) {

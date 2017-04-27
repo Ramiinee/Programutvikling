@@ -13,7 +13,7 @@ import javafx.animation.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,39 +35,40 @@ public class Controller implements Initializable {
 
     // FXML
 
-    public Button Stop;
-    public Button Start;
-    public Button reset;
-    public Button Load;
-    public Button Random;
+   
     public ColorPicker colorPicker;
     public BorderPane BoarderPane;
     public Slider size;
     public Slider timer;
     public Canvas Canvas;
     public ScrollPane scrollpane;
-    public TextField Url_Text;
-    public Button Url_button;
     public ComboBox RuleDropDown;
-    public CheckBox dynamic;
+    public Label TestLabel;
+
+    public Button StartStop;
+    public Button SaveBoard;
+    public Button Clear;
+    public Button NewBoard;
+    public Button LoadBoard;
+    public Button Reset;
 
 
     private Stage stage;
     private GraphicsContext gc;
     private ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
+    private ObservableList<String> ChangeBoard = FXCollections.observableArrayList("Static", "Dynamic");
 
     //Counters
-    private int playCount = 0;
-    private int stopCount = 0;
     private int runCount = 1;
     private int aliveCount = 0;
 
     private boolean loaded = false;
+    private boolean running = false;
 
     private BoardMaker boardMaker;
     private FileLoader fileLoader;
-    private Board staticBoard;
-    private Board dynamicBoard;
+    private Board board = null;
+    private NextGenThreads nextGenThreads;
 
 
     public Mouse mouse;
@@ -79,39 +80,24 @@ public class Controller implements Initializable {
      * Her styres hvert frame, og hva som skal skje i det framet.
      */
     private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0,0,2000,2000);
+        //gc.setFill(Color.WHITE);
+        //gc.fillRect(0,0,2000,2000);
 
 
-        if (dynamic.isSelected()){
             if(RuleDropDown.getValue() == "Game of Life"){
-                dynamicBoard.nextGeneration();
-                System.out.print("");
+                board.nextGeneration();
             }
             else if(RuleDropDown.getValue() == "No deaths"){
-                dynamicBoard.noDeadCellsRule();
+                board.noDeadCellsRule();
             }
             else if(RuleDropDown.getValue() == "Cover"){
-                dynamicBoard.slowlyCover();
+                board.slowlyCover();
             }
-            if (Canvas.getWidth() == dynamicBoard.getRow() && Canvas.getHeight() == dynamicBoard.getColumn()){
-                System.out.println(true);
-            }else {
-                Canvas.setWidth(dynamicBoard.getColumn()*size.getValue());
-                Canvas.setHeight( dynamicBoard.getRow()*size.getValue());
-            }
-        }else {
-            if(RuleDropDown.getValue() == "Game of Life"){
-                staticBoard.nextGeneration();
-            }
-            else if(RuleDropDown.getValue() == "No deaths"){
-                staticBoard.noDeadCellsRule();
-            }
-            else if(RuleDropDown.getValue() == "Cover"){
-                staticBoard.slowlyCover();
-            }
-        }
 
+            if (!(Canvas.getWidth() == board.getRow()*size.getValue() && Canvas.getHeight() == board.getColumn()*size.getValue())){
+                Canvas.setWidth(board.getColumn()*size.getValue());
+                Canvas.setHeight(board.getRow()*size.getValue());
+            }
 
         draw_Array();
 
@@ -153,16 +139,15 @@ public class Controller implements Initializable {
                 scrollpane.setPannable(false);
                 int y = (int)(e.getX()/size.getValue());
                 int x = (int)(e.getY()/size.getValue());
-                if(staticBoard.getCellAliveState(x,y)==1){
-                    staticBoard.setCellAliveState(x,y,(byte)0);
+                if(board.getCellAliveState(x,y)==1){
+                    board.setCellAliveState(x,y,(byte)0);
                     draw_ned(x,y,Color.WHITE);
                 }
                 else {
-                    staticBoard.setCellAliveState(x,y,(byte)1);
+                    board.setCellAliveState(x,y,(byte)1);
                     draw_ned(x,y,colorPicker.getValue());
                 }
-                Start.setDisable(false);
-                stopCount = 0;
+                StartStop.setDisable(false);
                 loaded = true;
             }
 
@@ -177,8 +162,7 @@ public class Controller implements Initializable {
                 int y = (int)(e.getX()/size.getValue());
                 int x = (int)(e.getY()/size.getValue());
                 try {
-                    staticBoard.setCellAliveState(x,y,(byte)1);
-
+                    board.setCellAliveState(x,y,(byte)1);
                     draw_ned(x,y,colorPicker.getValue());
                 } catch (Exception el) {
                     System.err.println("Why you out of canvas? " + y + " | "+x );
@@ -187,154 +171,104 @@ public class Controller implements Initializable {
         });
 
     }
-    /**
-     * Når start knappen i guiet blir trykket på kaller den på denne funksjonen.
-     * Den setter i gang videre prosesser som henter board og setter i gang animasjonen.
-     * Start kan ikke kjørers med mindre man har vært innom load eller randomboard.
-     */
-    public void startButton(){
-        if (loaded) {
-            if (playCount == 0) {
 
-                Load.setDisable(true);
-                Random.setDisable(true);
-                //make_board.randomPattern();
-                Stop.setDisable(false);
+    public void startStop() {
+        if (loaded){
+            if (!running){
+                running = true;
+                timeline.play();
+                LoadBoard.setDisable(true);
+                NewBoard.setDisable(true);
+                StartStop.setText("Stop");
+                StartStop.setTooltip(new Tooltip("Stop"));
+                size.setDisable(false);
             }
-            timeline.play();
-            stopCount = 0;
-            playCount++;
-            Start.setDisable(true);
-            size.setDisable(false);
-            Stop.setText("Stop");
-            Stop.setTooltip(new Tooltip("Stop"));
+            else {
+                running=false;
+                timeline.stop();
+                LoadBoard.setDisable(false);
+                NewBoard.setDisable(false);
+                size.setDisable(true);
+                Clear.setDisable(false);
+                StartStop.setText("Start");
+                StartStop.setTooltip(new Tooltip("Start"));
+            }
         }
+
     }
-    /**
-     * Når stopp knappen i guiet blir trykket på kaller den på denne funksjonen.
-     * Den stopper animasjonen og setter knappen klar for å cleare canvaset. Ved trykk 2 så cleres brettet.
-     */
-    public void stopButton(){
-        Start.setDisable(false);
-        //size.setDisable(true);
-        if(stopCount == 0){
-            timeline.stop();
-            stopCount++;
-            Stop.setText("Clear");
-            Stop.setTooltip(new Tooltip("Clear"));
-
-        }
-        else if( stopCount==1){
-
-            timeline.stop();
-            playCount = 0;
-            runCount = 0;
-            Stop.setText("Stop");
-            Load.setDisable(false);
-            Random.setDisable(false);
+    public void Clear() {
+        if (loaded){
             stage.setTitle("Game Of Life ");
-            Start.setDisable(true);
             showClearBoard();
-            dynamic.setSelected(false);
-            // satt inn else if, for å slippe å måtte flytte musen for å lukket programmet... ja, jeg er lat.
-            // når ferdig fjern if( stopCount==1) og stopcount + else under. uncomment stop.
-            //Stop.setDisable(true);
-            stopCount++;
-        }
-        else {
-            stage.close();
-        }
-    }
-
-
-    /**
-     * Draw array kjører gjennom brettet og bestemmer om det skal tegnes den valgte fargen eller om det skal tegnes hvit.
-     * den kaller på draw_ned eller draw, for visning på skjerm.
-     * Samtidig så setter den antall celler som er i livet i hver generation.
-     */
-    private void draw_Array(){
-        if (dynamic.isSelected()){
-            for (int row = 0; row < dynamicBoard.getRow(); row++) {
-                for (int col = 0; col <  dynamicBoard.getColumn() ; col++) {
-                    if (dynamicBoard.getCellAliveState(row,col)==1){
-                        draw_ned(row  , col , colorPicker.getValue());
-                        aliveCount ++;
-                    }
-                    else {
-                        draw_ned(row , col , Color.WHITE);
-                    }
-                }
-
-            }
-        }
-        else {
-            for (int row = 0; row < staticBoard.getRow(); row++) {
-                for (int col = 0; col < staticBoard.getColumn() ; col++) {
-                    if (staticBoard.getCellAliveState(row,col)== 1){
-                        draw_ned( row  , col , colorPicker.getValue());
-                        aliveCount ++;
-                    }
-                    else {
-                        draw_ned(row , col , Color.WHITE);
-                    }
-                }
-            }
         }
 
     }
+    public void newBoard() {
+        Stage popupwindow=new Stage();
+        popupwindow.initModality(Modality.APPLICATION_MODAL);
+        popupwindow.setTitle("Load");
+
+
+        Label label1= new Label("How do you want to load?");
+
+        ComboBox comboBox = new ComboBox();
+        comboBox.setValue("Static");
+        comboBox.setItems(ChangeBoard);
+
+
+        TextField sizeField = new TextField();
+        sizeField.setPromptText("Enter Size");
+        sizeField.setText("200");
 
 
 
-    /**
-     * Blir kalt på når boardet skal bli klart. Den kjører over alt og setter alle verdier til å være hvite.
-     */
-    @FXML private void remove_Array() {
+        Button clearBoard = new Button("Clear Board");
+        Button randomeBoard = new Button("Randome Board");
+        Button cancle = new Button("Cancle");
 
-        for (int row = 0; row < staticBoard.getRow(); row++) {
-            for (int col = 0; col < staticBoard.getColumn() ; col++) {
-                draw_ned(row , col, Color.WHITE);
-            }
-        }
+        clearBoard.setOnAction(event -> {
+            setBoardMakerBoard(comboBox);
+            int value = Integer.parseInt(sizeField.getText());
+            boardMaker.makeClearBoard(value,value);
+            loaded(loaded = true);
+            popupwindow.close();
+        });
+
+        randomeBoard.setOnAction(( event) -> {
+            setBoardMakerBoard(comboBox);
+            int value = Integer.parseInt(sizeField.getText());
+            boardMaker.randomPattern(value,value);
+            loaded(loaded = true);
+            popupwindow.close();
+        });
+
+
+        cancle.setOnAction(event -> {
+            popupwindow.close();
+        });
+
+
+        VBox layout= new VBox(20);
+        HBox Size = new HBox(10);
+
+        HBox okCancle = new HBox(10);
+
+        Size.getChildren().addAll(sizeField, comboBox);
+
+        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancle);
+        okCancle.setAlignment(Pos.BASELINE_RIGHT);
+
+        layout.getChildren().addAll(label1, Size,okCancle);
+
+        layout.setAlignment(Pos.CENTER);
+        Scene scene1= new Scene(layout, 300, 150);
+        popupwindow.setScene(scene1);
+        popupwindow.showAndWait();
     }
 
-    /**
-     * Draw får posisjonen til celle opp i mot resten og tegner den så proposjonalt ut på skjermen.
-     * @param col
-     * @param row
-     * @param c
-     */
-    private void draw( int col, int row, Color c) {
-        gc = Canvas.getGraphicsContext2D();
-        gc.setFill(Color.web("E0E0E0"));
-        //gc.setFill(Color.WHITE);
-        gc.fillRect(col* (size.getValue()/10) , row*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
-        gc.setFill(c);
-        gc.fillRect((col * (size.getValue()/10))+1 , (row  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
-    }
+    public void loadBoard(ActionEvent actionEvent) {
 
-    /**
-     * Draw får posisjonen til celle opp i mot resten og tegner den så proposjonalt ut på skjermen.
-     * @param col
-     * @param row
-     * @param c
-     */
-    private void draw_ned( int col, int row, Color c) {
-        gc.setFill(Color.web("E0E0E0"));
-        //gc.setFill(Color.WHITE);
-        gc.fillRect(row* (size.getValue()) , col*(size.getValue()), ((size.getValue())), (size.getValue()));
-        gc.setFill(c);
-        gc.fillRect((row * (size.getValue()))+1 , (col  * (size.getValue()))+1, ((size.getValue()))-2, (size.getValue())-2);
-
-
-    }
-
-
-    /**
-     * Load setter i gang en rekke andre funksjoner nedover linja, samt fler sjekker for å se at brettet blir lastet inn riktig.
-     * Her må alt før ha gått greit for at vi skal få klar beskjed til å kunne kjøre.
-     */
-    public void load() {
-       Stage popupwindow=new Stage();
+        Stage popupwindow=new Stage();
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
         final ToggleGroup group = new ToggleGroup();
@@ -353,7 +287,10 @@ public class Controller implements Initializable {
         TextField urlField = new TextField();
         urlField.setPromptText("Enter URL");
         urlField.setDisable(true);
-        CheckBox checkBox = new CheckBox("Dynamisk");
+
+        ComboBox comboBox = new ComboBox();
+        comboBox.setValue("Static");
+        comboBox.setItems(ChangeBoard);
 
         Button ok = new Button("Load");
         Button cancle = new Button("Cancle");
@@ -369,12 +306,16 @@ public class Controller implements Initializable {
             urlField.setDisable(false);
         });
 
+
         browse.setOnAction(event -> {
-            loadAction();
+            setBoardMakerBoard(comboBox);
+            loaded = fileLoader.ReadFromFile();
+            loaded(loaded);
             popupwindow.close();
         });
         ok.setOnAction(event -> {
-            if (!urlField.getText().isEmpty()){
+            setBoardMakerBoard(comboBox);
+            if (!urlField.getText().isEmpty()){ //Sjekke om det er en url eller ikke.... mangler.
                 loaded = fileLoader.ReadFromUrl(urlField.getText());
                 loaded(loaded);
                 popupwindow.close();
@@ -382,38 +323,45 @@ public class Controller implements Initializable {
         });
         cancle.setOnAction(event -> {
             loaded=false;
+            board= null;
             popupwindow.close();
         });
 
 
-        VBox layout= new VBox(15);
+
+        VBox layout= new VBox(20);
         HBox disk = new HBox(10);
         HBox url = new HBox(10);
         HBox okCancle = new HBox(10);
+        okCancle.setAlignment(Pos.BASELINE_RIGHT);
+
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
         okCancle.getChildren().addAll(ok,cancle);
-        layout.getChildren().addAll(label1, disk, url, checkBox,okCancle);
+
+        layout.getChildren().addAll(label1, disk, url, comboBox,okCancle);
+
         layout.setAlignment(Pos.CENTER);
-        Scene scene1= new Scene(layout, 300, 300);
+        Scene scene1= new Scene(layout, 300, 200);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
-
     }
-    public void loadAction(){
-        draw_Array();
-        gc.clearRect(0,0,600,600);
-        stopCount = 0;
-        Stop.setDisable(true);
 
-        loaded = fileLoader.ReadFromFile();
-        loaded(loaded);
-
+    private void setBoardMakerBoard(ComboBox comboBox){
+        if (!(comboBox.getValue() == "Static")){
+            board = new DynamicBoard();
+        }else {
+            board = new StaticBoard();
+        }
+        boardMaker.setBoardType(board);
     }
+
+
     public void loaded(boolean loaded){
         if (loaded){
+            gc.clearRect(0,0,Canvas.getWidth(),Canvas.getHeight());
             draw_Array();
-            Start.setDisable(false);
+            StartStop.setDisable(false);
         }
         else {
             showClearBoard();
@@ -422,30 +370,64 @@ public class Controller implements Initializable {
     }
 
 
+
     /**
-     * RandomBoard setter i gang flere funksjoner som generer ett random brett som så blir vist.
+     * Draw array kjører gjennom brettet og bestemmer om det skal tegnes den valgte fargen eller om det skal tegnes hvit.
+     * den kaller på draw_ned eller draw, for visning på skjerm.
+     * Samtidig så setter den antall celler som er i livet i hver generation.
      */
-    public void RandomBoard() {
+    private void draw_Array(){
+        for (int row = 0; row < board.getRow(); row++) {
+            for (int col = 0; col <  board.getColumn() ; col++) {
+                if (board.getCellAliveState(row,col)==1){
+                    draw_ned(row  , col , colorPicker.getValue());
+                    aliveCount ++;
+                }
+                else {
+                    draw_ned(row , col , Color.WHITE);
+                }
+            }
 
-
-
-        stopCount = 0;
-        Stop.setDisable(true);
-        boardMaker.randomPattern();
-        draw_Array();
-        loaded = true;
-        Start.setDisable(false);
+        }
+        
 
 
     }
+
+
+    private void draw( int col, int row, Color c) {
+        gc = Canvas.getGraphicsContext2D();
+        gc.setFill(Color.web("E0E0E0"));
+        //gc.setFill(Color.WHITE);
+        gc.fillRect(col* (size.getValue()/10) , row*(size.getValue()/10), ((size.getValue()/10)), (size.getValue()/10));
+        gc.setFill(c);
+        gc.fillRect((col * (size.getValue()/10))+1 , (row  * (size.getValue()/10))+1, ((size.getValue()/10) -2), (size.getValue()/10)-2);
+    }
+
+
+    private void draw_ned( int col, int row, Color c) {
+        gc.setFill(Color.web("E0E0E0"));
+        //gc.setFill(Color.WHITE);
+        gc.fillRect(row* (size.getValue()) , col*(size.getValue()), ((size.getValue())), (size.getValue()));
+        gc.setFill(c);
+        gc.fillRect((row * (size.getValue()))+1 , (col  * (size.getValue()))+1, ((size.getValue()))-2, (size.getValue())-2);
+
+
+    }
+
+
+
+
+
+
+
+
 
     /**
      * Generer ett blankt brett for så å tegne det.
      */
     public void showClearBoard(){
-        //boardMaker.makeClearBoard(); // vurderer å endre alle over til å bare hente info fra Board classen. ER redundent å lagre alt i Controller når vi har tilgang til det i Board.
-        staticBoard.resetBoard();
-        if (dynamic.isSelected())dynamicBoard.resetBoard();
+        boardMaker.makeClearBoard(200,200);
         draw_Array();
     }
 
@@ -481,20 +463,26 @@ public class Controller implements Initializable {
         timeline.setAutoReverse(false);
         timing =timer.getValue();
 
-        staticBoard = new StaticBoard(300,300);
-        dynamicBoard = new DynamicBoard(300,300);
-        boardMaker = new BoardMaker(staticBoard, dynamicBoard);
-        fileLoader = new FileLoader(staticBoard, dynamicBoard,boardMaker);
+
+
+        boardMaker = new BoardMaker();
+        fileLoader = new FileLoader(boardMaker);
+
+        nextGenThreads = new NextGenThreads(board);
         gc = Canvas.getGraphicsContext2D();
 
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
 
 
-        boardMaker.makeClearBoard();
+        //boardMaker.makeClearBoard();
 
-        Stop.setDisable(true);
-        Start.setDisable(true);
+        Clear.setDisable(true);
+        StartStop.setDisable(true);
+
+
+
+
         //scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         //scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollpane.setPannable(false);
@@ -502,30 +490,42 @@ public class Controller implements Initializable {
         RuleDropDown.setValue("Game of Life");
         RuleDropDown.setItems(ChangeRules);
 
-        mouse = new Mouse(Canvas, staticBoard,scrollpane);
+        mouse = new Mouse(Canvas,scrollpane);
         mouse.scroll();
 
         listeners();
-        showClearBoard();
+        //showClearBoard();
 
 
-
-        if ((Canvas.getWidth() == dynamicBoard.getRow() && Canvas.getHeight() == dynamicBoard.getColumn())|| (Canvas.getWidth() == staticBoard.getRow() && Canvas.getHeight() == staticBoard.getColumn()) ){
+/*
+        if ((Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn())|| (Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn()) ){
             System.out.println(true);
         }else {
+
             if (dynamic.isSelected()){
-                Canvas.setWidth(dynamicBoard.getColumn()*size.getValue());
-                Canvas.setHeight( dynamicBoard.getRow()*size.getValue());
+                Canvas.setWidth(board.getColumn()*size.getValue());
+                Canvas.setHeight( board.getRow()*size.getValue());
             }else {
-                Canvas.setWidth(staticBoard.getColumn()*size.getValue());
-                Canvas.setHeight( staticBoard.getRow()*size.getValue());
+                Canvas.setWidth(board.getColumn()*size.getValue());
+                Canvas.setHeight( board.getRow()*size.getValue());
             }
 
-        }
 
+        }
+*/
 
 
     }
 
 
+
+
+
+
+
+
+
+
+    public void saveBoard(ActionEvent actionEvent) {
+    }
 }
