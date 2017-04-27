@@ -153,6 +153,17 @@ public class Controller implements Initializable {
                 scrollpane.setPannable(false);
                 int y = (int)(e.getX()/size.getValue());
                 int x = (int)(e.getY()/size.getValue());
+                if(dynamic.isSelected()){
+                  if(dynamicBoard.getCellAliveState(x,y)==1){
+                    dynamicBoard.setCellAliveState(x,y,(byte)0);
+                    draw_ned(x,y,Color.WHITE);
+                }
+                else {
+                    dynamicBoard.setCellAliveState(x,y,(byte)1);
+                    draw_ned(x,y,colorPicker.getValue());
+                }  
+                }
+                else{
                 if(staticBoard.getCellAliveState(x,y)==1){
                     staticBoard.setCellAliveState(x,y,(byte)0);
                     draw_ned(x,y,Color.WHITE);
@@ -164,6 +175,7 @@ public class Controller implements Initializable {
                 Start.setDisable(false);
                 stopCount = 0;
                 loaded = true;
+                }
             }
 
         });
@@ -178,7 +190,7 @@ public class Controller implements Initializable {
                 int x = (int)(e.getY()/size.getValue());
                 try {
                     staticBoard.setCellAliveState(x,y,(byte)1);
-
+                    dynamicBoard.setCellAliveState(x,y,(byte)1);
                     draw_ned(x,y,colorPicker.getValue());
                 } catch (Exception el) {
                     System.err.println("Why you out of canvas? " + y + " | "+x );
@@ -193,6 +205,14 @@ public class Controller implements Initializable {
      * Start kan ikke kjørers med mindre man har vært innom load eller randomboard.
      */
     public void startButton(){
+        
+        for (int row = 0; row < dynamicBoard.getRow(); row++) {
+            for (int col = 0; col < dynamicBoard.getColumn(); col++) {
+                dynamicBoard.setCellAliveState(row, col, staticBoard.getCellAliveState(row, col));
+            }
+            }
+        
+        
         if (loaded) {
             if (playCount == 0) {
 
