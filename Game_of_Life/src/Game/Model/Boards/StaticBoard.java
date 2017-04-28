@@ -101,7 +101,7 @@ public class StaticBoard extends Board{
     }
 
 
-    protected int countNeighbor(int col, int row){
+    protected int countNeighbor(int row, int col){
         int neighbors = 0;
         // Check cell on the right.
         if (row != board.length - 1)
