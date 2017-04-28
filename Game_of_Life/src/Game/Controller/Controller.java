@@ -5,9 +5,8 @@ package Game.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import Game.Model.Boards.Board;
-import Game.Model.Boards.DynamicBoard;
-import Game.Model.Boards.StaticBoard;
+import Game.Model.Boards.*;
+
 
 import javafx.animation.*;
 import javafx.beans.value.ObservableValue;

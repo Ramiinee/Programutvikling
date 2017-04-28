@@ -28,7 +28,7 @@ public class DynamicBoard extends Board{
     }
 
     public void nextGeneration(){
-        //addTopRow(10);
+        
         makeNextGen();
 
         for (int row = 0; row < board.size(); row++) {
@@ -116,6 +116,7 @@ public class DynamicBoard extends Board{
 
 
     protected int countNeighbor(int col, int row){
+        addTopRow(1);
         int neighbors = 0;
         // Check cell on the right.
         if (row != board.size() - 1)
