@@ -214,7 +214,7 @@ public class Controller implements Initializable {
 
         TextField sizeField = new TextField();
         sizeField.setPromptText("Enter Size");
-        sizeField.setText("200");
+        sizeField.setText("50");
 
 
 

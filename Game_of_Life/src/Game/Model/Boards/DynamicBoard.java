@@ -14,21 +14,27 @@ public class DynamicBoard extends Board{
     public List<List<Byte>> board;
     private List<List<Byte>> nextGeneration;
 
+    @Override
     public int getRow() {
         return board.size();
     }
+    @Override
     public void setRow(int row) {
         this.MIN_ROW = row;
     }
+    @Override
     public int getColumn() {
         return board.get(0).size();
     }
+    @Override
     public void setColumn(int column) {
         this.MIN_COL = column;
     }
 
+    @Override
     public void nextGeneration(){
         
+      expand();
         makeNextGen();
 
         for (int row = 0; row < board.size(); row++) {
@@ -56,6 +62,21 @@ public class DynamicBoard extends Board{
         }
         setCurrentGen();
     }
+    
+  
+    public void expand(){
+
+        //board.get(row).get(col)
+    for (int x = 0; x < board.size(); x++) {      
+        
+        if(board.get(0).get(x) == 1){
+        addTopRow(1);
+        break;
+        }
+
+    }   
+    }
+    
 
     public void slowlyCover(){
         makeNextGen();
@@ -116,7 +137,7 @@ public class DynamicBoard extends Board{
 
 
     protected int countNeighbor(int col, int row){
-        addTopRow(1);
+       
         int neighbors = 0;
         // Check cell on the right.
         if (row != board.size() - 1)
