@@ -65,17 +65,41 @@ public class DynamicBoard extends Board{
     
   
     public void expand(){
-
+// the struggle is real. 
         //board.get(row).get(col)
-    for (int x = 0; x < board.size(); x++) {      
+    for (int top = 0; top < board.get(0).size(); top++) {      
         
-        if(board.get(0).get(x) == 1){
+        if(board.get(0).get(top) == 1){
         addTopRow(1);
         break;
         }
-
-    }   
     }
+    
+    for(int left = 0; left < board.size(); left ++){
+      if(board.get(left).get(0) == 1){
+          addLeftColumn(1);
+          break;
+      }
+    }
+    
+   /* for ( int right = 0; right < board.size(); right ++){
+       if(board.get(right).get( NOE ANGÅENDE MAX LENGDE SKAL INN HER) == 1){
+        addRightColumn(1);
+        break;
+    }
+    }
+    
+    for( int bottom = 0; bottom < board.get( MAX LENGDE ).size(); bottom++){
+        if(board.get(INN HER OGSÅ BUT I DONT EVEN ).get(bottom) == 1){
+        addBottomRow(1);
+        break;
+    }
+    } */
+    }
+        
+        
+      
+    
     
 
     public void slowlyCover(){
