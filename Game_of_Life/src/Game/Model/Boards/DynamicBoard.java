@@ -67,6 +67,9 @@ public class DynamicBoard extends Board{
     public void expand(){
 // the struggle is real. 
         //board.get(row).get(col)
+        int maxRow = board.size()-1;
+        int maxCol = board.get(maxRow).size() -1;
+        
     for (int top = 0; top < board.get(0).size(); top++) {      
         
         if(board.get(0).get(top) == 1){
@@ -82,19 +85,19 @@ public class DynamicBoard extends Board{
       }
     }
     
-   /* for ( int right = 0; right < board.size(); right ++){
-       if(board.get(right).get( NOE ANGÅENDE MAX LENGDE SKAL INN HER) == 1){
+   for ( int right = 0; right < board.size(); right ++){
+       if(board.get(right).get(maxCol) == 1){
         addRightColumn(1);
         break;
     }
     }
     
-    for( int bottom = 0; bottom < board.get( MAX LENGDE ).size(); bottom++){
-        if(board.get(INN HER OGSÅ BUT I DONT EVEN ).get(bottom) == 1){
+   for( int bottom = 0; bottom < board.get(maxRow).size(); bottom++){
+        if(board.get(maxRow).get(bottom) == 1){
         addBottomRow(1);
         break;
     }
-    } */
+    } 
     }
         
         
