@@ -2,84 +2,138 @@ package Game.Controller;
 
 
 import Game.Model.Boards.Board;
+import javafx.scene.control.ComboBox;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class NextGenThreads {
     Board board;
-    Thread serviceOneThread;
-    Thread nextGenThread;
     CyclicBarrier barrier;
     private final int numWorkers =Runtime.getRuntime().availableProcessors();
-    private int[][] segments;
-    private List<Thread> threads;
+    private int[] splitedBoard;
+    private Thread[] workers;
 
-    public NextGenThreads(Board boardType) {
-        this.board = boardType;
-        barrier = new CyclicBarrier(3);
-        segments = new int[numWorkers][4];
-        threads = new ArrayList<>();
+    public NextGenThreads() {
+
+
+
+        workers = new Thread[numWorkers];
+        splitedBoard = new int[numWorkers];
+        barrier = new CyclicBarrier(1);
+
     }
 
-    public void nextGen(){
 
+    public void createWorkers(ComboBox RuleDropDown) {
+        for (int i = 0; i < numWorkers; i++) {
+            int start;
+            int stop;
+            if (i == 0){
+                start = 0;
+                stop = splitedBoard[i];
+            }else{
+                start = splitedBoard[i-1];
+                stop = splitedBoard[i];
+            }
 
-        int rowpart1;
-
-
-        if ((board.getRow()%2) ==1 ){
-            rowpart1 = (board.getRow()/2) + 1;
-
-        }else {
-            rowpart1 = board.getRow()/2;
+            workers[i] = new Thread(new NextGenera(barrier, board, start,stop,RuleDropDown ));
 
         }
 
-        //System.out.println(rowpart1 + " | " + rowpart1);
 
-        serviceOneThread = new Thread((new NextGenera(barrier,board, 0, rowpart1)));
-        nextGenThread= new Thread(new NextGenera(barrier,board,rowpart1, board.getRow()));
 
-        serviceOneThread.start();
-        nextGenThread.start();
+    }
+    public void split(){
+        int length = board.getRow();
+        int splited = length/numWorkers;
+        for (int i = 1; i <splitedBoard.length  ; i++) {
+            splitedBoard[i-1] = splited * i;
+        }
+        splitedBoard[splitedBoard.length-1] = board.getRow();
 
+        System.out.println(Arrays.toString(splitedBoard));
+
+    }
+    private void runWorkers() throws InterruptedException {
+
+        for (int i = 0; i <workers.length ; i++) {
+            workers[i].start();
+        }
+        for (int i = 0; i <workers.length ; i++) {
+
+            workers[i].join();
+
+        }
+
+
+    }
+
+    public void nextGen(ComboBox RuleDropDown ) throws InterruptedException {
+
+        board.makeNextGenArray();
+
+        createWorkers(RuleDropDown);
+
+        runWorkers();
         try {
             barrier.await();
-        } catch (InterruptedException | BrokenBarrierException e) {
-            System.out.println("Main Thread interrupted!");
+        } catch (InterruptedException e) {
             e.printStackTrace();
-
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
         }
 
-
+        board.setBoard();
 
     }
     public void stop(){
-        serviceOneThread.stop();
-        nextGenThread.stop();
+
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+
     }
 
     private static class NextGenera implements Runnable {
         CyclicBarrier cyclicBarrier;
-        Board boardType;
+        Board board;
         int start;
-        int slutt;
+        int stop;
+        ComboBox RuleDropDown;
 
-        public NextGenera(CyclicBarrier cyclicBarrier,  Board boardType, int start, int slutt) {
+        public NextGenera(CyclicBarrier cyclicBarrier,Board board, int start, int stop,ComboBox RuleDropDown ) {
+
             this.cyclicBarrier = cyclicBarrier;
-            this.boardType = boardType;
+            this.board = board;
             this.start = start;
-            this.slutt = slutt;
+            this.stop = stop;
+            this.RuleDropDown = RuleDropDown;
+
         }
 
         @Override
         public void run() {
-            //boardType.nextGeneration(start,slutt,cyclicBarrier);
+            if(RuleDropDown.getValue() == "Game of Life"){
+                board.nextGeneration(start,stop,cyclicBarrier);
+            }
+            else if(RuleDropDown.getValue() == "No deaths"){
+                board.noDeadCellsRule(start,stop,cyclicBarrier);
+
+
+            }
+            else if(RuleDropDown.getValue() == "Cover"){
+                board.slowlyCover(start,stop,cyclicBarrier);
+            }
+
 
         }
+
 
 
     }

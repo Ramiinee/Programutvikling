@@ -1,5 +1,8 @@
 package Game.Model.Boards;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
 /**
  *
  * @author Joachim-Privat
@@ -31,12 +34,13 @@ public class StaticBoard extends Board{
     @Override
     public void setRow(int row) {
         this.Row = row;
+
     }
 
 
-    public void noDeadCellsRule(){
-        nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 0; col < board.length; col++) {
+    public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
+
+        for (int col = start; col < stop; col++) {
             for (int row = 0; row < board[col].length; row++) {
                 int neighbors = countNeighbor(col,row);
 
@@ -49,15 +53,34 @@ public class StaticBoard extends Board{
 
             }
         }
+
+
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
+
+        }
+
+
+    }
+    @Override
+    public void setBoard(){
         board = nextGeneration;
+        nextGeneration = null;
+    }
+
+    @Override
+    public void makeNextGenArray() {
+        nextGeneration = new byte[board.length][board[0].length];
     }
 
 
+    public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
 
-    public void nextGeneration(){
-        nextGeneration = new byte[board.length][board[0].length];
-        for (int row = 0; row <Row ; row++) {
-            for (int col = 0; col <Column; col++) {
+        for (int row = start; row < stop ; row++) {
+            for (int col = 0; col < board[row].length; col++) {
                 int neighbors = countNeighbor(row, col);
                 if ((board[row][col] == 1) && (neighbors < 2)) {
                     nextGeneration[row][col] = 0;
@@ -71,15 +94,22 @@ public class StaticBoard extends Board{
 
             }
         }
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
+
+        }
 
 
-        board = nextGeneration;
+
     }
 
-    public void slowlyCover(){
-        nextGeneration = new byte[board.length][board[0].length];
-        for (int col = 0; col < board.length; col++) {
-            for (int row = 0; row < board[col].length; row++) {
+    public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
+
+        for (int row = start; row < stop ; row++) {
+            for (int col = 0; col < board[row].length; col++) {
                 int neighbors = countNeighbor(col,row);
                 if((board[col][row] == 1)) {
                     nextGeneration[col][row] = 1;
@@ -97,7 +127,13 @@ public class StaticBoard extends Board{
             }
 
         }
-        board = nextGeneration;
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
+
+        }
     }
 
 

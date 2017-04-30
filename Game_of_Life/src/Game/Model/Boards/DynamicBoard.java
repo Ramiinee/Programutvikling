@@ -4,6 +4,8 @@ package Game.Model.Boards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 
 public class DynamicBoard extends Board{
@@ -14,41 +16,31 @@ public class DynamicBoard extends Board{
     public List<List<Byte>> board;
     private List<List<Byte>> nextGeneration;
 
-    @Override
     public int getRow() {
         return board.size();
     }
-    @Override
     public void setRow(int row) {
         this.MIN_ROW = row;
     }
-    @Override
     public int getColumn() {
         return board.get(0).size();
     }
-    @Override
     public void setColumn(int column) {
         this.MIN_COL = column;
     }
 
-    @Override
-    public void nextGeneration(){
-        
-      expand();
-        makeNextGen();
+    public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
+        //addTopRow(10);
+
 
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-
                 int neighbors = countNeighbor(col,row);
-
-
                 if (board.get(row).get(col)==1 && (neighbors < 2)){
                     nextGeneration.get(row).set(col,(byte)0);
                 }
                 else if (board.get(row).get(col) == 1 && (neighbors > 3)) {
                     nextGeneration.get(row).set(col,(byte)0);
-
                 }
                 else if ( board.get(row).get(col) == 0 && (neighbors == 3)){
                     nextGeneration.get(row).set(col,(byte)1);
@@ -56,67 +48,28 @@ public class DynamicBoard extends Board{
                 else {
                     nextGeneration.get(row).set(col, board.get(row).get(col));
                 }
-
             }
+        }
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
 
         }
-        setCurrentGen();
     }
-    
-  
-    public void expand(){
-// the struggle is real. 
-        //board.get(row).get(col)
-    for (int top = 0; top < board.get(0).size(); top++) {      
-        
-        if(board.get(0).get(top) == 1){
-        addTopRow(1);
-        break;
-        }
-    }
-    
-    for(int left = 0; left < board.size(); left ++){
-      if(board.get(left).get(0) == 1){
-          addLeftColumn(1);
-          break;
-      }
-    }
-    
-   /* for ( int right = 0; right < board.size(); right ++){
-       if(board.get(right).get( NOE ANGÅENDE MAX LENGDE SKAL INN HER) == 1){
-        addRightColumn(1);
-        break;
-    }
-    }
-    
-    for( int bottom = 0; bottom < board.get( MAX LENGDE ).size(); bottom++){
-        if(board.get(INN HER OGSÅ BUT I DONT EVEN ).get(bottom) == 1){
-        addBottomRow(1);
-        break;
-    }
-    } */
-    }
-        
-        
-      
-    
-    
 
-    public void slowlyCover(){
-        makeNextGen();
+    public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
 
-        for (int row = 0; row < board.size(); row++) {
+
+        for (int row = start; row < stop ; row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-
                 int neighbors = countNeighbor(col,row);
-
-
                 if (board.get(row).get(col)==1){
                     nextGeneration.get(row).set(col,(byte)1);
                 }
                 else if (neighbors > 3) {
                     nextGeneration.get(row).set(col,(byte)1);
-
                 }
                 else if (neighbors == 3){
                     nextGeneration.get(row).set(col,(byte)0);
@@ -124,44 +77,56 @@ public class DynamicBoard extends Board{
                 else {
                     nextGeneration.get(row).set(col, board.get(row).get(col));
                 }
-
             }
+        }
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
 
         }
-
-
-
-        setCurrentGen();
     }
 
-    public void noDeadCellsRule(){
-        makeNextGen();
-
+    public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-
                 int neighbors = countNeighbor(col,row);
-
                 if ( board.get(row).get(col) == 0 && (neighbors == 3)){
                     nextGeneration.get(row).set(col,(byte)1);
                 }
                 else {
                     nextGeneration.get(row).set(col, board.get(row).get(col));
                 }
-
             }
+        }
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            System.out.println("Main Thread interrupted!");
+            e.printStackTrace();
 
         }
-
+    }
+    @Override
+    public void setBoard(){
         setCurrentGen();
     }
 
-
-
+    @Override
+    public void makeNextGenArray() {
+        expand();
+        nextGeneration =  new ArrayList<>();
+        for (int row = 0; row < board.size(); row++) {
+            nextGeneration.add(new java.util.ArrayList<>());
+            for (int col = 0; col < board.get(row).size(); col++) {
+                nextGeneration.get(row).add((byte) 0);
+            }
+        }
+    }
 
 
     protected int countNeighbor(int col, int row){
-       
         int neighbors = 0;
         // Check cell on the right.
         if (row != board.size() - 1)
@@ -205,6 +170,41 @@ public class DynamicBoard extends Board{
 
         return neighbors;
     }
+    public void expand(){
+        // the struggle is real.
+        //board.get(row).get(col)
+        int maxRow = board.size()-1;
+        int maxCol = board.get(maxRow).size() -1;
+
+        for (int top = 0; top < board.get(0).size(); top++) {
+
+            if(board.get(0).get(top) == 1){
+                addTopRow(1);
+                break;
+            }
+        }
+
+        for(int left = 0; left < board.size(); left ++){
+            if(board.get(left).get(0) == 1){
+                addLeftColumn(1);
+                break;
+            }
+        }
+
+        for ( int right = 0; right < board.size(); right ++){
+            if(board.get(right).get(maxCol) == 1){
+                addRightColumn(1);
+                break;
+            }
+        }
+
+        for( int bottom = 0; bottom < board.get(maxRow).size(); bottom++){
+            if(board.get(maxRow).get(bottom) == 1){
+                addBottomRow(1);
+                break;
+            }
+        }
+    }
 
 
 
@@ -218,16 +218,7 @@ public class DynamicBoard extends Board{
         }
         nextGeneration.clear();
     }
-    private void makeNextGen(){
-        nextGeneration =  new ArrayList<>();
-        for (int row = 0; row < board.size(); row++) {
-            nextGeneration.add(new java.util.ArrayList<>());
-            for (int col = 0; col < board.get(row).size(); col++) {
-                nextGeneration.get(row).add((byte) 0);
-            }
-        }
 
-    }
     private void addTopRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.add(0, new ArrayList<>());
@@ -262,7 +253,7 @@ public class DynamicBoard extends Board{
     }
 
 
-        // rle leser inn i brett. Kan bestemme hvor så du kan ha flere figurer samtidig.
+    // rle leser inn i brett. Kan bestemme hvor så du kan ha flere figurer samtidig.
     // if white set backgrunfd to black.
 
 

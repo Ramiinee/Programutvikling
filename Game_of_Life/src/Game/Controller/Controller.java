@@ -4,14 +4,15 @@ package Game.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import Game.Model.Boards.*;
-
-
-import javafx.animation.*;
+import Game.Model.Boards.Board;
+import Game.Model.Boards.DynamicBoard;
+import Game.Model.Boards.StaticBoard;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -56,6 +57,7 @@ public class Controller implements Initializable {
     private GraphicsContext gc;
     private ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
     private ObservableList<String> ChangeBoard = FXCollections.observableArrayList("Static", "Dynamic");
+    private ScheduledService<Void> scheduledService;
 
     //Counters
     private int runCount = 1;
@@ -64,51 +66,22 @@ public class Controller implements Initializable {
     private boolean loaded = false;
     private boolean running = false;
 
+
     private BoardMaker boardMaker;
     private FileLoader fileLoader;
     private Board board = null;
     private NextGenThreads nextGenThreads;
-
-
     public Mouse mouse;
 
 
-    private double timing = 120;
-    private double StartTimer = timing;
-    /**
-     * Her styres hvert frame, og hva som skal skje i det framet.
-     */
-    private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
-        //gc.setFill(Color.WHITE);
-        //gc.fillRect(0,0,2000,2000);
-
-
-            if(RuleDropDown.getValue() == "Game of Life"){
-                board.nextGeneration();
-            }
-            else if(RuleDropDown.getValue() == "No deaths"){
-                board.noDeadCellsRule();
-            }
-            else if(RuleDropDown.getValue() == "Cover"){
-                board.slowlyCover();
-            }
-
-
-        updateCanvas();
-        draw_Array();
-
-        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
-        aliveCount = 0;
-    }
-    ));
 
     /**
      * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
      */
     private void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
-            timing = newtime.intValue();
-            timeline.setRate(timing);
+            Duration duration = new Duration(1000/newtime.intValue());
+            scheduledService.setPeriod(duration);
         });
         size.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
             try {
@@ -172,7 +145,8 @@ public class Controller implements Initializable {
         if (loaded){
             if (!running){
                 running = true;
-                timeline.play();
+
+                    scheduledService.restart();
                 LoadBoard.setDisable(true);
                 NewBoard.setDisable(true);
                 StartStop.setText("Stop");
@@ -181,7 +155,8 @@ public class Controller implements Initializable {
             }
             else {
                 running=false;
-                timeline.stop();
+
+                    scheduledService.cancel();
                 LoadBoard.setDisable(false);
                 NewBoard.setDisable(false);
                 size.setDisable(true);
@@ -214,7 +189,7 @@ public class Controller implements Initializable {
 
         TextField sizeField = new TextField();
         sizeField.setPromptText("Enter Size");
-        sizeField.setText("50");
+        sizeField.setText("200");
 
 
 
@@ -232,10 +207,12 @@ public class Controller implements Initializable {
 
         randomeBoard.setOnAction(( event) -> {
             setBoardMakerBoard(comboBox);
-            int value = Integer.parseInt(sizeField.getText());
+            int value = Integer.parseInt(sizeField.getText());//sjekke om det er tall eller ikke
             boardMaker.randomPattern(value,value);
             loaded(loaded = true);
             popupwindow.close();
+
+
         });
 
 
@@ -260,6 +237,7 @@ public class Controller implements Initializable {
         Scene scene1= new Scene(layout, 300, 150);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
+
     }
 
     public void loadBoard(ActionEvent actionEvent) {
@@ -341,6 +319,7 @@ public class Controller implements Initializable {
         Scene scene1= new Scene(layout, 300, 200);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
+
     }
 
     private void setBoardMakerBoard(ComboBox comboBox){
@@ -350,10 +329,13 @@ public class Controller implements Initializable {
             board = new StaticBoard();
         }
         boardMaker.setBoardType(board);
+
     }
 
 
     public void loaded(boolean loaded){
+        nextGenThreads.setBoard(board);
+        nextGenThreads.split();
         if (loaded){
             gc.clearRect(0,0,Canvas.getWidth(),Canvas.getHeight());
             updateCanvas();
@@ -433,6 +415,7 @@ public class Controller implements Initializable {
      */
     public void showClearBoard(){
         boardMaker.makeClearBoard(200,200);
+        updateCanvas();
         draw_Array();
     }
 
@@ -441,11 +424,9 @@ public class Controller implements Initializable {
      * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
      */
     public void reset(){
-
         size.setValue(5);
-        timer.setValue(1);
+        timer.setValue(60);
         colorPicker.setValue(Color.BLACK);
-
         try {
             mouse.setZoomValue(0);
             scrollpane.setHvalue(0);
@@ -464,29 +445,17 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(false);
-        timing =timer.getValue();
-
-
-
-        boardMaker = new BoardMaker();
-        fileLoader = new FileLoader(boardMaker);
-
-        nextGenThreads = new NextGenThreads(board);
         gc = Canvas.getGraphicsContext2D();
-
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
 
-
-        //boardMaker.makeClearBoard();
+        boardMaker = new BoardMaker();
+        fileLoader = new FileLoader(boardMaker);
+        nextGenThreads = new NextGenThreads();
+        mouse = new Mouse(Canvas);
 
         Clear.setDisable(true);
         StartStop.setDisable(true);
-
-
-
 
         //scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         //scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -494,36 +463,34 @@ public class Controller implements Initializable {
 
         RuleDropDown.setValue("Game of Life");
         RuleDropDown.setItems(ChangeRules);
-
-        mouse = new Mouse(Canvas);
-        mouse.scroll();
-
         listeners();
-        //showClearBoard();
-
-
-/*
-        if ((Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn())|| (Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn()) ){
-            System.out.println(true);
-        }else {
-
-            if (dynamic.isSelected()){
-                Canvas.setWidth(board.getColumn()*size.getValue());
-                Canvas.setHeight( board.getRow()*size.getValue());
-            }else {
-                Canvas.setWidth(board.getColumn()*size.getValue());
-                Canvas.setHeight( board.getRow()*size.getValue());
-            }
-
-
-        }
-*/
-
-
+        initializeService();
     }
 
 
 
+    private void initializeService(){
+        scheduledService = new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        nextGenThreads.nextGen(RuleDropDown);
+                        Platform.runLater(() -> {
+                            updateCanvas();
+                            draw_Array();
+                            stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + (int)(timer.getValue())+ " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount + " | " + board.getRow() );
+                            aliveCount = 0;
+                        });
+                        return null;
+                    }
+                };
+            }
+        };
+        Duration duration = Duration.millis(1000/60);
+        scheduledService.setPeriod(duration);
+    }
 
 
 
