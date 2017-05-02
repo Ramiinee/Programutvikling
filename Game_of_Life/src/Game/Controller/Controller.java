@@ -44,6 +44,7 @@ public class Controller implements Initializable {
     public ScrollPane scrollpane;
     public ComboBox RuleDropDown;
     public Label TestLabel;
+    
 
     public Button StartStop;
     public Button SaveBoard;
@@ -195,7 +196,7 @@ public class Controller implements Initializable {
 
         Button clearBoard = new Button("Clear Board");
         Button randomeBoard = new Button("Randome Board");
-        Button cancle = new Button("Cancle");
+        Button cancle = new Button("Cancel");
 
         clearBoard.setOnAction(event -> {
             setBoardMakerBoard(comboBox);
@@ -395,6 +396,7 @@ public class Controller implements Initializable {
 
     }
 
+
     private void updateCanvas(){
         if (!(Canvas.getWidth() == board.getRow()*size.getValue() && Canvas.getHeight() == board.getColumn()*size.getValue())){
             Canvas.setWidth(board.getColumn()*size.getValue());
@@ -465,6 +467,7 @@ public class Controller implements Initializable {
         RuleDropDown.setItems(ChangeRules);
         listeners();
         initializeService();
+
     }
 
 
@@ -494,10 +497,28 @@ public class Controller implements Initializable {
 
 
 
+public java.awt.Color getAwkColor(javafx.scene.paint.Color fx){
+
+    
+java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),
+                                             (float) fx.getGreen(),
+                                             (float) fx.getBlue(),
+                                             (float) fx.getOpacity());
+return awtColor;
+}
 
 
 
+    public void saveBoard(ActionEvent actionEvent) throws Exception {
 
-    public void saveBoard(ActionEvent actionEvent) {
+        Color c = colorPicker.getValue();
+                
+      //GifWriter ugh = new GifWriter(getAwkColor(c));
+      GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown);
+      gifWriter.GifWriter();
+            
     }
+
+    
+    
 }

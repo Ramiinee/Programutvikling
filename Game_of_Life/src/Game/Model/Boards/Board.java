@@ -14,6 +14,7 @@ public abstract class Board{
    public abstract void setRow(int row);
 
    public abstract void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier);
+   public abstract void nextGeneration(int start, int stop);
    public abstract void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier);
    public abstract void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier);
    protected abstract int countNeighbor(int col, int row);
@@ -21,6 +22,7 @@ public abstract class Board{
    public abstract void setCellAliveState(int row, int column, byte aliveState);
    public abstract void makeBoard(int row, int col);
    public abstract void setBoard();
+   
    public abstract void makeNextGenArray();
 
 }

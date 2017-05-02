@@ -3,6 +3,9 @@ package Game.Model.Boards;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import static java.util.Collections.list;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -28,6 +31,7 @@ public class DynamicBoard extends Board{
     public void setColumn(int column) {
         this.MIN_COL = column;
     }
+
 
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
         //addTopRow(10);
@@ -115,6 +119,7 @@ public class DynamicBoard extends Board{
 
     @Override
     public void makeNextGenArray() {
+        
         expand();
         nextGeneration =  new ArrayList<>();
         for (int row = 0; row < board.size(); row++) {
@@ -171,41 +176,106 @@ public class DynamicBoard extends Board{
         return neighbors;
     }
     public void expand(){
-        // the struggle is real.
+
         //board.get(row).get(col)
         int maxRow = board.size()-1;
         int maxCol = board.get(maxRow).size() -1;
 
-        for (int top = 0; top < board.get(0).size(); top++) {
+        checkTop();
+        checkLeft();
+        checkRight(maxCol);
+        checkBottom(maxRow);
 
-            if(board.get(0).get(top) == 1){
+    }
+
+    public void checkTop(){
+        
+        int count = 0;
+
+        for (int topadd = 0; topadd < board.get(0).size(); topadd++) {
+            for (int topdelete = 0; topdelete < board.get(0).size(); topdelete++) {
+                if(board.get(0).get(topdelete) == 1){
+                    count ++; 
+                }
+            }
+            if(count == 0){
+            removeTopRow(1);
+            }
+            if(board.get(0).get(topadd) == 1){
                 addTopRow(1);
-                break;
-            }
-        }
-
-        for(int left = 0; left < board.size(); left ++){
-            if(board.get(left).get(0) == 1){
-                addLeftColumn(1);
-                break;
-            }
-        }
-
-        for ( int right = 0; right < board.size(); right ++){
-            if(board.get(right).get(maxCol) == 1){
-                addRightColumn(1);
-                break;
-            }
-        }
-
-        for( int bottom = 0; bottom < board.get(maxRow).size(); bottom++){
-            if(board.get(maxRow).get(bottom) == 1){
-                addBottomRow(1);
-                break;
+                return;
             }
         }
     }
+    
+    public void checkLeft(){
+        
+        int count = 0;
+           
+       
+        for(int leftadd = 0; leftadd < board.size(); leftadd ++){
+             for(int leftdelete = 0; leftdelete < board.size(); leftdelete ++){
+            if(board.get(leftdelete).get(0) == 1){
+                count++;
+            }
+            }
+             if(count == 0){
+             removeLeftColumn(1);
+             return;
+             }
+       
+            if(board.get(leftadd).get(0) == 1){
+                addLeftColumn(1);
+                return;
+            }
+        }
+    }
+    
+    public int checkRight(int maxCol){
+         int count = 0;
 
+        for ( int rightadd = 0; rightadd < board.size(); rightadd ++){
+             for ( int rightdelete = 0; rightdelete < board.size(); rightdelete ++){
+            if(board.get(rightdelete).get(maxCol) == 1){
+            count++;
+            }
+            }
+             /* if(count == 0){
+             removeRightColumn(1);
+             }*/
+            if(board.get(rightadd).get(maxCol) == 1){
+                addRightColumn(1);
+                return 0;
+            }
+        }
+        return 0;
+    }
+    
+    public int checkBottom(int maxRow){
+        
+        // delete
+        int count = 0;
+          
+        // add
+        for( int bottomadd = 0; bottomadd < board.get(maxRow).size(); bottomadd++){
+              for( int bottomdelete = 0; bottomdelete < board.get(maxRow).size(); bottomdelete++){
+                if(board.get(maxRow).get(bottomdelete) == 1){
+                count++;
+            }
+              }
+              /*if(count == 0){
+              removeBottomRow(1);
+              }*/
+            if(board.get(maxRow).get(bottomadd) == 1){
+                addBottomRow(1);
+                return 0;
+            }
+        }
+        return 0;
+    }
+    
+    
+   
 
 
     private void setCurrentGen(){
@@ -251,6 +321,25 @@ public class DynamicBoard extends Board{
             board.remove(0);
         }
     }
+    private void removeLeftColumn(int numberOfColumns) {
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (List<Byte> row : board) {
+                row.remove(0);
+            }
+        }
+    }
+    private void removeRightColumn(int numberOfColumns) {
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (List<Byte> row : board) {
+                row.remove(board.get(0).size() - 1);
+            }
+        }
+    }
+    private void removeBottomRow(int numberOfRows) {
+        for (int i = 0; i < numberOfRows; i++) {
+            board.remove(board.size() - 1);
+        }
+    }
 
 
     // rle leser inn i brett. Kan bestemme hvor så du kan ha flere figurer samtidig.
@@ -288,6 +377,11 @@ public class DynamicBoard extends Board{
             }
         }
 
+    }
+
+    @Override
+    public void nextGeneration(int start, int stop) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

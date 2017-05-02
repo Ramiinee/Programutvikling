@@ -30,13 +30,13 @@ public class StaticBoard extends Board{
     public int getRow() {
         return board.length;
     }
-
+    
     @Override
     public void setRow(int row) {
         this.Row = row;
 
     }
-
+    
 
     public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
 
@@ -104,6 +104,25 @@ public class StaticBoard extends Board{
 
 
 
+    }
+    public void nextGeneration(int start, int stop ){
+        makeNextGenArray();
+        for (int row = start; row < stop ; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                int neighbors = countNeighbor(row, col);
+                if ((board[row][col] == 1) && (neighbors < 2)) {
+                    nextGeneration[row][col] = 0;
+                } else if ((board[row][col] == 1) && (neighbors > 3)) {
+                    nextGeneration[row][col] = 0;
+                } else if (board[row][col] == 0 && (neighbors == 3)) {
+                    nextGeneration[row][col] = 1;
+                } else {
+                    nextGeneration[row][col] = board[row][col];
+                }
+
+            }
+        }
+        setBoard();
     }
 
     public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){

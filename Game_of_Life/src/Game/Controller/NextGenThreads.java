@@ -14,7 +14,7 @@ import java.util.concurrent.CyclicBarrier;
 public class NextGenThreads {
     Board board;
     CyclicBarrier barrier;
-    private final int numWorkers =Runtime.getRuntime().availableProcessors();
+    private final int numWorkers = 4;
     private int[] splitedBoard;
     private Thread[] workers;
 
