@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 
 
 
@@ -21,11 +22,16 @@ public class Main extends Application {
 
 
         stage = primaryStage;
-
-
+        
+        Image Icon = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Game_of_life_fpento.svg/2000px-Game_of_life_fpento.svg.png");
+        primaryStage.getIcons().add(Icon);
+        
+        
         loader = new FXMLLoader(getClass().getResource("GOL_new.fxml"));
         Parent root = loader.load();
-
+        
+        
+        
 
 
         scene = new Scene(root);
