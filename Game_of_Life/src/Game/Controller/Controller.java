@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,14 +16,18 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
@@ -509,24 +515,25 @@ return awtColor;
 
 
 
-    public void saveBoard(ActionEvent actionEvent) throws Exception {
+public void saveBoard(ActionEvent actionEvent) throws Exception {
 
+        scheduledService.cancel();
+       
+        
         Color c = colorPicker.getValue();
                 
       //GifWriter ugh = new GifWriter(getAwkColor(c));
       GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown);
       gifWriter.GifWriter();
       
-      scheduledService.cancel();
-      Stage dialog = new Stage();
-
-            dialog.initOwner(Main.getPrimaryStage());
-            dialog.initModality(Modality.WINDOW_MODAL); 
-            dialog.showAndWait();
-
-            
+      
+     
     }
+}
+      
+
+    
 
     
     
-}
+

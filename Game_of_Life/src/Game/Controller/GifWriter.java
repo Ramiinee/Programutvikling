@@ -73,8 +73,8 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 
 		// insert the painted image into the animation sequence
 		gwriter.insertAndProceed();
+              
 		board.nextGeneration(0, board.getRow());
-                
                 --i;
                  }
 		
