@@ -516,6 +516,14 @@ return awtColor;
       //GifWriter ugh = new GifWriter(getAwkColor(c));
       GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown);
       gifWriter.GifWriter();
+      
+      scheduledService.cancel();
+      Stage dialog = new Stage();
+
+            dialog.initOwner(Main.getPrimaryStage());
+            dialog.initModality(Modality.WINDOW_MODAL); 
+            dialog.showAndWait();
+
             
     }
 

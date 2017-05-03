@@ -105,6 +105,8 @@ public class StaticBoard extends Board{
 
 
     }
+    
+    @Override
     public void nextGeneration(int start, int stop ){
         makeNextGenArray();
         for (int row = start; row < stop ; row++) {
@@ -125,6 +127,7 @@ public class StaticBoard extends Board{
         setBoard();
     }
 
+    @Override
     public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
 
         for (int row = start; row < stop ; row++) {
@@ -156,6 +159,7 @@ public class StaticBoard extends Board{
     }
 
 
+    @Override
     protected int countNeighbor(int row, int col){
         int neighbors = 0;
         // Check cell on the right.

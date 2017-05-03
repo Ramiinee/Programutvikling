@@ -19,9 +19,9 @@ public class GifWriter {
     public Slider size;
     public Board board;
     private Color c;
-    NextGenThreads nextGenThreads;
+    public NextGenThreads nextGenThreads;
     public ComboBox RuleDropDown;
-    public int count;
+
 
 public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads nextGenThreads, ComboBox RuleDropDown  ){
     this.board = board;
@@ -35,6 +35,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 
     
     public boolean GifWriter() throws Exception {
+        int i = 4;
 		
 		// data related to the GIF image file
 		String path = "testgif.gif";
@@ -46,7 +47,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 		// create the GIFWriter object
 		lieng.GIFWriter gwriter = new lieng.GIFWriter(width,height,path,timePerMilliSecond);
 		
-                
+                while(i != 0){
                  int cellSize = (int) calculateSize(height, width, board.getRow(), board.getColumn());
 
                  int x1 = 0;
@@ -55,7 +56,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
                  int y2 = cellSize;
                 
                        
-                 if(count != 0){   
+                 
                 for(int col = 0; col < board.getColumn() -1; col++){
                     for(int row = 0; row < board.getRow() -1; row++){
                         if(board.getCellAliveState(col, row) == 1){
@@ -73,14 +74,13 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 		// insert the painted image into the animation sequence
 		gwriter.insertAndProceed();
 		board.nextGeneration(0, board.getRow());
-                --count;
-                GifWriter();
-                 }
-		// close the GIF stream.
                 
-		gwriter.close();
+                --i;
+                 }
+		
 		
 		System.out.println("done!");
+                
                 return true;
 		
 	}
