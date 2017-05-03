@@ -35,7 +35,7 @@ public class BoardMaker {
     /**
      * Her genrerer vi ett random brett
      */
-    public void randomBoard(int Row, int Col){
+    public void randomPattern(int Row, int Col){
         board.makeBoard(Row,Col);
         Random r = new Random();
         for (int row = 0; row <board.getRow() ; row++) {
@@ -69,7 +69,7 @@ public class BoardMaker {
 
             return true;
         } else {
-            System.out.println("Not quadratic");
+            System.out.println("Ikke kvadratisk");
             return false;
         }
     }

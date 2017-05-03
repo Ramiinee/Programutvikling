@@ -21,6 +21,7 @@
                 <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
+
                 <Button fx:id="LoadBoard" mnemonicParsing="false" onAction="#loadBoard" prefHeight="50.0" prefWidth="90.0" text="Load Board" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets left="10.0" />

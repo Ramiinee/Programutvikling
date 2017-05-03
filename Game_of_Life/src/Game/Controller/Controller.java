@@ -18,7 +18,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -162,7 +161,7 @@ public class Controller implements Initializable {
                     board.setCellAliveState(x,y,(byte)1);
                     draw_ned(x,y,colorPicker.getValue());
                 } catch (Exception el) {
-                    System.err.println("Why are you out of canvas? " + y + " | "+x );
+                    System.err.println("Why you out of canvas? " + y + " | "+x );
                 }
             }
         });
@@ -204,9 +203,6 @@ public class Controller implements Initializable {
         Stage popupwindow=new Stage();
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
-        
-        Image Icon = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Game_of_life_fpento.svg/2000px-Game_of_life_fpento.svg.png");
-        popupwindow.getIcons().add(Icon);
 
 
         Label label1= new Label("How do you want to load?");
@@ -223,8 +219,8 @@ public class Controller implements Initializable {
 
 
         Button clearBoard = new Button("Clear Board");
-        Button RandomBoard = new Button("Random Board");
-        Button cancel = new Button("Cancel");
+        Button randomeBoard = new Button("Randome Board");
+        Button cancle = new Button("Cancle");
 
         clearBoard.setOnAction(event -> {
             setBoardMakerBoard(comboBox);
@@ -234,16 +230,16 @@ public class Controller implements Initializable {
             popupwindow.close();
         });
 
-        RandomBoard.setOnAction(( event) -> {
+        randomeBoard.setOnAction(( event) -> {
             setBoardMakerBoard(comboBox);
             int value = Integer.parseInt(sizeField.getText());
-            boardMaker.randomBoard(value,value);
+            boardMaker.randomPattern(value,value);
             loaded(loaded = true);
             popupwindow.close();
         });
 
 
-        cancel.setOnAction(event -> {
+        cancle.setOnAction(event -> {
             popupwindow.close();
         });
 
@@ -251,18 +247,17 @@ public class Controller implements Initializable {
         VBox layout= new VBox(20);
         HBox Size = new HBox(10);
 
-        HBox okCancel = new HBox(10);
+        HBox okCancle = new HBox(10);
 
         Size.getChildren().addAll(sizeField, comboBox);
 
-        okCancel.getChildren().addAll(clearBoard,RandomBoard,cancel);
-        okCancel.setAlignment(Pos.BASELINE_RIGHT);
+        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancle);
+        okCancle.setAlignment(Pos.BASELINE_RIGHT);
 
-        layout.getChildren().addAll(label1, Size,okCancel);
+        layout.getChildren().addAll(label1, Size,okCancle);
 
         layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 150);
-        
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
     }
@@ -273,9 +268,6 @@ public class Controller implements Initializable {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
         final ToggleGroup group = new ToggleGroup();
-        
-        Image Icon = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Game_of_life_fpento.svg/2000px-Game_of_life_fpento.svg.png");
-        popupwindow.getIcons().add(Icon);
 
         Label label1= new Label("How do you want to load?");
 
@@ -286,7 +278,7 @@ public class Controller implements Initializable {
         fileField.setPromptText("Browse from file");
         Button browse = new Button("Browse");
 
-        RadioButton radioUrl = new RadioButton("With URL");
+        RadioButton radioUrl = new RadioButton("From disk");
         radioUrl.setToggleGroup(group);
         TextField urlField = new TextField();
         urlField.setPromptText("Enter URL");
@@ -297,7 +289,7 @@ public class Controller implements Initializable {
         comboBox.setItems(ChangeBoard);
 
         Button ok = new Button("Load");
-        Button cancel = new Button("Cancel");
+        Button cancle = new Button("Cancle");
 
         radioDisk.setOnAction(event -> {
             fileField.setDisable(false);
@@ -325,7 +317,7 @@ public class Controller implements Initializable {
                 popupwindow.close();
             }
         });
-        cancel.setOnAction(event -> {
+        cancle.setOnAction(event -> {
             loaded=false;
             board= null;
             popupwindow.close();
@@ -336,14 +328,14 @@ public class Controller implements Initializable {
         VBox layout= new VBox(20);
         HBox disk = new HBox(10);
         HBox url = new HBox(10);
-        HBox okCancel = new HBox(10);
-        okCancel.setAlignment(Pos.BASELINE_RIGHT);
+        HBox okCancle = new HBox(10);
+        okCancle.setAlignment(Pos.BASELINE_RIGHT);
 
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
-        okCancel.getChildren().addAll(ok,cancel);
+        okCancle.getChildren().addAll(ok,cancle);
 
-        layout.getChildren().addAll(label1, disk, url, comboBox,okCancel);
+        layout.getChildren().addAll(label1, disk, url, comboBox,okCancle);
 
         layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 200);
