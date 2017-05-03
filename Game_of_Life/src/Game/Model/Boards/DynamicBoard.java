@@ -232,21 +232,30 @@ public class DynamicBoard extends Board{
    
     
     public void checkRight(){
-        int count = 0;
-        int maxRow = board.size()-1;
-        int maxCol = board.get(maxRow).size();
+        int sum1 = 0;
+        int sum2 = 0;
 
-       
-        for(int leftadd = 0; leftadd < board.size(); leftadd ++){
-             for(int leftdelete = 0; leftdelete < board.size(); leftdelete ++){
-            if(board.get(leftdelete).get(maxCol) == 1){
-                
-                addRightColumn(1);
-                return;
-            }
+   
+
+        final int columns = board.get(0).size();
+
+        for (List<Byte> e : board) {
+            sum1 += e.get(columns - 1);
+            sum2 += e.get(columns - 2);
+
+           
+
+        }
+        final int remove = sum1 + sum2;
+        final int add = sum1 + sum2;
+
+        if (add != 0) {
+            addRightColumn(1);
+        } else if (remove == 0 && board.get(0).size() > MIN_COL){
+            removeRightColumn(1);
         }
     }
-}
+    
     
     
   
