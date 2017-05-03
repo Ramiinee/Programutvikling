@@ -7,8 +7,7 @@ import java.util.ResourceBundle;
 import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.Insets;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,20 +15,21 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
 
@@ -145,6 +145,17 @@ public class Controller implements Initializable {
                 }
             }
         });
+        
+        stage.addEventHandler(KeyEvent.KEY_PRESSED,(KeyEvent e)->{
+            if (e.getCode().equals(KeyCode.ENTER)){
+                startStop();
+            if(e.isControlDown() && e.getCode().equals(KeyCode.N)){
+                newBoard();
+            }
+            }else if (e.getCode().equals(KeyCode.DELETE)){
+                Clear();
+            }
+        });
 
     }
 
@@ -202,7 +213,7 @@ public class Controller implements Initializable {
 
         Button clearBoard = new Button("Clear Board");
         Button randomeBoard = new Button("Randome Board");
-        Button cancle = new Button("Cancel");
+        Button cancel = new Button("Cancel");
 
         clearBoard.setOnAction(event -> {
             setBoardMakerBoard(comboBox);
@@ -223,7 +234,7 @@ public class Controller implements Initializable {
         });
 
 
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             popupwindow.close();
         });
 
@@ -235,7 +246,7 @@ public class Controller implements Initializable {
 
         Size.getChildren().addAll(sizeField, comboBox);
 
-        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancle);
+        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancel);
         okCancle.setAlignment(Pos.BASELINE_RIGHT);
 
         layout.getChildren().addAll(label1, Size,okCancle);
@@ -274,7 +285,7 @@ public class Controller implements Initializable {
         comboBox.setItems(ChangeBoard);
 
         Button ok = new Button("Load");
-        Button cancle = new Button("Cancle");
+        Button cancel = new Button("Cancel");
 
         radioDisk.setOnAction(event -> {
             fileField.setDisable(false);
@@ -302,7 +313,7 @@ public class Controller implements Initializable {
                 popupwindow.close();
             }
         });
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             loaded=false;
             board= null;
             popupwindow.close();
@@ -318,7 +329,7 @@ public class Controller implements Initializable {
 
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
-        okCancle.getChildren().addAll(ok,cancle);
+        okCancle.getChildren().addAll(ok,cancel);
 
         layout.getChildren().addAll(label1, disk, url, comboBox,okCancle);
 
@@ -515,20 +526,63 @@ return awtColor;
 
 
 
-public void saveBoard(ActionEvent actionEvent) throws Exception {
-
+public void saveBoard() throws Exception {
+String checkgif = ".gif";
         scheduledService.cancel();
-       
-        
+//-----------------------------------------------
+    Stage GifSave =new Stage();
+    GridPane grid = new GridPane();
+
+    
+
+    // Category in column 2, row 1
+    Label saveas = new Label("Save as:");
+    Button OK = new Button("OK");
+    Button Cancel = new Button ("Cancel");
+    
+    ChoiceBox DurName = new ChoiceBox();
+    DurName.getItems().addAll("0,25","0,5", "1", "2" );
+    DurName.setTooltip(new Tooltip("Select Speed (Seconds)"));
+    DurName.getSelectionModel().selectFirst();
+    
+
+    TextField saveName = new TextField("testGif.gif");
+    Label Duration = new Label("Duration");
+
+    grid.add(saveas, 0,0  );
+    
+    grid.add(saveName, 2, 2, 2, 1 );
+    grid.add(DurName, 2,4);
+    grid.add(Duration, 2,3);
+    grid.add(OK,3, 4 );
+    grid.add(Cancel, 4,4 );
+ 
+        Scene scene = new Scene(grid, 300, 150);
+    GifSave.setScene(scene);
+    GifSave.showAndWait();
+
+    
+    OK.setOnAction((event) -> {
+
+            if (!saveName.getText().isEmpty() || !saveName.getText().toLowerCase().contains(checkgif.toLowerCase())){ 
+                GifSave.close();
+                System.out.print("heeeeeeyyooo");
+            }
+        });
+    
+ //-------------------------------------------------
+ 
+ String filename = saveName.getText();
         Color c = colorPicker.getValue();
                 
       //GifWriter ugh = new GifWriter(getAwkColor(c));
-      GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown);
+      GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown, filename);
       gifWriter.GifWriter();
-      
-      
-     
+ 
+  
+    //jeg la den ned her for showandwait holder igjen programmet. så når du trykket ok
     }
+
 }
       
 

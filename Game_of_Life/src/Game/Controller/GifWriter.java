@@ -21,15 +21,17 @@ public class GifWriter {
     private Color c;
     public NextGenThreads nextGenThreads;
     public ComboBox RuleDropDown;
+    public String filename;
 
 
-public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads nextGenThreads, ComboBox RuleDropDown  ){
+public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads nextGenThreads, ComboBox RuleDropDown,String filename ){
     this.board = board;
     this.size = size;
     this.Canvas = Canvas;
     this.c = c;
     this.nextGenThreads = nextGenThreads;
     this.RuleDropDown = RuleDropDown;
+    this.filename = filename;
     
   }
 
@@ -38,7 +40,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
         int i = 4;
 		
 		// data related to the GIF image file
-		String path = "testgif.gif";
+		String path = filename;
                 
 		int width =  board.getColumn();
 		int height = board.getRow();
@@ -51,7 +53,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
                  int cellSize = (int) calculateSize(height, width, board.getRow(), board.getColumn());
 
                  int x1 = 0;
-                 int x2 = cellSize;
+                 int x2 = cellSize-1;
                  int y1 = 0;
                  int y2 = cellSize;
                 
