@@ -178,13 +178,12 @@ public class DynamicBoard extends Board{
     public void expand(){
 
         //board.get(row).get(col)
-        int maxRow = board.size()-1;
-        int maxCol = board.get(maxRow).size() -1;
-
+        
         checkTop();
         checkLeft();
-        checkRight(maxCol);
-        checkBottom(maxRow);
+        checkRight();
+        checkBottom();
+        
 
     }
 
@@ -221,7 +220,7 @@ public class DynamicBoard extends Board{
             }
              if(count == 0){
              removeLeftColumn(1);
-             return;
+             
              }
        
             if(board.get(leftadd).get(0) == 1){
@@ -230,29 +229,31 @@ public class DynamicBoard extends Board{
             }
         }
     }
+   
     
-    public int checkRight(int maxCol){
-         int count = 0;
+    public void checkRight(){
+        int count = 0;
+        int maxRow = board.size()-1;
+        int maxCol = board.get(maxRow).size();
 
-        for ( int rightadd = 0; rightadd < board.size(); rightadd ++){
-             for ( int rightdelete = 0; rightdelete < board.size(); rightdelete ++){
-            if(board.get(rightdelete).get(maxCol) == 1){
-            count++;
-            }
-            }
-             /* if(count == 0){
-             removeRightColumn(1);
-             }*/
-            if(board.get(rightadd).get(maxCol) == 1){
+       
+        for(int leftadd = 0; leftadd < board.size(); leftadd ++){
+             for(int leftdelete = 0; leftdelete < board.size(); leftdelete ++){
+            if(board.get(leftdelete).get(maxCol) == 1){
+                
                 addRightColumn(1);
-                return 0;
+                return;
             }
         }
-        return 0;
     }
+}
     
-    public int checkBottom(int maxRow){
-        
+    
+  
+    
+    public void checkBottom(){
+        int maxRow = board.size()-1;
+        int maxCol = board.get(maxRow).size() -1;
         // delete
         int count = 0;
           
@@ -263,15 +264,15 @@ public class DynamicBoard extends Board{
                 count++;
             }
               }
-              /*if(count == 0){
+              if(count == 0){
               removeBottomRow(1);
-              }*/
+              }
             if(board.get(maxRow).get(bottomadd) == 1){
                 addBottomRow(1);
-                return 0;
+                return;
             }
         }
-        return 0;
+      
     }
     
     
