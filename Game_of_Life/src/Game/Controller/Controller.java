@@ -30,6 +30,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -159,23 +160,27 @@ public class Controller implements Initializable {
         stage.addEventHandler(KeyEvent.KEY_PRESSED,(KeyEvent e)->{
             if (e.getCode().equals(KeyCode.ENTER)){
                 startStop();
+            }
             if(e.isControlDown() && e.getCode().equals(KeyCode.N)){
                 newBoard();
             }
             if(e.isControlDown() && e.getCode().equals(KeyCode.S)){
-                    try {
+                
+               
+                try {
                         saveBoard();
                     } catch (Exception ex) {
                         Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
                     }
             }
             
-            }else if (e.getCode().equals(KeyCode.DELETE)){
+            
+            else if (e.getCode().equals(KeyCode.DELETE)){
                 Clear();
             }
         });
+}
 
-    }
 
     public void startStop() {
         if (loaded){
@@ -393,20 +398,34 @@ public class Controller implements Initializable {
      * Samtidig så setter den antall celler som er i livet i hver generation.
      */
     private void draw_Array(){
-        for (int row = 0; row < board.getRow(); row++) {
-            for (int col = 0; col <  board.getColumn() ; col++) {
-                if (board.getCellAliveState(row,col)==1){
-                    draw_ned(row  , col , colorPicker.getValue());
-                    aliveCount ++;
-                }
-                else {
-                    draw_ned(row , col , Color.WHITE);
+        gc.clearRect(0, 0, Canvas.getWidth(),Canvas.getWidth());
+            for(int row = 0; row < board.getRow(); row++){
+                for(int col = 0; col < board.getColumn(); col ++){
+                    if(board.getCellAliveState(row,col) == 1){
+                        draw_ned(row, col, colorPicker.getValue());
+                        aliveCount ++;
+                    }else{
+                        //draw_ned(row,col,Color.White);
+                    }
                 }
             }
-
+        
+        
+        
+        
+        /*  for (int row = 0; row < board.getRow(); row++) {
+        for (int col = 0; col <  board.getColumn() ; col++) {
+        if (board.getCellAliveState(row,col)==1){
+        draw_ned(row  , col , colorPicker.getValue());
+        aliveCount ++;
+        }
+        else {
+        draw_ned(row , col , Color.WHITE);
+        }
         }
         
-
+        }
+        */
 
     }
 
@@ -554,84 +573,72 @@ public void saveBoard() throws Exception {
 //-----------------------------------------------
     Stage GifSave =new Stage();
     GridPane grid = new GridPane();
+    grid.setMaxSize(42, 327);
 
     
     Label saveas = new Label("Save as:");
-    Button OK = new Button("OK");
+    Button OK = new Button("    OK    ");
     Button Cancel = new Button ("Cancel");
     Button Browse = new Button("Browse");
-    
     ChoiceBox DurName = new ChoiceBox();
+    TextField saveName = new TextField(place);
+    Label Duration = new Label("Duration");
+    Label Space = new Label(" ");
+    
+    saveas.setFont(new Font("Serif", 18));
     DurName.getItems().addAll("0.25","0.5", "1", "2" );
     DurName.setTooltip(new Tooltip("Select Speed (Seconds)"));
     DurName.getSelectionModel().selectFirst();
-
-
-    TextField saveName = new TextField(place);
-    Label Duration = new Label("Duration");
-
-    grid.add(saveas, 0,0  );
     
+    
+    grid.add(Space, 0,0);
+    grid.add(saveas, 1,1 );
     grid.add(saveName, 2, 2, 2, 1 );
     grid.add(DurName, 2,4);
     grid.add(Duration, 2,3);
-    grid.add(Browse, 5,2 );
-    grid.add(OK,3, 4 );
-    grid.add(Cancel, 4,4 );
+    grid.add(Browse, 4,2 );
+    grid.add(OK,4, 4 );
+    grid.add(Cancel, 5,4 );
     
-    
-       
-    
+ 
     OK.setOnAction((event) -> {
-        
-            if (!saveName.getText().isEmpty()){ 
-               
-                
-               
+            try {
+                if(!saveName.getText().isEmpty()){
                 place = saveName.getText();
                 Pattern gif = Pattern.compile("(.*/)*.+\\.(|gif|GIF)$");
                 Matcher gifMatch = gif.matcher(place);
                     if(!gifMatch.find()){
                   place += ".gif";
-                System.out.println("ww");
-                }
-                    else{
-                        System.out.println("ddd");
-                             }
-            saveName.setText(place);
-            run = true; 
+              
+           }else{}
+                saveName.setText(place);
+                run = true; 
                GifSave.close();
+            }}
+        catch(NullPointerException e){System.out.print("Your name is not valid"); }     
+      });
     
-            }
-            
-        });
     Cancel.setOnAction((event) -> {
-
-                GifSave.close();         
+            GifSave.close();         
         });
     
     Browse.setOnAction((event) -> {
-        
-         JFileChooser chooser = new JFileChooser();
-chooser.setCurrentDirectory(new java.io.File("."));
-chooser.setDialogTitle("choosertitle");
-chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-chooser.setAcceptAllFileFilterUsed(false);
+            JFileChooser chooser = new JFileChooser();
+            chooser.setCurrentDirectory(new java.io.File("."));
+            chooser.setDialogTitle("choosertitle");
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
 
-if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-    
+    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+             place = chooser.getSelectedFile().toString() + "\\Game_of_life";
 
- place = chooser.getSelectedFile().toString() + "\\Game_of_life";
-
-} else {
-  System.out.println("No Selection ");
-}
-saveName.setText(place);
+    }else{
+            System.out.println("No Selection ");
+        }
+    saveName.setText(place);
 
 
-        });
-  
-            
+        });   
         Scene scene = new Scene(grid, 300, 150);
         GifSave.setScene(scene);
         GifSave.showAndWait();
@@ -639,7 +646,7 @@ saveName.setText(place);
     
     
  //-------------------------------------------------
-   if(run){ int value = 0;
+   try { if(run){ int value = 0;
         if ((DurName.getValue() == "0.25")){
              value = 250;
             }else if( DurName.getValue() == "0.5") {
@@ -649,24 +656,17 @@ saveName.setText(place);
             }else{
              value = 2000;
             }
- 
+        
         String filename = saveName.getText();
         Color c = colorPicker.getValue();
                 
         GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value, nextGenThreads);
-        gifWriter.GifWriter();
- 
-        
-        
-        
-   }}
+        gifWriter.GifWriter();}
+    
+   }catch(NullPointerException e){
+       System.out.print("you do not have a valid name");
+       return;
+   }
+}
    
     }
-
-    
-
-    
-
-    
-    
-
