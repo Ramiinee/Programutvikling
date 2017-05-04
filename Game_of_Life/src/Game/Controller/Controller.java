@@ -108,6 +108,9 @@ public class Controller implements Initializable {
                 e.getStackTrace();
             }
         });
+        Grid.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            draw_Array();
+        });
         Canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
             if (e.isControlDown()){
                 scrollpane.setPannable(true);
