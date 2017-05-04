@@ -537,34 +537,35 @@ public class Controller implements Initializable {
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
 
+        initializeObjects();
+        initializeButtons();
+       
+        listeners();
+        initializeService();
+       
+        updateCanvas();
+        draw_Array();
+        
+    }
+    private void initializeButtons(){
+        StartStop.setDisable(true);
+        Grid.setSelected(true);
+        scrollpane.setPannable(false);
+        RuleDropDown.setValue("Game of Life");
+        RuleDropDown.setItems(ChangeRules);
+    }
+    
+    private void initializeObjects(){
         metaData = new MetaData();
         boardMaker = new BoardMaker(metaData);
         fileLoader = new FileLoader(boardMaker);
 
         nextGenThreads = new NextGenThreads();
-
-       
-
-
-
-        //Clear.setDisable(true);
-        StartStop.setDisable(true);
-        Grid.setSelected(true);
-        //scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        //scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollpane.setPannable(false);
-
-        RuleDropDown.setValue("Game of Life");
-        RuleDropDown.setItems(ChangeRules);
-        listeners();
-        initializeService();
-
+        
         board = new StaticBoard();
         board.makeBoard(200,200);
         nextGenThreads.setBoard(board);
         boardMaker.setBoardType(board);
-        updateCanvas();
-        draw_Array();
         
     }
 
@@ -614,7 +615,7 @@ public class Controller implements Initializable {
         scheduledService.cancel();
 
     //-----------------------------------------------
-        Stage GifSave =new Stage();
+        Stage GifSave = new Stage();
         GridPane grid = new GridPane();
         grid.setMaxSize(42, 327);
 
