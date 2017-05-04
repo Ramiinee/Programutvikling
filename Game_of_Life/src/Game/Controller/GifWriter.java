@@ -19,24 +19,27 @@ public class GifWriter {
     public Slider size;
     public Board board;
     private Color c;
-    public NextGenThreads nextGenThreads;
+    
     public ComboBox RuleDropDown;
     public String filename;
+    private NextGenThreads nextGenThreads;
     public int value;
 
 
-public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int value){
+public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int value, NextGenThreads nextGenThreads ){
     this.board = board;
     this.c = c;
     this.RuleDropDown = RuleDropDown;
     this.filename = filename; 
-    this.value = value;   
+    this.value = value; 
+    this.nextGenThreads = nextGenThreads;
+    
     
   }
 
     
-    public boolean GifWriter() throws Exception {
-        int i = 4;
+    public lieng.GIFWriter GifWriter() throws Exception {
+        int i = 500;
 		
 		// data related to the GIF image file
 		String path = filename;
@@ -74,25 +77,16 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 
 		// insert the painted image into the animation sequence
 		gwriter.insertAndProceed();
-                //gwriter.fl
-              
-                if(RuleDropDown.getValue() == "Game of Life"){
-		board.nextGeneration(0, board.getRow());
-                --i;
-                 }else if(RuleDropDown.getValue() == "No deaths"){
-                     System.out.print("nodeath");
-                   board.noDeadCellsRule(0, board.getRow()); 
-                }else{
-                     System.out.print("cover");
-                   board.slowlyCover(0, board.getRow());  
-                 }
-                
+
+                    //System.out.println("rule");
+                nextGenThreads.nextGen(RuleDropDown);
+                    i--;
                 }
-		gwriter.close();
 		
-		System.out.println("File Saved!");
+		
+		System.out.println("done!");
                 
-                return true;
+                return gwriter;
 		
 	}
      private double calculateSize(double availableHeight, double availableWidth,

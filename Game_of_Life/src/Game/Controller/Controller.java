@@ -633,7 +633,7 @@ if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         String filename = saveName.getText();
         Color c = colorPicker.getValue();
                 
-        GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value);
+        GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value, nextGenThreads);
         gifWriter.GifWriter();
  
         
