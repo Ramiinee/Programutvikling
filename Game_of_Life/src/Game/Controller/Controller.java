@@ -394,16 +394,15 @@ public class Controller implements Initializable {
 
     }
 
-     private void setBoardMakerBoard(ComboBox<? extends String> comboBox){
+    private void setBoardMakerBoard(ComboBox comboBox){
         if (!(comboBox.getValue() == "Static")){
             board = new DynamicBoard();
-            //BoardLabel.setText("Dynamic");
+            SaveBoard.setDisable(true);
         }else {
             board = new StaticBoard();
-            //BoardLabel.setText("Static");
+            SaveBoard.setDisable(false);
         }
         boardMaker.setBoardType(board);
-
 
     }
 
