@@ -1,134 +1,120 @@
 package Game.Model.Decoders;
 
 import Game.Model.Boards.Board;
-
+import Game.Model.MetaData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RLEDecoder extends Decoder{
+public class RLEDecoder {
 
-    public RLEDecoder(BufferedReader reader, Board board) {
-        super(reader,board);
+
+    private Board board;
+    private  BufferedReader reader;
+    private byte[][] byteBoard;
+    private MetaData metaData;
+    private Pattern YPattern = Pattern.compile("([yY][\\s][=][\\s])([\\d]+)");
+    private Pattern XPattern = Pattern.compile("([xX][\\s][=][\\s])([\\d]+)");
+    private  int row = 0, col = 0;
+
+    public RLEDecoder(BufferedReader reader, Board board, MetaData metaData) {
+       this.board = board;
+       this.reader = reader;
+       this.metaData = metaData;
     }
-    @Override
+
     public void decode() throws IOException {
-        parseMetadata(reader);
-        parseBoard(reader);
+        MetaDataReader(reader);
+        BoardReader(reader);
+        //board.makeBoard(byteBoard);
     }
-    private void parseMetadata(BufferedReader reader) throws IOException {
 
+    private void MetaDataReader(BufferedReader reader) throws IOException {
         StringBuilder name = new StringBuilder();
         StringBuilder author = new StringBuilder();
         StringBuilder comment = new StringBuilder();
-        Pattern RLEpatternY = Pattern.compile("([yY][\\s][=][\\s])([\\d]+)");
-        Pattern RLEpatternX = Pattern.compile("([xX][\\s][=][\\s])([\\d]+)");
-
-        String line;
-        while ((line = reader.readLine()) != null) {
+        String line = reader.readLine();
+        while (line != null) {
             if (line.charAt(0) == '#') {
-                final char tempChar = line.charAt(1);
-                switch (tempChar) {
-                    case 'N':
-                        String tempString = line.replaceAll("(#N )", "");
-                        name.append(tempString);
-                        break;
-                    case 'C':
-                        String tempString2 = line.replaceAll("(#C )", "");
-                        comment.append(tempString2);
-                        comment.append("\n");
-                        break;
-                    case 'c':
-                        String tempString3 = line.replaceAll("(#c )", "");
-                        comment.append(tempString3);
-                        comment.append("\n");
-                        break;
-                    case 'O':
-                        String tempString4 = line.replaceAll("(#O )", "");
-                        author.append(tempString4);
+                char tempChar = line.charAt(1);
+                if (tempChar == 'N') {
+                    String nameLine = line.replaceAll("(#N )", "");
+                    metaData.setName(name.append(nameLine).toString());
+                }else if (tempChar == 'C' || tempChar == 'c' ) {
+                    String commentLine = line.replaceAll("(#C )", "");
+                    metaData.setComment(comment.append(commentLine + "\n").toString());
+                }else if (tempChar == 'O'){
+                    String authorLine = line.replaceAll("(#O )", "");
+                    metaData.setAuthor(author.append(authorLine).toString());
                 }
             } else {
-                boolean foundRows = false;
-                boolean foundColumns = false;
-                Matcher RLEmatcherY = RLEpatternY.matcher(line);
-                Matcher RLEmatcherX = RLEpatternX.matcher(line);
+                Matcher Y = YPattern.matcher(line);
+                Matcher X = XPattern.matcher(line);
                 int rows = 0;
                 int columns = 0;
 
-                if (RLEmatcherY.find()) {
-                    rows = Integer.parseInt(RLEmatcherY.group(2));
-                    foundRows = true;
-                }
-
-                if (RLEmatcherX.find()) {
-                    columns = Integer.parseInt(RLEmatcherX.group(2));
-                    foundColumns = true;
-                }
-
-                if (foundRows && foundColumns) {
-                    board.makeBoard(rows*5,columns*5);
+                if (X.find() && (Y.find())) {
+                    rows = Integer.parseInt(Y.group(2));
+                    columns = Integer.parseInt(X.group(2));
+                    //byteBoard = new byte[rows][columns];
+                    board.makeBoard(rows+2,columns+2);
                     return;
-
                 }
-
-
             }
+            line = reader.readLine();
         }
-        System.out.println(name.toString());
-
     }
 
+    private void BoardReader(BufferedReader reader) throws IOException {
+        int NumberOfCells = 0;
+        char lineBreak = '$';
 
-    private void parseBoard(BufferedReader reader) throws IOException {
-        String line;
-        int row = 0, col = 0;
-        final char lineBreak = '$';
-        int charNumber = 0; // Antall forekomster av en celle
-
-        while ((line = reader.readLine()) != null) {
+        String line = reader.readLine();
+        while (line != null) {
             for (int j = 0; j < line.length(); j++) {
-                if (Character.isDigit(line.charAt(j))) {
-                    if (charNumber == 0) {
-                        charNumber = Character.getNumericValue(line.charAt(j));
+                if(Character.isDigit(line.charAt(j))) {
+                    if (NumberOfCells == 0) {
+                        NumberOfCells = Character.getNumericValue(line.charAt(j));
                     } else {
-                        charNumber *= 10;
-                        charNumber += Character.getNumericValue(line.charAt(j));
+                        NumberOfCells *= 10;
+                        NumberOfCells += Character.getNumericValue(line.charAt(j));
                     }
                 } else if (line.charAt(j) == 'o' || line.charAt(j) == 'O') {
-                    if (charNumber != 0) { //Iterer gjennom antall forekomster og sett celle til levende
-                        while (charNumber != 0) {
-                            board.setCellAliveState(row+2,col+2,(byte)1);
-                            charNumber--;
+                    if (NumberOfCells != 0) {
+                        while (NumberOfCells != 0) {
+                            //byteBoard[row][col] = 1;
+                            board.setCellAliveState(row,col,(byte)1);
+                            NumberOfCells--;
                             col++;
                         }
                     } else {
-                        board.setCellAliveState(row+2,col+2,(byte)1);
+                        board.setCellAliveState(row,col,(byte)1);
+                        //|byteBoard[row][col] = 1;
                         col++;
                     }
                 } else if (line.charAt(j) == 'b' || line.charAt(j) == 'B') {
-                    if (charNumber != 0) {
-                        while (charNumber != 0) {
-                            charNumber--;
+                    if(NumberOfCells != 0) {
+                        while (NumberOfCells != 0) {
+                            NumberOfCells--;
                             col++;
-                            System.out.print("");
                         }
-                    } else {
+                    }else {
                         col++;
                     }
-                } else if (line.charAt(j) == lineBreak) {
-                    if (charNumber != 0) {
-                        while (charNumber != 0) {
-                            charNumber--;
+                }else if (line.charAt(j) == lineBreak) {
+                    if(NumberOfCells != 0) {
+                        while (NumberOfCells != 0) {
                             row++;
+                            NumberOfCells--;
                         }
-                    } else {
+                    }else {
                         row++;
                     }
                     col = 0;
                 }
             }
+            line = reader.readLine();
         }
-
     }
 }

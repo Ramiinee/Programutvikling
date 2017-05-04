@@ -91,27 +91,7 @@ public class DynamicBoard extends Board{
 
         }
     }
-     public void slowlyCover(int start, int stop){
-
-
-        for (int row = start; row < stop ; row++) {
-            for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
-                if (board.get(row).get(col)==1){
-                    nextGeneration.get(row).set(col,(byte)1);
-                }
-                else if (neighbors > 3) {
-                    nextGeneration.get(row).set(col,(byte)1);
-                }
-                else if (neighbors == 3){
-                    nextGeneration.get(row).set(col,(byte)0);
-                }
-                else {
-                    nextGeneration.get(row).set(col, board.get(row).get(col));
-                }
-            }
-        }
-     }
+     
 
     public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
         for (int row = 0; row < board.size(); row++) {
@@ -133,19 +113,7 @@ public class DynamicBoard extends Board{
 
         }
     }
-    public void noDeadCellsRule(int start, int slutt){
-        for (int row = 0; row < board.size(); row++) {
-            for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
-                if ( board.get(row).get(col) == 0 && (neighbors == 3)){
-                    nextGeneration.get(row).set(col,(byte)1);
-                }
-                else {
-                    nextGeneration.get(row).set(col, board.get(row).get(col));
-                }
-            }
-        }
-    }
+    
     @Override
     public void setBoard(){
         setCurrentGen();
@@ -154,7 +122,7 @@ public class DynamicBoard extends Board{
     @Override
     public void makeNextGenArray() {
         
-        expand();
+        CheckSides();
         nextGeneration =  new ArrayList<>();
         for (int row = 0; row < board.size(); row++) {
             nextGeneration.add(new java.util.ArrayList<>());
@@ -209,20 +177,15 @@ public class DynamicBoard extends Board{
 
         return neighbors;
     }
-    public void expand(){
-
-        //board.get(row).get(col)
-        
+    public void CheckSides(){
         checkTop();
         checkLeft();
         checkRight();
         checkBottom();
-        
-
+      
     }
 
     public void checkTop(){
-        
         int count = 0;
 
         for (int topadd = 0; topadd < board.get(0).size(); topadd++) {
@@ -318,8 +281,7 @@ public class DynamicBoard extends Board{
     private void setCurrentGen(){
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-                byte a = nextGeneration.get(row).get(col);
-                board.get(row).set(col,a);
+                board.get(row).set(col,nextGeneration.get(row).get(col));
 
             }
         }
@@ -379,9 +341,6 @@ public class DynamicBoard extends Board{
     }
 
 
-    // rle leser inn i brett. Kan bestemme hvor så du kan ha flere figurer samtidig.
-    // if white set backgrunfd to black.
-
 
     @Override
     public byte getCellAliveState(int row, int column) {
@@ -409,35 +368,11 @@ public class DynamicBoard extends Board{
         for (int rows = 0; rows < MIN_ROW; rows++) {
             board.add(new java.util.ArrayList<>());
             for (int cols = 0; cols < MIN_COL; cols++) {
-                board.get(rows).add((byte) 0);
+                board.get(rows).add((byte)0);
 
             }
         }
 
     }
-
-    @Override
-    public void nextGeneration(int start, int stop) {
-        for (int row = 0; row < board.size(); row++) {
-            for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
-                if (board.get(row).get(col)==1 && (neighbors < 2)){
-                    nextGeneration.get(row).set(col,(byte)0);
-                }
-                else if (board.get(row).get(col) == 1 && (neighbors > 3)) {
-                    nextGeneration.get(row).set(col,(byte)0);
-                }
-                else if ( board.get(row).get(col) == 0 && (neighbors == 3)){
-                    nextGeneration.get(row).set(col,(byte)1);
-                }
-                else {
-                    nextGeneration.get(row).set(col, board.get(row).get(col));
-                }
-            }
-        } 
-    }
-
-
-
 
 }
