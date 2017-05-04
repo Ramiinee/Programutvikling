@@ -18,6 +18,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -121,7 +122,7 @@ public class Controller implements Initializable {
         });
         colorPicker.valueProperty().addListener((ObservableValue<? extends Color> timerListener, Color oldColor, Color newColor) -> {
             try {
-                gc.clearRect(0,0,3000,2000);
+                gc.clearRect(0,0,2000,3000);
                 draw_Array();
             }
             catch (Exception e){
@@ -160,8 +161,8 @@ public class Controller implements Initializable {
                 try {
                     board.setCellAliveState(x,y,(byte)1);
                     draw_ned(x,y,colorPicker.getValue());
-                } catch (Exception el) {
-                    System.err.println("Why you out of canvas? " + y + " | "+x );
+                } catch (Exception e1) {
+                    System.err.println("Why are you out of canvas? " + y + " | "+x );
                 }
             }
         });
@@ -203,6 +204,9 @@ public class Controller implements Initializable {
         Stage popupwindow=new Stage();
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
+        
+        Image Icon = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Game_of_life_fpento.svg/2000px-Game_of_life_fpento.svg.png");
+        popupwindow.getIcons().add(Icon);
 
 
         Label label1= new Label("How do you want to load?");
@@ -219,8 +223,8 @@ public class Controller implements Initializable {
 
 
         Button clearBoard = new Button("Clear Board");
-        Button randomeBoard = new Button("Randome Board");
-        Button cancle = new Button("Cancle");
+        Button RandomBoard = new Button("Random Board");
+        Button cancel = new Button("Cancel");
 
         clearBoard.setOnAction(event -> {
             setBoardMakerBoard(comboBox);
@@ -230,16 +234,16 @@ public class Controller implements Initializable {
             popupwindow.close();
         });
 
-        randomeBoard.setOnAction(( event) -> {
+        RandomBoard.setOnAction(( event) -> {
             setBoardMakerBoard(comboBox);
             int value = Integer.parseInt(sizeField.getText());
-            boardMaker.randomPattern(value,value);
+            boardMaker.randomBoard(value,value);
             loaded(loaded = true);
             popupwindow.close();
         });
 
 
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             popupwindow.close();
         });
 
@@ -247,17 +251,18 @@ public class Controller implements Initializable {
         VBox layout= new VBox(20);
         HBox Size = new HBox(10);
 
-        HBox okCancle = new HBox(10);
+        HBox okCancel = new HBox(10);
 
         Size.getChildren().addAll(sizeField, comboBox);
 
-        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancle);
-        okCancle.setAlignment(Pos.BASELINE_RIGHT);
+        okCancel.getChildren().addAll(clearBoard,RandomBoard,cancel);
+        okCancel.setAlignment(Pos.BASELINE_RIGHT);
 
-        layout.getChildren().addAll(label1, Size,okCancle);
+        layout.getChildren().addAll(label1, Size,okCancel);
 
         layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 150);
+        
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
     }
@@ -268,6 +273,9 @@ public class Controller implements Initializable {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle("Load");
         final ToggleGroup group = new ToggleGroup();
+        
+        Image Icon = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Game_of_life_fpento.svg/2000px-Game_of_life_fpento.svg.png");
+        popupwindow.getIcons().add(Icon);
 
         Label label1= new Label("How do you want to load?");
 
@@ -278,7 +286,7 @@ public class Controller implements Initializable {
         fileField.setPromptText("Browse from file");
         Button browse = new Button("Browse");
 
-        RadioButton radioUrl = new RadioButton("From disk");
+        RadioButton radioUrl = new RadioButton("With URL");
         radioUrl.setToggleGroup(group);
         TextField urlField = new TextField();
         urlField.setPromptText("Enter URL");
@@ -289,7 +297,7 @@ public class Controller implements Initializable {
         comboBox.setItems(ChangeBoard);
 
         Button ok = new Button("Load");
-        Button cancle = new Button("Cancle");
+        Button cancel = new Button("Cancel");
 
         radioDisk.setOnAction(event -> {
             fileField.setDisable(false);
@@ -317,7 +325,7 @@ public class Controller implements Initializable {
                 popupwindow.close();
             }
         });
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             loaded=false;
             board= null;
             popupwindow.close();
@@ -328,14 +336,14 @@ public class Controller implements Initializable {
         VBox layout= new VBox(20);
         HBox disk = new HBox(10);
         HBox url = new HBox(10);
-        HBox okCancle = new HBox(10);
-        okCancle.setAlignment(Pos.BASELINE_RIGHT);
+        HBox okCancel = new HBox(10);
+        okCancel.setAlignment(Pos.BASELINE_RIGHT);
 
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
-        okCancle.getChildren().addAll(ok,cancle);
+        okCancel.getChildren().addAll(ok,cancel);
 
-        layout.getChildren().addAll(label1, disk, url, comboBox,okCancle);
+        layout.getChildren().addAll(label1, disk, url, comboBox,okCancel);
 
         layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 200);
@@ -375,6 +383,7 @@ public class Controller implements Initializable {
      * Samtidig så setter den antall celler som er i livet i hver generation.
      */
     private void draw_Array(){
+        gc.clearRect(0,0,Canvas.getWidth(), Canvas.getHeight());
         for (int row = 0; row < board.getRow(); row++) {
             for (int col = 0; col <  board.getColumn() ; col++) {
                 if (board.getCellAliveState(row,col)==1){
@@ -382,8 +391,9 @@ public class Controller implements Initializable {
                     aliveCount ++;
                 }
                 else {
-                    draw_ned(row , col , Color.WHITE);
+                    //draw_ned(row , col , Color.WHITE);
                 }
+
             }
 
         }
@@ -404,7 +414,7 @@ public class Controller implements Initializable {
 
 
     private void draw_ned( int col, int row, Color c) {
-        gc.setFill(Color.web("E0E0E0"));
+        gc.setFill(Color.web("RED"));
         //gc.setFill(Color.WHITE);
         gc.fillRect(row* (size.getValue()) , col*(size.getValue()), ((size.getValue())), (size.getValue()));
         gc.setFill(c);
@@ -506,7 +516,6 @@ public class Controller implements Initializable {
         if ((Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn())|| (Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn()) ){
             System.out.println(true);
         }else {
-
             if (dynamic.isSelected()){
                 Canvas.setWidth(board.getColumn()*size.getValue());
                 Canvas.setHeight( board.getRow()*size.getValue());
@@ -514,8 +523,6 @@ public class Controller implements Initializable {
                 Canvas.setWidth(board.getColumn()*size.getValue());
                 Canvas.setHeight( board.getRow()*size.getValue());
             }
-
-
         }
 */
 
