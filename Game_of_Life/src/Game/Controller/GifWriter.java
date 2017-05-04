@@ -39,7 +39,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 
     
     public lieng.GIFWriter GifWriter() throws Exception {
-        int i = 50;
+        int i = 5;
 		
 		// data related to the GIF image file
 		String path = filename;
