@@ -8,6 +8,9 @@ import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
 import java.awt.Insets;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -34,6 +37,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -83,7 +87,8 @@ public class Controller implements Initializable {
     private NextGenThreads nextGenThreads;
     public Mouse mouse;
     private boolean run = false;
-
+    private String place;
+    
 
     /**
      * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
@@ -552,6 +557,7 @@ public void saveBoard() throws Exception {
     Label saveas = new Label("Save as:");
     Button OK = new Button("OK");
     Button Cancel = new Button ("Cancel");
+    Button Browse = new Button("Browse");
     
     ChoiceBox DurName = new ChoiceBox();
     DurName.getItems().addAll("0.25","0.5", "1", "2" );
@@ -559,7 +565,7 @@ public void saveBoard() throws Exception {
     DurName.getSelectionModel().selectFirst();
 
 
-    TextField saveName = new TextField("testGif.gif");
+    TextField saveName = new TextField(place);
     Label Duration = new Label("Duration");
 
     grid.add(saveas, 0,0  );
@@ -567,6 +573,7 @@ public void saveBoard() throws Exception {
     grid.add(saveName, 2, 2, 2, 1 );
     grid.add(DurName, 2,4);
     grid.add(Duration, 2,3);
+    grid.add(Browse, 5,2 );
     grid.add(OK,3, 4 );
     grid.add(Cancel, 4,4 );
     
@@ -582,10 +589,29 @@ public void saveBoard() throws Exception {
             
         });
     Cancel.setOnAction((event) -> {
+
                 GifSave.close();         
         });
     
- 
+    Browse.setOnAction((event) -> {
+        
+         JFileChooser chooser = new JFileChooser();
+chooser.setCurrentDirectory(new java.io.File("."));
+chooser.setDialogTitle("choosertitle");
+chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+chooser.setAcceptAllFileFilterUsed(false);
+
+if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+ place = chooser.getSelectedFile().toString() + "\\Game_of_life.gif";
+
+} else {
+  System.out.println("No Selection ");
+}
+            saveName.setText(place);      
+        });
+   
+    
         Scene scene = new Scene(grid, 300, 150);
         GifSave.setScene(scene);
         GifSave.showAndWait();
@@ -610,12 +636,14 @@ public void saveBoard() throws Exception {
         GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value);
         gifWriter.GifWriter();
  
-       }
+        
+        
+        
+   }}
    
     }
 
-}
-      
+    
 
     
 

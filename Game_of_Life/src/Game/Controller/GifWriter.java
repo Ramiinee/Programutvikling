@@ -35,7 +35,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
   }
 
     
-    public boolean GifWriter() throws Exception {
+    public lieng.GIFWriter GifWriter() throws Exception {
         int i = 4;
 		
 		// data related to the GIF image file
@@ -74,13 +74,16 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 
 		// insert the painted image into the animation sequence
 		gwriter.insertAndProceed();
+                //gwriter.fl
               
                 if(RuleDropDown.getValue() == "Game of Life"){
 		board.nextGeneration(0, board.getRow());
                 --i;
                  }else if(RuleDropDown.getValue() == "No deaths"){
+                     System.out.print("nodeath");
                    board.noDeadCellsRule(0, board.getRow()); 
                 }else{
+                     System.out.print("cover");
                    board.slowlyCover(0, board.getRow());  
                  }
                 
@@ -89,7 +92,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 		
 		System.out.println("done!");
                 
-                return true;
+                return gwriter;
 		
 	}
      private double calculateSize(double availableHeight, double availableWidth,
