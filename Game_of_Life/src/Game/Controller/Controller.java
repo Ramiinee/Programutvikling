@@ -13,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -581,10 +583,25 @@ public void saveBoard() throws Exception {
        
     
     OK.setOnAction((event) -> {
-            if (!saveName.getText().isEmpty() || !saveName.getText().toLowerCase().contains(checkgif.toLowerCase())){ 
-               run = true; 
-               GifSave.close();
+        
+            if (!saveName.getText().isEmpty()){ 
+               
                 
+               
+                place = saveName.getText();
+                Pattern gif = Pattern.compile("(.*/)*.+\\.(|gif|GIF)$");
+                Matcher gifMatch = gif.matcher(place);
+                    if(!gifMatch.find()){
+                  place += ".gif";
+                System.out.println("ww");
+                }
+                    else{
+                        System.out.println("ddd");
+                             }
+            saveName.setText(place);
+            run = true; 
+               GifSave.close();
+    
             }
             
         });
@@ -602,16 +619,19 @@ chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 chooser.setAcceptAllFileFilterUsed(false);
 
 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+    
 
- place = chooser.getSelectedFile().toString() + "\\Game_of_life.gif";
+ place = chooser.getSelectedFile().toString() + "\\Game_of_life";
 
 } else {
   System.out.println("No Selection ");
 }
-            saveName.setText(place);      
+saveName.setText(place);
+
+
         });
-   
-    
+  
+            
         Scene scene = new Scene(grid, 300, 150);
         GifSave.setScene(scene);
         GifSave.showAndWait();

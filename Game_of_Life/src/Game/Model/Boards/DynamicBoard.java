@@ -293,32 +293,27 @@ public class DynamicBoard extends Board{
   
     
     public void checkBottom(){
-        int maxRow = board.size()-1;
-        int maxCol = board.get(maxRow).size() -1;
-        // delete
-        int count = 0;
-          
-        // add
-        for( int bottomadd = 0; bottomadd < board.get(maxRow).size(); bottomadd++){
-              for( int bottomdelete = 0; bottomdelete < board.get(maxRow).size(); bottomdelete++){
-                if(board.get(maxRow).get(bottomdelete) == 1){
-                count++;
-            }
-              }
-              if(count == 0){
-              removeBottomRow(1);
-              }
-            if(board.get(maxRow).get(bottomadd) == 1){
-                addBottomRow(1);
-                return;
-            }
-        }
-      
-    }
-    
-    
-   
+         final int rows = board.size();
+        final int sum1 = board
+                .get(rows -1)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum2 = board
+                .get(rows -2)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
 
+        final int remove = sum1 + sum2;
+        final int add = sum1 + sum2;
+
+        if (add != 0) {
+            addBottomRow(1);
+        } else if(remove == 0 && board.size() > MIN_ROW) {
+            removeBottomRow(1);
+        }
+    }
 
     private void setCurrentGen(){
         for (int row = 0; row < board.size(); row++) {
