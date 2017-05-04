@@ -4,27 +4,43 @@ package Game.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import Game.Model.Boards.*;
-
-
-import javafx.animation.*;
+import Game.Model.Boards.Board;
+import Game.Model.Boards.DynamicBoard;
+import Game.Model.Boards.StaticBoard;
+import java.awt.Insets;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -42,7 +58,9 @@ public class Controller implements Initializable {
     public Canvas Canvas;
     public ScrollPane scrollpane;
     public ComboBox RuleDropDown;
+    public ComboBox comboBox;
     public Label TestLabel;
+    
 
     public Button StartStop;
     public Button SaveBoard;
@@ -56,6 +74,7 @@ public class Controller implements Initializable {
     private GraphicsContext gc;
     private ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
     private ObservableList<String> ChangeBoard = FXCollections.observableArrayList("Static", "Dynamic");
+    private ScheduledService<Void> scheduledService;
 
     //Counters
     private int runCount = 1;
@@ -64,51 +83,23 @@ public class Controller implements Initializable {
     private boolean loaded = false;
     private boolean running = false;
 
+
     private BoardMaker boardMaker;
     private FileLoader fileLoader;
     private Board board = null;
     private NextGenThreads nextGenThreads;
-
-
     public Mouse mouse;
-
-
-    private double timing = 120;
-    private double StartTimer = timing;
-    /**
-     * Her styres hvert frame, og hva som skal skje i det framet.
-     */
-    private Timeline timeline = new Timeline( new KeyFrame(Duration.millis(timing), e -> {
-        //gc.setFill(Color.WHITE);
-        //gc.fillRect(0,0,2000,2000);
-
-
-            if(RuleDropDown.getValue() == "Game of Life"){
-                board.nextGeneration();
-            }
-            else if(RuleDropDown.getValue() == "No deaths"){
-                board.noDeadCellsRule();
-            }
-            else if(RuleDropDown.getValue() == "Cover"){
-                board.slowlyCover();
-            }
-
-
-        updateCanvas();
-        draw_Array();
-
-        stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + Math.round((1000/(StartTimer/timing) )) + " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount );
-        aliveCount = 0;
-    }
-    ));
+    private boolean run = false;
+    private String place;
+    
 
     /**
      * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
      */
     private void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
-            timing = newtime.intValue();
-            timeline.setRate(timing);
+            Duration duration = new Duration(1000/newtime.intValue());
+            scheduledService.setPeriod(duration);
         });
         size.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
             try {
@@ -165,14 +156,38 @@ public class Controller implements Initializable {
                 }
             }
         });
+        
+        stage.addEventHandler(KeyEvent.KEY_PRESSED,(KeyEvent e)->{
+            if (e.getCode().equals(KeyCode.ENTER)){
+                startStop();
+            }
+            if(e.isControlDown() && e.getCode().equals(KeyCode.N)){
+                newBoard();
+            }
+            if(e.isControlDown() && e.getCode().equals(KeyCode.S)){
+                
+               
+                try {
+                        saveBoard();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+            
+            
+            else if (e.getCode().equals(KeyCode.DELETE)){
+                Clear();
+            }
+        });
+}
 
-    }
 
     public void startStop() {
         if (loaded){
             if (!running){
                 running = true;
-                timeline.play();
+
+                    scheduledService.restart();
                 LoadBoard.setDisable(true);
                 NewBoard.setDisable(true);
                 StartStop.setText("Stop");
@@ -181,7 +196,8 @@ public class Controller implements Initializable {
             }
             else {
                 running=false;
-                timeline.stop();
+
+                    scheduledService.cancel();
                 LoadBoard.setDisable(false);
                 NewBoard.setDisable(false);
                 size.setDisable(true);
@@ -207,20 +223,20 @@ public class Controller implements Initializable {
 
         Label label1= new Label("How do you want to load?");
 
-        ComboBox comboBox = new ComboBox();
+        comboBox = new ComboBox();
         comboBox.setValue("Static");
         comboBox.setItems(ChangeBoard);
 
 
         TextField sizeField = new TextField();
         sizeField.setPromptText("Enter Size");
-        sizeField.setText("50");
+        sizeField.setText("200");
 
 
 
         Button clearBoard = new Button("Clear Board");
         Button randomeBoard = new Button("Randome Board");
-        Button cancle = new Button("Cancle");
+        Button cancel = new Button("Cancel");
 
         clearBoard.setOnAction(event -> {
             setBoardMakerBoard(comboBox);
@@ -232,14 +248,16 @@ public class Controller implements Initializable {
 
         randomeBoard.setOnAction(( event) -> {
             setBoardMakerBoard(comboBox);
-            int value = Integer.parseInt(sizeField.getText());
+            int value = Integer.parseInt(sizeField.getText());//sjekke om det er tall eller ikke
             boardMaker.randomPattern(value,value);
             loaded(loaded = true);
             popupwindow.close();
+
+
         });
 
 
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             popupwindow.close();
         });
 
@@ -251,7 +269,7 @@ public class Controller implements Initializable {
 
         Size.getChildren().addAll(sizeField, comboBox);
 
-        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancle);
+        okCancle.getChildren().addAll(clearBoard,randomeBoard,cancel);
         okCancle.setAlignment(Pos.BASELINE_RIGHT);
 
         layout.getChildren().addAll(label1, Size,okCancle);
@@ -260,6 +278,7 @@ public class Controller implements Initializable {
         Scene scene1= new Scene(layout, 300, 150);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
+
     }
 
     public void loadBoard(ActionEvent actionEvent) {
@@ -289,7 +308,7 @@ public class Controller implements Initializable {
         comboBox.setItems(ChangeBoard);
 
         Button ok = new Button("Load");
-        Button cancle = new Button("Cancle");
+        Button cancel = new Button("Cancel");
 
         radioDisk.setOnAction(event -> {
             fileField.setDisable(false);
@@ -317,7 +336,7 @@ public class Controller implements Initializable {
                 popupwindow.close();
             }
         });
-        cancle.setOnAction(event -> {
+        cancel.setOnAction(event -> {
             loaded=false;
             board= null;
             popupwindow.close();
@@ -333,7 +352,7 @@ public class Controller implements Initializable {
 
         disk.getChildren().addAll(radioDisk,fileField, browse);
         url.getChildren().addAll(radioUrl,urlField);
-        okCancle.getChildren().addAll(ok,cancle);
+        okCancle.getChildren().addAll(ok,cancel);
 
         layout.getChildren().addAll(label1, disk, url, comboBox,okCancle);
 
@@ -341,6 +360,7 @@ public class Controller implements Initializable {
         Scene scene1= new Scene(layout, 300, 200);
         popupwindow.setScene(scene1);
         popupwindow.showAndWait();
+
     }
 
     private void setBoardMakerBoard(ComboBox comboBox){
@@ -350,10 +370,13 @@ public class Controller implements Initializable {
             board = new StaticBoard();
         }
         boardMaker.setBoardType(board);
+
     }
 
 
     public void loaded(boolean loaded){
+        nextGenThreads.setBoard(board);
+        nextGenThreads.split();
         if (loaded){
             gc.clearRect(0,0,Canvas.getWidth(),Canvas.getHeight());
             updateCanvas();
@@ -375,20 +398,34 @@ public class Controller implements Initializable {
      * Samtidig så setter den antall celler som er i livet i hver generation.
      */
     private void draw_Array(){
-        for (int row = 0; row < board.getRow(); row++) {
-            for (int col = 0; col <  board.getColumn() ; col++) {
-                if (board.getCellAliveState(row,col)==1){
-                    draw_ned(row  , col , colorPicker.getValue());
-                    aliveCount ++;
-                }
-                else {
-                    draw_ned(row , col , Color.WHITE);
+        gc.clearRect(0, 0, Canvas.getWidth(),Canvas.getWidth());
+            for(int row = 0; row < board.getRow(); row++){
+                for(int col = 0; col < board.getColumn(); col ++){
+                    if(board.getCellAliveState(row,col) == 1){
+                        draw_ned(row, col, colorPicker.getValue());
+                        aliveCount ++;
+                    }else{
+                        //draw_ned(row,col,Color.White);
+                    }
                 }
             }
-
+        
+        
+        
+        
+        /*  for (int row = 0; row < board.getRow(); row++) {
+        for (int col = 0; col <  board.getColumn() ; col++) {
+        if (board.getCellAliveState(row,col)==1){
+        draw_ned(row  , col , colorPicker.getValue());
+        aliveCount ++;
+        }
+        else {
+        draw_ned(row , col , Color.WHITE);
+        }
         }
         
-
+        }
+        */
 
     }
 
@@ -413,6 +450,7 @@ public class Controller implements Initializable {
 
     }
 
+
     private void updateCanvas(){
         if (!(Canvas.getWidth() == board.getRow()*size.getValue() && Canvas.getHeight() == board.getColumn()*size.getValue())){
             Canvas.setWidth(board.getColumn()*size.getValue());
@@ -433,6 +471,7 @@ public class Controller implements Initializable {
      */
     public void showClearBoard(){
         boardMaker.makeClearBoard(200,200);
+        updateCanvas();
         draw_Array();
     }
 
@@ -441,11 +480,9 @@ public class Controller implements Initializable {
      * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
      */
     public void reset(){
-
         size.setValue(5);
-        timer.setValue(1);
+        timer.setValue(60);
         colorPicker.setValue(Color.BLACK);
-
         try {
             mouse.setZoomValue(0);
             scrollpane.setHvalue(0);
@@ -464,29 +501,17 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(false);
-        timing =timer.getValue();
-
-
-
-        boardMaker = new BoardMaker();
-        fileLoader = new FileLoader(boardMaker);
-
-        nextGenThreads = new NextGenThreads(board);
         gc = Canvas.getGraphicsContext2D();
-
         stage = Main.getPrimaryStage();
         colorPicker.setValue(Color.BLACK);
 
-
-        //boardMaker.makeClearBoard();
+        boardMaker = new BoardMaker();
+        fileLoader = new FileLoader(boardMaker);
+        nextGenThreads = new NextGenThreads();
+        mouse = new Mouse(Canvas);
 
         Clear.setDisable(true);
         StartStop.setDisable(true);
-
-
-
 
         //scrollpane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         //scrollpane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -494,43 +519,154 @@ public class Controller implements Initializable {
 
         RuleDropDown.setValue("Game of Life");
         RuleDropDown.setItems(ChangeRules);
-
-        mouse = new Mouse(Canvas);
-        mouse.scroll();
-
         listeners();
-        //showClearBoard();
+        initializeService();
+
+    }
 
 
-/*
-        if ((Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn())|| (Canvas.getWidth() == board.getRow() && Canvas.getHeight() == board.getColumn()) ){
-            System.out.println(true);
-        }else {
 
-            if (dynamic.isSelected()){
-                Canvas.setWidth(board.getColumn()*size.getValue());
-                Canvas.setHeight( board.getRow()*size.getValue());
-            }else {
-                Canvas.setWidth(board.getColumn()*size.getValue());
-                Canvas.setHeight( board.getRow()*size.getValue());
+    private void initializeService(){
+        scheduledService = new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        nextGenThreads.nextGen(RuleDropDown);
+                        Platform.runLater(() -> {
+                            updateCanvas();
+                            draw_Array();
+                            stage.setTitle("Game Of Life | Gen : " + runCount++ + " | Fps : " + (int)(timer.getValue())+ " | Size : " + Math.round(size.getValue()) + " | Alive : " + aliveCount + " | " + board.getRow() );
+                            aliveCount = 0;
+                        });
+                        return null;
+                    }
+                };
             }
-
-
-        }
-*/
-
-
+        };
+        Duration duration = Duration.millis(1000/60);
+        scheduledService.setPeriod(duration);
     }
 
 
 
+public java.awt.Color getAwkColor(javafx.scene.paint.Color fx){
 
-
-
-
-
-
-
-    public void saveBoard(ActionEvent actionEvent) {
-    }
+    
+java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),
+                                             (float) fx.getGreen(),
+                                             (float) fx.getBlue(),
+                                             (float) fx.getOpacity());
+return awtColor;
 }
+
+
+
+public void saveBoard() throws Exception {
+    String checkgif = ".gif";
+   
+    
+    //Pause game while saving
+    scheduledService.cancel();
+    
+//-----------------------------------------------
+    Stage GifSave =new Stage();
+    GridPane grid = new GridPane();
+    grid.setMaxSize(42, 327);
+
+    
+    Label saveas = new Label("Save as:");
+    Button OK = new Button("    OK    ");
+    Button Cancel = new Button ("Cancel");
+    Button Browse = new Button("Browse");
+    ChoiceBox DurName = new ChoiceBox();
+    TextField saveName = new TextField(place);
+    Label Duration = new Label("Duration");
+    Label Space = new Label(" ");
+    
+    saveas.setFont(new Font("Serif", 18));
+    DurName.getItems().addAll("0.25","0.5", "1", "2" );
+    DurName.setTooltip(new Tooltip("Select Speed (Seconds)"));
+    DurName.getSelectionModel().selectFirst();
+    
+    
+    grid.add(Space, 0,0);
+    grid.add(saveas, 1,1 );
+    grid.add(saveName, 2, 2, 2, 1 );
+    grid.add(DurName, 2,4);
+    grid.add(Duration, 2,3);
+    grid.add(Browse, 4,2 );
+    grid.add(OK,4, 4 );
+    grid.add(Cancel, 5,4 );
+    
+ 
+    OK.setOnAction((event) -> {
+            try {
+                if(!saveName.getText().isEmpty()){
+                place = saveName.getText();
+                Pattern gif = Pattern.compile("(.*/)*.+\\.(|gif|GIF)$");
+                Matcher gifMatch = gif.matcher(place);
+                    if(!gifMatch.find()){
+                  place += ".gif";
+              
+           }else{}
+                saveName.setText(place);
+                run = true; 
+               GifSave.close();
+            }}
+        catch(NullPointerException e){System.out.print("Your name is not valid"); }     
+      });
+    
+    Cancel.setOnAction((event) -> {
+            GifSave.close();         
+        });
+    
+    Browse.setOnAction((event) -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setCurrentDirectory(new java.io.File("."));
+            chooser.setDialogTitle("choosertitle");
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+
+    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+             place = chooser.getSelectedFile().toString() + "\\Game_of_life";
+
+    }else{
+            System.out.println("No Selection ");
+        }
+    saveName.setText(place);
+
+
+        });   
+        Scene scene = new Scene(grid, 300, 150);
+        GifSave.setScene(scene);
+        GifSave.showAndWait();
+
+    
+    
+ //-------------------------------------------------
+   try { if(run){ int value = 0;
+        if ((DurName.getValue() == "0.25")){
+             value = 250;
+            }else if( DurName.getValue() == "0.5") {
+             value = 500;
+            }else if(DurName.getValue() == "1"){
+             value = 1000;
+            }else{
+             value = 2000;
+            }
+        
+        String filename = saveName.getText();
+        Color c = colorPicker.getValue();
+                
+        GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value, nextGenThreads);
+        gifWriter.GifWriter();}
+    
+   }catch(NullPointerException e){
+       System.out.print("you do not have a valid name");
+       return;
+   }
+}
+   
+    }

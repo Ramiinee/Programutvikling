@@ -21,6 +21,7 @@
                 <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
+
                 <Button fx:id="LoadBoard" mnemonicParsing="false" onAction="#loadBoard" prefHeight="50.0" prefWidth="90.0" text="Load Board" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets left="10.0" />
@@ -36,7 +37,7 @@
                         <Insets top="80.0" />
                     </GridPane.margin>
                 </Slider>
-                <Slider fx:id="timer" blockIncrement="0.1" max="5.0" maxWidth="150.0" min="1.0" value="1.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Slider fx:id="timer" blockIncrement="1.0" max="60.0" maxWidth="150.0" min="1.0" rotate="180.0" value="60.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="30.0" />
                     </GridPane.margin>

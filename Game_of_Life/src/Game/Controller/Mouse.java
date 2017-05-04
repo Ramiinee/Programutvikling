@@ -25,7 +25,7 @@ public class Mouse {
      */
     public Mouse(Canvas canvas) {
         this.Canvas = canvas;
-
+        scroll();
 
     }
 
@@ -58,7 +58,7 @@ public class Mouse {
             newScale.setPivotX(event.getX());
             newScale.setPivotY(event.getY());
 
-            if (zoomValue < 30 && zoomValue > -12){
+            if (zoomValue < 30 && zoomValue > -30){
                 if (event.getDeltaY() > 0){
                     zoomValue++;
                     newScale.setX( Canvas.getScaleX() * zoom_fac );
@@ -96,7 +96,7 @@ public class Mouse {
                     zoomValue--;
                     newScale.setX(Canvas.getScaleX() / zoom_fac);
                     newScale.setY(Canvas.getScaleY() / zoom_fac);
-                } else if (zoomValue <= -12 && event.getDeltaY() > 0) {
+                } else if (zoomValue <= -30 && event.getDeltaY() > 0) {
                     zoomValue++;
                     newScale.setX(Canvas.getScaleX() * zoom_fac);
                     newScale.setY(Canvas.getScaleY() * zoom_fac);
