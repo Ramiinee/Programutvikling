@@ -82,6 +82,8 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
                 nextGenThreads.nextGen(RuleDropDown);
                     i--;
                 }
+                
+              
 		
 		
 		System.out.println("done!");

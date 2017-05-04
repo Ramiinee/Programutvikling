@@ -165,16 +165,17 @@ public class Controller implements Initializable {
                 newBoard();
             }
             if(e.isControlDown() && e.getCode().equals(KeyCode.S)){
-                
-               
-                try {
+                if(!SaveBoard.isDisable()){
+                    
+                    try {
                         saveBoard();
                     } catch (Exception ex) {
                         Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                   
+                
+                }
             }
-            
-            
             else if (e.getCode().equals(KeyCode.DELETE)){
                 Clear();
             }
@@ -366,8 +367,10 @@ public class Controller implements Initializable {
     private void setBoardMakerBoard(ComboBox comboBox){
         if (!(comboBox.getValue() == "Static")){
             board = new DynamicBoard();
+            SaveBoard.setDisable(true);
         }else {
             board = new StaticBoard();
+            SaveBoard.setDisable(false);
         }
         boardMaker.setBoardType(board);
 
@@ -522,6 +525,7 @@ public class Controller implements Initializable {
         listeners();
         initializeService();
 
+        SaveBoard.setDisable(true);
     }
 
 
@@ -563,7 +567,7 @@ return awtColor;
 
 
 
-public void saveBoard() throws Exception {
+public void saveBoard() throws Exception{
     String checkgif = ".gif";
    
     
@@ -661,7 +665,10 @@ public void saveBoard() throws Exception {
         Color c = colorPicker.getValue();
                 
         GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value, nextGenThreads);
-        gifWriter.GifWriter();}
+       
+           gifWriter.GifWriter();
+    
+}
     
    }catch(NullPointerException e){
        System.out.print("you do not have a valid name");
