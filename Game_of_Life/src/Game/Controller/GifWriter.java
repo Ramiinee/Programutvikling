@@ -35,7 +35,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
   }
 
     
-    public lieng.GIFWriter GifWriter() throws Exception {
+    public boolean GifWriter() throws Exception {
         int i = 4;
 		
 		// data related to the GIF image file
@@ -88,11 +88,11 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
                  }
                 
                 }
+		gwriter.close();
 		
-		
-		System.out.println("done!");
+		System.out.println("File Saved!");
                 
-                return gwriter;
+                return true;
 		
 	}
      private double calculateSize(double availableHeight, double availableWidth,
