@@ -22,16 +22,15 @@ public class GifWriter {
     public NextGenThreads nextGenThreads;
     public ComboBox RuleDropDown;
     public String filename;
+    public int value;
 
 
-public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads nextGenThreads, ComboBox RuleDropDown,String filename ){
+public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int value){
     this.board = board;
-    this.size = size;
-    this.Canvas = Canvas;
     this.c = c;
-    this.nextGenThreads = nextGenThreads;
     this.RuleDropDown = RuleDropDown;
-    this.filename = filename;
+    this.filename = filename; 
+    this.value = value;   
     
   }
 
@@ -44,7 +43,7 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
                 
 		int width =  board.getColumn();
 		int height = board.getRow();
-		int timePerMilliSecond = 1000; // 1 second
+		int timePerMilliSecond = value; 
 		
 		// create the GIFWriter object
 		lieng.GIFWriter gwriter = new lieng.GIFWriter(width,height,path,timePerMilliSecond);
@@ -76,9 +75,16 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 		// insert the painted image into the animation sequence
 		gwriter.insertAndProceed();
               
+                if(RuleDropDown.getValue() == "Game of Life"){
 		board.nextGeneration(0, board.getRow());
                 --i;
+                 }else if(RuleDropDown.getValue() == "No deaths"){
+                   board.noDeadCellsRule(0, board.getRow()); 
+                }else{
+                   board.slowlyCover(0, board.getRow());  
                  }
+                
+                }
 		
 		
 		System.out.println("done!");
@@ -88,8 +94,8 @@ public GifWriter(Board board,Slider size,Canvas Canvas,Color c, NextGenThreads n
 	}
      private double calculateSize(double availableHeight, double availableWidth,
             int rows, int columns) {
-        double sizeHeight = availableHeight / rows;
-        double sizeWidth = availableWidth / columns;
-        return Math.min(sizeWidth, sizeHeight);
+                 double sizeHeight = availableHeight / rows;
+                 double sizeWidth = availableWidth / columns;
+                 return Math.min(sizeWidth, sizeHeight);
     }
 }

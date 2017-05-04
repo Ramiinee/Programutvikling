@@ -8,6 +8,8 @@ import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
 import java.awt.Insets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -49,6 +51,7 @@ public class Controller implements Initializable {
     public Canvas Canvas;
     public ScrollPane scrollpane;
     public ComboBox RuleDropDown;
+    public ComboBox comboBox;
     public Label TestLabel;
     
 
@@ -79,7 +82,7 @@ public class Controller implements Initializable {
     private Board board = null;
     private NextGenThreads nextGenThreads;
     public Mouse mouse;
-
+    private boolean run = false;
 
 
     /**
@@ -152,6 +155,14 @@ public class Controller implements Initializable {
             if(e.isControlDown() && e.getCode().equals(KeyCode.N)){
                 newBoard();
             }
+            if(e.isControlDown() && e.getCode().equals(KeyCode.S)){
+                    try {
+                        saveBoard();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+            
             }else if (e.getCode().equals(KeyCode.DELETE)){
                 Clear();
             }
@@ -200,7 +211,7 @@ public class Controller implements Initializable {
 
         Label label1= new Label("How do you want to load?");
 
-        ComboBox comboBox = new ComboBox();
+        comboBox = new ComboBox();
         comboBox.setValue("Static");
         comboBox.setItems(ChangeBoard);
 
@@ -527,24 +538,26 @@ return awtColor;
 
 
 public void saveBoard() throws Exception {
-String checkgif = ".gif";
-        scheduledService.cancel();
+    String checkgif = ".gif";
+   
+    
+    //Pause game while saving
+    scheduledService.cancel();
+    
 //-----------------------------------------------
     Stage GifSave =new Stage();
     GridPane grid = new GridPane();
 
     
-
-    // Category in column 2, row 1
     Label saveas = new Label("Save as:");
     Button OK = new Button("OK");
     Button Cancel = new Button ("Cancel");
     
     ChoiceBox DurName = new ChoiceBox();
-    DurName.getItems().addAll("0,25","0,5", "1", "2" );
+    DurName.getItems().addAll("0.25","0.5", "1", "2" );
     DurName.setTooltip(new Tooltip("Select Speed (Seconds)"));
     DurName.getSelectionModel().selectFirst();
-    
+
 
     TextField saveName = new TextField("testGif.gif");
     Label Duration = new Label("Duration");
@@ -556,31 +569,49 @@ String checkgif = ".gif";
     grid.add(Duration, 2,3);
     grid.add(OK,3, 4 );
     grid.add(Cancel, 4,4 );
- 
-        Scene scene = new Scene(grid, 300, 150);
-    GifSave.setScene(scene);
-    GifSave.showAndWait();
-
+    
+    
+       
     
     OK.setOnAction((event) -> {
-
             if (!saveName.getText().isEmpty() || !saveName.getText().toLowerCase().contains(checkgif.toLowerCase())){ 
-                GifSave.close();
-                System.out.print("heeeeeeyyooo");
+               run = true; 
+               GifSave.close();
+                
             }
+            
+        });
+    Cancel.setOnAction((event) -> {
+                GifSave.close();         
         });
     
- //-------------------------------------------------
  
- String filename = saveName.getText();
+        Scene scene = new Scene(grid, 300, 150);
+        GifSave.setScene(scene);
+        GifSave.showAndWait();
+
+    
+    
+ //-------------------------------------------------
+   if(run){ int value = 0;
+        if ((DurName.getValue() == "0.25")){
+             value = 250;
+            }else if( DurName.getValue() == "0.5") {
+             value = 500;
+            }else if(DurName.getValue() == "1"){
+             value = 1000;
+            }else{
+             value = 2000;
+            }
+ 
+        String filename = saveName.getText();
         Color c = colorPicker.getValue();
                 
-      //GifWriter ugh = new GifWriter(getAwkColor(c));
-      GifWriter gifWriter = new GifWriter(board, size, Canvas,getAwkColor(c), nextGenThreads, RuleDropDown, filename);
-      gifWriter.GifWriter();
+        GifWriter gifWriter = new GifWriter(board,getAwkColor(c), RuleDropDown, filename, value);
+        gifWriter.GifWriter();
  
-  
-    //jeg la den ned her for showandwait holder igjen programmet. så når du trykket ok
+       }
+   
     }
 
 }

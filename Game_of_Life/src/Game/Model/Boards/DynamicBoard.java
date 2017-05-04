@@ -91,6 +91,27 @@ public class DynamicBoard extends Board{
 
         }
     }
+     public void slowlyCover(int start, int stop){
+
+
+        for (int row = start; row < stop ; row++) {
+            for (int col = 0; col < board.get(row).size(); col++) {
+                int neighbors = countNeighbor(col,row);
+                if (board.get(row).get(col)==1){
+                    nextGeneration.get(row).set(col,(byte)1);
+                }
+                else if (neighbors > 3) {
+                    nextGeneration.get(row).set(col,(byte)1);
+                }
+                else if (neighbors == 3){
+                    nextGeneration.get(row).set(col,(byte)0);
+                }
+                else {
+                    nextGeneration.get(row).set(col, board.get(row).get(col));
+                }
+            }
+        }
+     }
 
     public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
         for (int row = 0; row < board.size(); row++) {
@@ -110,6 +131,19 @@ public class DynamicBoard extends Board{
             System.out.println("Main Thread interrupted!");
             e.printStackTrace();
 
+        }
+    }
+    public void noDeadCellsRule(int start, int slutt){
+        for (int row = 0; row < board.size(); row++) {
+            for (int col = 0; col < board.get(row).size(); col++) {
+                int neighbors = countNeighbor(col,row);
+                if ( board.get(row).get(col) == 0 && (neighbors == 3)){
+                    nextGeneration.get(row).set(col,(byte)1);
+                }
+                else {
+                    nextGeneration.get(row).set(col, board.get(row).get(col));
+                }
+            }
         }
     }
     @Override
@@ -242,8 +276,6 @@ public class DynamicBoard extends Board{
         for (List<Byte> e : board) {
             sum1 += e.get(columns - 1);
             sum2 += e.get(columns - 2);
-
-           
 
         }
         final int remove = sum1 + sum2;
@@ -391,7 +423,23 @@ public class DynamicBoard extends Board{
 
     @Override
     public void nextGeneration(int start, int stop) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (int row = 0; row < board.size(); row++) {
+            for (int col = 0; col < board.get(row).size(); col++) {
+                int neighbors = countNeighbor(col,row);
+                if (board.get(row).get(col)==1 && (neighbors < 2)){
+                    nextGeneration.get(row).set(col,(byte)0);
+                }
+                else if (board.get(row).get(col) == 1 && (neighbors > 3)) {
+                    nextGeneration.get(row).set(col,(byte)0);
+                }
+                else if ( board.get(row).get(col) == 0 && (neighbors == 3)){
+                    nextGeneration.get(row).set(col,(byte)1);
+                }
+                else {
+                    nextGeneration.get(row).set(col, board.get(row).get(col));
+                }
+            }
+        } 
     }
 
 
