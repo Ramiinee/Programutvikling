@@ -19,41 +19,23 @@ public class Mouse {
     private double zoom_fac = 1.05;
     private double zoomValue = 0;
 
-    /**
-     *
-     * @param canvas
-     */
+
     public Mouse(Canvas canvas) {
         this.Canvas = canvas;
         scroll();
 
     }
 
-    /**
-     *
-     * @return
-     */
-    public double getZoomValue() {
-        return zoomValue;
-    }
 
-    /**
-     *
-     * @param zoomValue
-     */
     public void setZoomValue(double zoomValue) {
         this.zoomValue = zoomValue;
     }
 
-    /**
-     * Dette er en test funksjon for zoom og click events.
-     */
-    public void scroll(){
+
+    private void scroll(){
 
         Canvas.setOnScroll((ScrollEvent event) -> {
-            if (event.isControlDown()){
 
-            }
             newScale = new Scale();
             newScale.setPivotX(event.getX());
             newScale.setPivotY(event.getY());
@@ -108,27 +90,5 @@ public class Mouse {
         });
     }
 
-    /**
-     *
-     * @return
-     */
-    public Scale getNewScale() {
-        return newScale;
-    }
 
-    /**
-     *
-     * @return
-     */
-    public double getZoom_fac() {
-        return zoom_fac;
-    }
-
-    /**
-     *
-     * @param zoom_fac
-     */
-    public void setZoom_fac(double zoom_fac) {
-        this.zoom_fac = zoom_fac;
-    }
 }

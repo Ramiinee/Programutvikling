@@ -16,6 +16,10 @@ public class DynamicBoard extends Board{
     public List<List<Byte>> board;
     private List<List<Byte>> nextGeneration;
 
+
+
+
+
     public int getRow() {
         return board.size();
     }
@@ -30,12 +34,12 @@ public class DynamicBoard extends Board{
     }
 
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
-        //addTopRow(10);
-
 
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
+
                 int neighbors = countNeighbor(col,row);
+
                 if (board.get(row).get(col)==1 && (neighbors < 2)){
                     nextGeneration.get(row).set(col,(byte)0);
                 }
@@ -49,6 +53,7 @@ public class DynamicBoard extends Board{
                     nextGeneration.get(row).set(col, board.get(row).get(col));
                 }
             }
+
         }
         try {
             cyclicBarrier.await();
@@ -111,6 +116,8 @@ public class DynamicBoard extends Board{
     @Override
     public void setBoard(){
         setCurrentGen();
+
+
     }
 
     @Override
@@ -125,6 +132,22 @@ public class DynamicBoard extends Board{
         }
     }
 
+    @Override
+    public void test() {
+
+    }
+
+
+    private void setCurrentGen(){
+        for (int row = 0; row < board.size(); row++) {
+            for (int col = 0; col < board.get(row).size(); col++) {
+                byte a = nextGeneration.get(row).get(col);
+                board.get(row).set(col,a);
+
+            }
+        }
+        nextGeneration.clear();
+    }
 
     protected int countNeighbor(int col, int row){
         int neighbors = 0;
@@ -170,7 +193,7 @@ public class DynamicBoard extends Board{
 
         return neighbors;
     }
-    public void expand(){
+    private void expand(){
         // the struggle is real.
         //board.get(row).get(col)
         int maxRow = board.size()-1;
@@ -184,15 +207,15 @@ public class DynamicBoard extends Board{
             }
         }
 
-        for(int left = 0; left < board.size(); left ++){
-            if(board.get(left).get(0) == 1){
+        for (List<Byte> aBoard : board) {
+            if (aBoard.get(0) == 1) {
                 addLeftColumn(1);
                 break;
             }
         }
 
-        for ( int right = 0; right < board.size(); right ++){
-            if(board.get(right).get(maxCol) == 1){
+        for (List<Byte> aBoard : board) {
+            if (aBoard.get(maxCol) == 1) {
                 addRightColumn(1);
                 break;
             }
@@ -208,16 +231,7 @@ public class DynamicBoard extends Board{
 
 
 
-    private void setCurrentGen(){
-        for (int row = 0; row < board.size(); row++) {
-            for (int col = 0; col < board.get(row).size(); col++) {
-                byte a = nextGeneration.get(row).get(col);
-                board.get(row).set(col,a);
 
-            }
-        }
-        nextGeneration.clear();
-    }
 
     private void addTopRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
@@ -230,12 +244,12 @@ public class DynamicBoard extends Board{
 
     private void addRightColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
-            board.stream().forEach((col) -> col.add((byte) 0));
+            board.forEach((col) -> col.add((byte) 0));
         }
     }
     private void addLeftColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
-            board.stream().forEach((col) -> col.add(0, (byte) 0));
+            board.forEach((col) -> col.add(0, (byte) 0));
         }
     }
     private void addBottomRow(int numberOfRows) {
@@ -249,6 +263,13 @@ public class DynamicBoard extends Board{
     private void removeTopRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.remove(0);
+        }
+    }
+    private void removeRightColumn(int numberOfColumns) {
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (List<Byte> row : board) {
+                row.remove(board.get(0).size() - 1);
+            }
         }
     }
 
@@ -288,9 +309,25 @@ public class DynamicBoard extends Board{
             }
         }
 
+
+
     }
 
+    @Override
+    public void makeBoard(byte[][] byteboard) {
+        this.MIN_ROW = byteboard.length;
+        this.MIN_COL = byteboard[0].length;
 
+        board = new ArrayList<>();
+
+        for (int rows = 0; rows < MIN_ROW; rows++) {
+            board.add(new java.util.ArrayList<>());
+            for (int cols = 0; cols < MIN_COL; cols++) {
+                board.get(rows).add(byteboard[rows][cols]);
+
+            }
+        }
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package Game.Model.Boards;
 
+import java.util.Arrays;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -13,7 +14,9 @@ public class StaticBoard extends Board{
     private int Row;
     public byte[][] board;
     private byte[][] nextGeneration;
-
+    private byte[][] neighborArray;
+    private byte[][] neighborArrayold;
+    private boolean t = true;
 
 
     @Override
@@ -28,15 +31,13 @@ public class StaticBoard extends Board{
 
     @Override
     public int getRow() {
-        return board.length;
+        return Row;
     }
 
     @Override
     public void setRow(int row) {
         this.Row = row;
-
     }
-
 
     public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
 
@@ -73,7 +74,34 @@ public class StaticBoard extends Board{
 
     @Override
     public void makeNextGenArray() {
+
         nextGeneration = new byte[board.length][board[0].length];
+        if (t){
+
+            neighborArrayold = new byte[board.length+2][board[0].length+3];
+            for (int i = 0; i <neighborArrayold.length ; i++) {
+                for (int y = 0; y < neighborArrayold[i].length; y++) {
+                    neighborArrayold[i][y] = 1;
+                }
+            }
+            System.out.println(t);
+            t = false;
+            neighborArray = neighborArrayold;
+        }else {
+            neighborArrayold = neighborArray;
+            neighborArray = new byte[board.length+2][board[0].length+3];
+        }
+    }
+
+    @Override
+    public void test() {
+        System.out.println();
+        for (int i = 0; i < neighborArrayold.length; i++) {
+            for (int i1 = 0; i1 < neighborArrayold[i].length; i1++) {
+                System.out.print(neighborArrayold[i][i1]);
+            }
+            System.out.println();
+        }
     }
 
 
@@ -81,6 +109,8 @@ public class StaticBoard extends Board{
 
         for (int row = start; row < stop ; row++) {
             for (int col = 0; col < board[row].length; col++) {
+                //if (neighborArrayold[row][col] == 0 && board[row][col]==0) continue;
+
                 int neighbors = countNeighbor(row, col);
                 if ((board[row][col] == 1) && (neighbors < 2)) {
                     nextGeneration[row][col] = 0;
@@ -88,10 +118,15 @@ public class StaticBoard extends Board{
                     nextGeneration[row][col] = 0;
                 } else if (board[row][col] == 0 && (neighbors == 3)) {
                     nextGeneration[row][col] = 1;
+                    setNeighborArray(row,col);
+                    neighborArray[row][col] = 1;
                 } else {
                     nextGeneration[row][col] = board[row][col];
+                    if (nextGeneration[row][col] == 1){
+                        setNeighborArray(row,col);
+                        neighborArray[row][col] = 1;
+                    }
                 }
-
             }
         }
         try {
@@ -99,8 +134,56 @@ public class StaticBoard extends Board{
         } catch (InterruptedException | BrokenBarrierException e) {
             System.out.println("Main Thread interrupted!");
             e.printStackTrace();
+        }
+    }
+
+    private void setNeighborArray(int row, int col){
+
+        row++;
+        col++;
+        try {
+            neighborArray[row + 1][col] = 1;
+        }catch (Exception e){
 
         }
+
+        try {
+            neighborArray[row + 1][col + 1] = 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row][col + 1] = 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row - 1][col + 1]= 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row - 1][col] = 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row - 1][col - 1] = 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row][col - 1] = 1;
+        }catch (Exception e){
+
+        }
+        try {
+            neighborArray[row +1][col - 1] = 1;
+        }catch (Exception e){
+
+        }
+
+
 
 
 
@@ -195,9 +278,7 @@ public class StaticBoard extends Board{
 
     @Override
     public void setCellAliveState(int row, int column, byte aliveState) {
-        if (row > getRow()-1 || row < 0 || column > getColumn()-1 || column < 0) {
-
-        } else {
+        if (!(row > getRow()-1 || row < 0 || column > getColumn()-1 || column < 0)) {
             if (aliveState == 0 || aliveState == 1) {
                 board[row][column] = aliveState;
             } else {
@@ -213,6 +294,13 @@ public class StaticBoard extends Board{
         this.Row = row;
         this.Column = col;
         board = new byte[Row][Column];
+    }
+
+    @Override
+    public void makeBoard(byte[][] byteboard) {
+        this.Row = byteboard.length;
+        this.Column = byteboard[0].length;
+        board = byteboard;
     }
 
 

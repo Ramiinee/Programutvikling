@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
@@ -32,11 +33,6 @@
                         <Insets right="10.0" />
                     </GridPane.margin>
                 </Button>
-                <Slider fx:id="size" blockIncrement="0.1" max="200.0" maxWidth="150.0" min="5" value="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                    <GridPane.margin>
-                        <Insets top="80.0" />
-                    </GridPane.margin>
-                </Slider>
                 <Slider fx:id="timer" blockIncrement="1.0" max="60.0" maxWidth="150.0" min="1.0" rotate="180.0" value="60.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="30.0" />
@@ -76,13 +72,17 @@
                         <Insets top="10.0" />
                     </GridPane.margin>
                 </Label>
-                <Label text="Size" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                    <GridPane.margin>
-                        <Insets top="60.0" />
-                    </GridPane.margin>
-                </Label>
                 <ComboBox fx:id="RuleDropDown" prefWidth="150.0" promptText="Game of life" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             <Button fx:id="SaveBoard" mnemonicParsing="false" onAction="#saveBoard" prefHeight="50.0" prefWidth="80.0" text="Save Board" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Label fx:id="BoardLabel" alignment="CENTER" prefHeight="47.0" prefWidth="205.0" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="20.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ToggleButton fx:id="FitView" mnemonicParsing="false" onAction="#FitToView" text="Fit to View" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             </children>
 
         </GridPane>

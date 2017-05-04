@@ -9,8 +9,7 @@ import javafx.fxml.FXMLLoader;
 
 public class Main extends Application {
 
-    public FXMLLoader loader;
-    public static Stage stage;
+    private static Stage stage;
     public Scene scene;
 
 
@@ -23,7 +22,7 @@ public class Main extends Application {
         stage = primaryStage;
 
 
-        loader = new FXMLLoader(getClass().getResource("GOL_new.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("GOL_new.fxml"));
         Parent root = loader.load();
 
 
