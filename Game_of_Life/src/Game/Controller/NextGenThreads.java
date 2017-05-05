@@ -3,14 +3,8 @@ package Game.Controller;
 
 import Game.Model.Boards.Board;
 import javafx.scene.control.ComboBox;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-
 
 
 public class NextGenThreads {
@@ -20,44 +14,51 @@ public class NextGenThreads {
     
     //Datatypes
     private final int numWorkers =  Runtime.getRuntime().availableProcessors();
-    private int[] splitedBoard;
-    private Thread[] workers;
+    private final int[] splitedBoard;
+    private final Thread[] workers;
 
     
-    //Threads for next generation with defined workers, cyclic barrier and splitedBoard
+    
+
+    /**
+     * Prepare the required to run workers
+     */
     public NextGenThreads() {
         workers = new Thread[numWorkers];
         splitedBoard = new int[numWorkers];
         barrier = new CyclicBarrier(1);
 
     }
-     public void setBoard(Board board) {
+
+   
+    public void setBoard(Board board) {
         this.board = board;
 
     }
      
-     /*
-      * 
-      */
-     
-    public void nextGen(ComboBox RuleDropDown ) throws InterruptedException {
-
+    /**
+     * The function being called on by scheduledService.
+     * Runs the required preporations before @
+     * @param RuleDropDown from controller. Determines which rule to use
+     * @throws InterruptedException
+     */
+    public void GenerationWorkers(ComboBox RuleDropDown ) throws InterruptedException {
         board.makeNextGenArray();
-
         createWorkers(RuleDropDown);
-
         runWorkers();
         try {
             barrier.await();
         } catch (InterruptedException | BrokenBarrierException e) {
-            System.out.println("Main Thread interrupted!");
-            e.printStackTrace();
+            System.err.println("Thread interrupted!");
 
         }
         board.setBoard();
 
     }
     
+    /**
+     * Splits the board into the amount of available prosessors.
+     */
     public void split(){
         int length = board.getRow();
         int splited = length/numWorkers;
@@ -67,7 +68,10 @@ public class NextGenThreads {
         splitedBoard[splitedBoard.length-1] = board.getRow();
     }
     
-    //creates thread workers that do the tasks given
+    /**
+     * Generate the workes needed and sets the required messurse for a new generation to be generated.
+     * @param RuleDropDown from controller. Determines which rule to use
+     */
     public void createWorkers(ComboBox RuleDropDown) {
         for (int i = 0; i < numWorkers; i++) {
             int start;
@@ -80,15 +84,14 @@ public class NextGenThreads {
                 stop = splitedBoard[i];
             }
 
-            workers[i] = new Thread(new NextGenera(barrier, board, start,stop,RuleDropDown ));
+            workers[i] = new Thread(new NextGenerationRun(barrier, board, start,stop,RuleDropDown ));
 
         }
     }
       
-    /*
-     * thread worker that loops and waits for the availability of a task to execute,
-     * once a task is assigned the worker comes out of the waiting loop and do the task given
-     * after the worker has runned, it waits for a new task
+    /**
+     * Starts the workers and joins them.
+     * @throws InterruptedException 
      */
     private void runWorkers() throws InterruptedException {
 
@@ -103,18 +106,25 @@ public class NextGenThreads {
 
 
    
-      /*
-       *implements the interface Runnable which is meant to contain the code executed in the thread
-       */
-private static class NextGenera implements Runnable {
+    
+private static class NextGenerationRun implements Runnable {
         CyclicBarrier cyclicBarrier;
         Board board;
         int start;
         int stop;
         ComboBox RuleDropDown;
         
-        //constructor
-        public NextGenera(CyclicBarrier cyclicBarrier, Board board, int start, int stop, ComboBox RuleDropDown ) {
+       
+        /**
+         * Creates a {@link Runnable}
+         * 
+         * @param cyclicBarrier The cyclic barrier.
+         * @param board The {@link Board} to use.
+         * @param start The start position of the board segment.
+         * @param stop The end position of the board segment.
+         * @param RuleDropDown from {@link Controller} . Determines which rule to use .
+         */
+        public NextGenerationRun(CyclicBarrier cyclicBarrier, Board board, int start, int stop, ComboBox RuleDropDown ) {
 
             this.cyclicBarrier = cyclicBarrier;
             this.board = board;
@@ -124,6 +134,7 @@ private static class NextGenera implements Runnable {
 
         }
 
+        
         @Override
         public void run() {
             if(RuleDropDown.getValue() == "Game of Life"){

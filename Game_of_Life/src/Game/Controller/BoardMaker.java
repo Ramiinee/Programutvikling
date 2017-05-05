@@ -17,8 +17,8 @@ public class BoardMaker {
 
 
     private Board board;
-    private MetaData metaData;
-    private byte[] byteArray;
+    private final MetaData metaData;
+
     
 
     public BoardMaker(MetaData metaData) {
@@ -26,9 +26,8 @@ public class BoardMaker {
     }
 
 
-
     /**
-     * generate a clear board where all values are 0.
+     * Generate a clear board where all values are 0.
      * @param Row row in board 
      * @param Col Column in board
      */
@@ -37,7 +36,7 @@ public class BoardMaker {
     }
 
    /**
-    * place alive cells, random places on the board. 
+    * Place alive cells, random places on the board. 
     * @param Row Row in board 
     * @param Col column in board
     */
@@ -77,14 +76,16 @@ public class BoardMaker {
         return new Thread() ;
     }
 
-    //This method insert the Rle into board
-    public boolean InsertRleIntoBoard( BufferedReader reader) throws IOException{
+    /**
+     * Takes reader and passes it on to decoding.
+     * @param reader from Url or local file. 
+     * @throws IOException if reading fails.
+     */
+    public void InsertRleIntoBoard( BufferedReader reader) throws IOException{
         RLEDecoder decoder = new RLEDecoder(reader, board, metaData);
         decoder.decode();
-        return true;
-    }
-
-   
+        
+    }   
     public void setBoardType(Board board) {
         this.board = board;
     }

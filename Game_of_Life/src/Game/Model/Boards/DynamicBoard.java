@@ -1,11 +1,6 @@
 package Game.Model.Boards;
 
-
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import static java.util.Collections.list;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -48,7 +43,7 @@ public class DynamicBoard extends Board{
 
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
+                int neighbors = countNeighbor(row,col);
                 if (board.get(row).get(col)==1 && (neighbors < 2)){
                     nextGeneration.get(row).set(col,(byte)0);
                 }
@@ -86,7 +81,7 @@ public class DynamicBoard extends Board{
 
         for (int row = start; row < stop ; row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
+                int neighbors = countNeighbor(row,col);
                 if (board.get(row).get(col)==1){
                     nextGeneration.get(row).set(col,(byte)1);
                 }
@@ -119,10 +114,10 @@ public class DynamicBoard extends Board{
      * @param cyclicBarrier 
      */
     @Override
-    public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
-        for (int row = 0; row < board.size(); row++) {
+    public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
+        for (int row = start; row <stop; row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
-                int neighbors = countNeighbor(col,row);
+                int neighbors = countNeighbor(row,col);
                 if ( board.get(row).get(col) == 0 && (neighbors == 3)){
                     nextGeneration.get(row).set(col,(byte)1);
                 }
@@ -164,7 +159,8 @@ public class DynamicBoard extends Board{
      * @param col columns in the board. 
      * @return returns the number of alive cells
      */
-    protected int countNeighbor(int col, int row){
+    @Override
+    protected int countNeighbor(int row, int col){
         int neighbors = 0;
         // Check cell on the right.
         if (row != board.size() - 1)

@@ -83,7 +83,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 		gwriter.insertAndProceed();
 
                     //System.out.println("rule");
-                nextGenThreads.nextGen(RuleDropDown);
+                nextGenThreads.GenerationWorkers(RuleDropDown);
                     i--;
                 }
 		

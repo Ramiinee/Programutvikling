@@ -1,4 +1,5 @@
 package Game.Controller;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
@@ -16,13 +17,13 @@ public class Main extends Application {
 
 
 
-/**
- * makes a site out of an fxml. 
- * @param primaryStage
- * @throws Exception 
- */
+    /**
+     * Tries to open the FXML file.
+     * @param primaryStage Main Stage.
+     * @throws IOException if FXMLLoader fails.
+    */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         
         stage = primaryStage;
 
@@ -50,15 +51,13 @@ public class Main extends Application {
     public Scene getScene() {
         return scene;
     }
-/**
- * launch game of life program. 
- * @param args 
- */
+    /**
+     * Launches Game of Life program through the start function.  
+     * @param args 
+     */
     public static void main(String[] args) {
-
         launch(args);
-        
-        
+           
     }
 
 

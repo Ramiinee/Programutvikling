@@ -37,7 +37,6 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.*;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
 
 /**
  *
@@ -91,8 +90,8 @@ public class Controller implements Initializable {
     
 
     /**
-     *Here there are listeners who respond every time a slider or colorpicker changes value.
-     *      
+     * Here there are listeners who respond every time a the user changes some varibles. 
+     * Key shortcuts that open other functions.
      */
     private void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
@@ -258,7 +257,6 @@ public class Controller implements Initializable {
             StartStop.setText("Start");
             StartStop.setTooltip(new Tooltip("Start"));
             stage.setTitle("Game Of Life");
-            stage.setTitle("Game Of Life ");
             showClearBoard();
         }
     }
@@ -356,7 +354,7 @@ public class Controller implements Initializable {
 
     }
     /**
-     * create popup load board. 
+     * Create popup, load board. 
      * Load board, either from Disk or URL. 
      */
      public void loadBoard() {
@@ -644,7 +642,7 @@ public class Controller implements Initializable {
                     @Override
                     protected Void call() throws Exception {
                         nextGenThreads.split();
-                        nextGenThreads.nextGen(RuleDropDown);
+                        nextGenThreads.GenerationWorkers(RuleDropDown);
                         Platform.runLater(() -> {
                             updateCanvas();
                             draw_Array();

@@ -6,10 +6,7 @@ import javafx.stage.FileChooser;
 import java.io.*;
 import java.net.URL;
 
-/**
- *
- * @author Joachim
- */
+
 public class FileLoader {
 
     private BoardMaker boardMaker;
@@ -17,11 +14,12 @@ public class FileLoader {
     public FileLoader(BoardMaker boardMaker) {
         this.boardMaker = boardMaker;
     }
-/**
- * read file from url
- * @param url 
- * @return true og false to check if a url was chosen or not. 
- */
+    /**
+     * Generates a reader from url imput.
+     * The reader gets passed on to decoding.
+     * @param url from userinput
+     * @return true if everything went ok, false if something went wrong.
+     */
     public boolean ReadFromUrl(String url) {
         try {
             URL oracle = new URL(url);
@@ -37,8 +35,9 @@ public class FileLoader {
 
     }
     /**
-     * read file from selected file
-     * @return true og false to check if a file was chosen or not. 
+     * Opens opp a Filechooser and makes a reader.
+     * The reader gets passed on to decoding.
+     * @return true if everything went ok, false if something went wrong.
      */
    
     public boolean ReadFromFile(){
@@ -61,9 +60,9 @@ public class FileLoader {
         if (selectedFile != null) {
             try {
                 reader = new BufferedReader(new FileReader(selectedFile));
-                boolean inserted = boardMaker.InsertRleIntoBoard(reader); // her kommer det en funksjon som konverterter rle fil til array.
+                boardMaker.InsertRleIntoBoard(reader); // her kommer det en funksjon som konverterter rle fil til array.
                 reader.close();
-                return inserted;
+                return true;
             } catch (IOException e) {
                 System.out.println(e + " | Reader failed");
                 return false;
