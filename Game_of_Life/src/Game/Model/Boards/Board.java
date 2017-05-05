@@ -86,7 +86,13 @@ public abstract class Board{
      * @param col
      */
     public abstract void makeBoard(int row, int col);
+    /**
+     * Generates an emty board in the requierd size.
+     * @param byteboard.
+     */
+    public abstract void makeBoard(byte[][] byteBoard);
    
+    
     /**
      * Sets the board to the newest value
      */

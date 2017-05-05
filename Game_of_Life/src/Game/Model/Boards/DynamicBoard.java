@@ -509,5 +509,21 @@ public class DynamicBoard extends Board{
         }
 
     }
+    @Override
+    public void makeBoard(byte[][] byteBoard) {
+        this.MIN_ROW = byteBoard.length;
+        this.MIN_COL = byteBoard[0].length;
+
+        board = new ArrayList<>();
+
+        for (int rows = 0; rows < MIN_ROW; rows++) {
+            board.add(new java.util.ArrayList<>());
+            for (int cols = 0; cols < MIN_COL; cols++) {
+                board.get(rows).add((byte)byteBoard[rows][cols]);
+
+            }
+        }
+
+    }
 
 }

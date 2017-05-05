@@ -258,6 +258,12 @@ public class StaticBoard extends Board{
         this.Column = col;
         board = new byte[Row][Column];
     }
+    @Override
+    public void makeBoard(byte[][] byteBoard) {
+        this.Row = byteBoard.length;
+        this.Column = byteBoard[0].length;
+        board = byteBoard;
+    }
 
     /**
      * board get the information of the new board (nextgeneration ), and the nextgeneration sets back to null

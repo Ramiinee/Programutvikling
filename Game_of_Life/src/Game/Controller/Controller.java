@@ -299,7 +299,7 @@ public class Controller implements Initializable {
                     setBoardMakerBoard(comboBox);
 
 
-                    boardMaker.makeClearBoard(row-1,col-1);
+                    boardMaker.makeClearBoard(row,col);
 
 
                     loaded(loaded = true);
@@ -315,10 +315,9 @@ public class Controller implements Initializable {
             randomBoard.setOnAction(( event) -> {
                 try {
                     int row = Integer.parseInt(sizeField1.getText());
-
                     int col = Integer.parseInt(sizeField1.getText());
                     setBoardMakerBoard(comboBox);
-                    boardMaker.randomBoard(row-1,col-1);
+                    boardMaker.randomBoard(row,col);
                     loaded(loaded = true);
                     newBoard.close();
                     BoardLabel.setText("");
