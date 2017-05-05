@@ -295,7 +295,7 @@ public class Controller implements Initializable {
                 
                 try {                    
                     int row = Integer.parseInt(sizeField1.getText());
-                    int col = Integer.parseInt(sizeField1.getText());
+                    int col = Integer.parseInt(sizeField2.getText());
                     setBoardMakerBoard(comboBox);
 
 
@@ -315,7 +315,7 @@ public class Controller implements Initializable {
             randomBoard.setOnAction(( event) -> {
                 try {
                     int row = Integer.parseInt(sizeField1.getText());
-                    int col = Integer.parseInt(sizeField1.getText());
+                    int col = Integer.parseInt(sizeField2.getText());
                     setBoardMakerBoard(comboBox);
                     boardMaker.randomBoard(row,col);
                     loaded(loaded = true);

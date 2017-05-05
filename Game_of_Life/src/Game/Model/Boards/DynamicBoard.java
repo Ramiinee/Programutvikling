@@ -526,4 +526,16 @@ public class DynamicBoard extends Board{
 
     }
 
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+        for (List<Byte> currentGeneration1 : board) {
+            for (int j = 0; j < board.get(0).size(); j++) {
+                sb.append(currentGeneration1.get(j));
+            }
+        }
+        return sb.toString();
+    }
+    
+
 }

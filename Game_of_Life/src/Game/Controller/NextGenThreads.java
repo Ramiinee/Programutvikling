@@ -43,6 +43,7 @@ public class NextGenThreads {
      * @throws InterruptedException
      */
     public void GenerationWorkers(ComboBox RuleDropDown ) throws InterruptedException {
+       
         board.makeNextGenArray();
         createWorkers(RuleDropDown);
         runWorkers();
@@ -60,6 +61,7 @@ public class NextGenThreads {
      * Splits the board into the amount of available prosessors.
      */
     public void split(){
+         
         int length = board.getRow();
         int splited = length/numWorkers;
         for (int i = 1; i <splitedBoard.length  ; i++) {
@@ -83,10 +85,11 @@ public class NextGenThreads {
                 start = splitedBoard[i-1];
                 stop = splitedBoard[i];
             }
-
+               
             workers[i] = new Thread(new NextGenerationRun(barrier, board, start,stop,RuleDropDown ));
 
         }
+       
     }
       
     /**
@@ -138,6 +141,7 @@ private static class NextGenerationRun implements Runnable {
         public void run() {
             if(RuleDropDown.getValue() == "Game of Life"){
                 board.nextGeneration(start,stop,cyclicBarrier);
+                
             }
             else if(RuleDropDown.getValue() == "No deaths"){
                 board.noDeadCellsRule(start,stop,cyclicBarrier);

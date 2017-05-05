@@ -18,7 +18,7 @@ public class StaticBoard extends Board{
 
     @Override
     public int getColumn() {
-        return Column;
+        return board[0].length;
     }
 
     @Override
@@ -273,6 +273,19 @@ public class StaticBoard extends Board{
         board = nextGeneration;
         nextGeneration = null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (byte[] currentGeneration1 : board) {
+            for (int j = 0; j < board[0].length; j++) {
+                sb.append(currentGeneration1[j]);
+            }
+        }
+        return sb.toString();
+    }
+    
+    
 
 
 }

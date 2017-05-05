@@ -4,23 +4,19 @@ package Game.Controller;
 
 import Game.Model.Boards.Board;
 import java.awt.Color;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.transform.Scale;
 
 
 public class GifWriter {
-    private Canvas Canvas;
     public Slider size;
     public Board board;
-    private Color c;
+    private final Color c;
     
     
     public ComboBox RuleDropDown;
     public String filename;
-    private NextGenThreads nextGenThreads;
+    private final NextGenThreads nextGenThreads;
     public int value;
 
     //constructor for this class

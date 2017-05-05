@@ -95,12 +95,12 @@ public class RLEDecoder {
                     if (NumberOfCells != 0) {
                         while (NumberOfCells != 0) {
                             //byteBoard[row][col] = 1;
-                            board.setCellAliveState(row,col,(byte)1);
+                            board.setCellAliveState(row+1,col+1,(byte)1);
                             NumberOfCells--;
                             col++;
                         }
                     } else {
-                        board.setCellAliveState(row,col,(byte)1);
+                        board.setCellAliveState(row+1,col+1,(byte)1);
                         //|byteBoard[row][col] = 1;
                         col++;
                     }
