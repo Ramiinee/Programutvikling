@@ -28,13 +28,19 @@ public class BoardMaker {
 
 
     /**
-     * Her generer vi ett klart brett hvor alle verider er 0.
+     * generate a clear board where all values are 0.
+     * @param Row row in board 
+     * @param Col Column in board
      */
     public void makeClearBoard(int Row, int Col){
         board.makeBoard(Row,Col);
     }
 
-   
+   /**
+    * place alivecell on random places in board. 
+    * @param Row Row in board 
+    * @param Col column in board
+    */
      public void randomBoard(int Row, int Col){
         board.makeBoard(Row,Col);
         int start1 = Row/4;

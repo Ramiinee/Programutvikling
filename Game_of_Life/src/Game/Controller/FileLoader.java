@@ -17,7 +17,11 @@ public class FileLoader {
     public FileLoader(BoardMaker boardMaker) {
         this.boardMaker = boardMaker;
     }
-
+/**
+ * read file from url
+ * @param url 
+ * @return true og false to check if a url was chosen or not. 
+ */
     public boolean ReadFromUrl(String url) {
         try {
             URL oracle = new URL(url);
@@ -32,6 +36,10 @@ public class FileLoader {
         }
 
     }
+    /**
+     * read file from selected file
+     * @return true og false to check if a file was chosen or not. 
+     */
    
     public boolean ReadFromFile(){
         File selectedFile;

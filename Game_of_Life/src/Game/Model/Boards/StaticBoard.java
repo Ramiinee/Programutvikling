@@ -48,7 +48,14 @@ public class StaticBoard extends Board{
 
    
 
-
+/**
+ * The rules of Game of life. 
+ * decide whats alive or not in the next generation
+ * scanns game from int Start to Int stop. 
+ * @param start where therow starts from 
+ * @param stop where the row ends.  
+ * @param cyclicBarrier 
+ */
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
 
         for (int row = start; row < stop ; row++) {
@@ -78,6 +85,14 @@ public class StaticBoard extends Board{
 
     }
     
+    /**
+     * Slowly cover Rules. 
+     * decide whats alive or not in the next generation
+     * scanns game from int Start to Int stop. 
+     * @param start where row starts
+     * @param stop where row ends
+     * @param cyclicBarrier 
+     */
     @Override
     public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
 
@@ -108,6 +123,15 @@ public class StaticBoard extends Board{
 
         }
     }
+    /**
+     * No dead cell rule. det same as nextGeneration method, except that alive cells doesnt die. 
+     * decide which cell who comes to life
+     * scanns game from int Start to Int stop. 
+     * @param start where col starts from  in board
+     * @param stop where col ends board
+     * @param cyclicBarrier 
+     */
+    
     public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
 
         for (int col = start; col < stop; col++) {
@@ -136,6 +160,12 @@ public class StaticBoard extends Board{
 
     }
    
+    /**
+     * Count the closest cells to a cell. 
+     * @param row rows in the board 
+     * @param col columns in the board. 
+     * @return returns the number of alive cells
+     */
     @Override
     protected int countNeighbor(int row, int col){
         int neighbors = 0;
@@ -183,6 +213,13 @@ public class StaticBoard extends Board{
 
     }
 
+    /**
+     * Checks if the current cell is alive or not. 
+     * @param col column in the board
+     * @param row row in the baord
+     * @return returns the value 1 for alive or 0 for dead cell. 
+     */
+    
     @Override
     public byte getCellAliveState(int col, int row) {
         if (col > getRow()-1 || col < 0 || row > getColumn()-1 || row < 0) {
@@ -192,7 +229,14 @@ public class StaticBoard extends Board{
             return board[col][row];
         }
     }
-
+    /**
+     * Set the cell to either 1 (alive ) or 0 ( dead) in the board. 
+     * column and row is used to navigate where you are placed on the board.
+     * @param row row in the board
+     * @param column column in the board 
+     * @param aliveState either 1 or 0 
+     */
+    
     @Override
     public void setCellAliveState(int row, int column, byte aliveState) {
         if (row > getRow()-1 || row < 0 || column > getColumn()-1 || column < 0) {
@@ -207,7 +251,6 @@ public class StaticBoard extends Board{
     }
 
 
-
     @Override
     public void makeBoard(int row, int col) {
         this.Row = row;
@@ -215,6 +258,9 @@ public class StaticBoard extends Board{
         board = new byte[Row][Column];
     }
 
+    /**
+     * board get the information of the new board (nextgeneration ), and the nextgeneration sets back to null
+    */
     @Override
     public void setBoard() {
         board = nextGeneration;
