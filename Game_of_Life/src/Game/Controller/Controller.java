@@ -111,6 +111,7 @@ public class Controller implements Initializable {
         Grid.selectedProperty().addListener((observable, oldValue, newValue) -> {
             draw_Array();
         });
+        
         Canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
             if (e.isControlDown()){
                 scrollpane.setPannable(true);
@@ -285,7 +286,7 @@ public class Controller implements Initializable {
             cancel.setOnAction(event -> newBoard.close());
             cancel.setCancelButton(true);
             randomBoard.setDefaultButton(true);
-
+               
 
             VBox layout= new VBox(20);
             HBox Size = new HBox(10);
@@ -662,7 +663,13 @@ public class Controller implements Initializable {
                     run = true; 
                    GifSave.close();
                 }}
-            catch(NullPointerException e){System.out.print("Your name is not valid"); }     
+                
+            catch(NullPointerException e){
+                saveas.setText("Invalid name");
+                
+                }   
+                
+               
           });
 
         Cancel.setOnAction((event) -> {
@@ -718,7 +725,7 @@ public class Controller implements Initializable {
 
        }catch(NullPointerException e){
            System.out.print("you do not have a valid name");
-           return;
+          
        }
     }
    
