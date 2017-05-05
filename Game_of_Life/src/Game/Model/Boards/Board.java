@@ -20,7 +20,7 @@ public abstract class Board{
    public abstract byte getCellAliveState(int row, int column);
    public abstract void setCellAliveState(int row, int column, byte aliveState);
    public abstract void makeBoard(int row, int col);
-   
+   public abstract byte[][] getBoard();
    public abstract void setBoard();
    public abstract void makeNextGenArray();
 

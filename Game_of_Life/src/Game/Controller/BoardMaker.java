@@ -43,6 +43,14 @@ public class BoardMaker {
     */
      public void randomBoard(int Row, int Col){
         board.makeBoard(Row,Col);
+        Random r = new Random();
+        for (int row = 0; row <board.getRow() ; row++) {
+            for (int col = 0; col <board.getColumn() ; col++) {
+                int a = r.nextInt(2);
+                board.setCellAliveState(row,col,(byte)a);
+            }
+        } 
+        /*
         int start1 = Row/4;
         int stop1 = Row/4 + start1;
         int stop2 = Row/4 + start1 +start1;
@@ -64,7 +72,7 @@ public class BoardMaker {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        */
     }
       private Thread test(int start, int stop){
         Random r = new Random();

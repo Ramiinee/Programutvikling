@@ -56,6 +56,7 @@ public class StaticBoard extends Board{
  * @param stop where the row ends.  
  * @param cyclicBarrier 
  */
+    @Override
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
 
         for (int row = start; row < stop ; row++) {
@@ -212,6 +213,39 @@ public class StaticBoard extends Board{
         return neighbors;
 
     }
+    
+    //---test-----
+    public String toString(){
+        String check = "0";
+        for (int row = 0; row < board.length ; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if(board[col][row] == 1){
+                    check += 1;
+                }else{
+                    check += 0;
+                }
+                    
+                }  
+            }
+        return check;
+    }
+    
+    
+    public byte[][] setBoard(byte[][] board) {
+        this.board = new byte[board.length][board[0].length];
+         for (int col = 0; col < board.length; col++) {
+            for (int row = 0; row < board[col].length; row++) {
+        this.board[col][row] = board[col][row];
+            }
+            
+         }
+         return this.board;
+    }
+    
+    
+    
+    //------------
+
 
     /**
      * Checks if the current cell is alive or not. 
@@ -265,6 +299,11 @@ public class StaticBoard extends Board{
     public void setBoard() {
         board = nextGeneration;
         nextGeneration = null;
+    }
+
+    @Override
+    public byte[][] getBoard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

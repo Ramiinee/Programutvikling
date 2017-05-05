@@ -5,6 +5,7 @@
  */
 package Game.Controller;
 
+import Game.Model.Boards.StaticBoard;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.scene.canvas.Canvas;
@@ -24,18 +25,7 @@ import static org.junit.Assert.*;
 
 
 public class ControllerTest {
-    public ColorPicker colorPicker;
-    public BorderPane BoarderPane;
-    public Slider timer;
-    public Canvas Canvas;
-    public ScrollPane scrollpane;
-    public ComboBox<String> RuleDropDown;
-    public Label BoardLabel;
-    
-    public ControllerTest() {
-        
-    }
-    
+   
     @BeforeClass
     public static void setUpClass() {
     }
@@ -64,16 +54,21 @@ public class ControllerTest {
        
     }
 
-    @Test
+   @Test
     public void nextGenerationtest(){
         byte[][] board = {
             {0,0,1,0},
             {0,0,1,0},
             {0,0,1,0},
             {0,0,0,0}
-    }    ; 
+    };
+        
+StaticBoard gol = new StaticBoard();
+gol.setBoard(board);
+gol.(); 
+org.junit.Assert.assertEquals("00010001000100000", gol.toString());
     }
-    /**
+   /**
      * Test of Clear method, of class Controller.
      */
     @Test
@@ -88,78 +83,7 @@ public class ControllerTest {
     /**
      * Test of newBoard method, of class Controller.
      */
-    @Test
-    public void testNewBoard() {
-        System.out.println("newBoard");
-        Controller instance = new Controller();
-        instance.newBoard();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+   
 
-    /**
-     * Test of loadBoard method, of class Controller.
-     */
-    @Test
-    public void testLoadBoard() {
-        System.out.println("loadBoard");
-        Controller instance = new Controller();
-        instance.loadBoard();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of reset method, of class Controller.
-     */
-    @Test
-    public void testReset() {
-        System.out.println("reset");
-        Controller instance = new Controller();
-        instance.reset();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of initialize method, of class Controller.
-     */
-    @Test
-    public void testInitialize() {
-        System.out.println("initialize");
-        URL location = null;
-        ResourceBundle resources = null;
-        Controller instance = new Controller();
-        instance.initialize(location, resources);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAwkColor method, of class Controller.
-     */
-    @Test
-    public void testGetAwkColor() {
-        System.out.println("getAwkColor");
-        Color fx = null;
-        Controller instance = new Controller();
-        java.awt.Color expResult = null;
-        java.awt.Color result = instance.getAwkColor(fx);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of saveBoard method, of class Controller.
-     */
-    @Test
-    public void testSaveBoard() {
-        System.out.println("saveBoard");
-        Controller instance = new Controller();
-        instance.saveBoard();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
+   
 }
