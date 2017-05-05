@@ -9,8 +9,6 @@ import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
 import Game.Model.MetaData;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
@@ -67,7 +65,7 @@ public class Controller implements Initializable {
     private int runCount = 1;
     private int aliveCount = 0;
     private double size = 5;
-    private double zoom_fac = 1.05;
+    private final double zoom_fac = 1.05;
     private double zoomValue = 0;
 
     //Checkers
@@ -84,8 +82,8 @@ public class Controller implements Initializable {
 
     private Stage stage;
     private GraphicsContext gc;
-    private ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
-    private ObservableList<String> ChangeBoard = FXCollections.observableArrayList("Static", "Dynamic");
+    private final ObservableList<String> ChangeRules = FXCollections.observableArrayList("Game of Life", "No deaths", "Cover");
+    private final ObservableList<String> ChangeBoard = FXCollections.observableArrayList("Static", "Dynamic");
     private ScheduledService<Void> scheduledService;
     private boolean run = false;
     private String place;
@@ -93,21 +91,20 @@ public class Controller implements Initializable {
 
     /**
      *Here there are listeners who respond every time a slider or colorpicker changes value.
-     *      */
+     *      
+     */
     private void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
             Duration duration = new Duration(1000/newtime.intValue());
             scheduledService.setPeriod(duration);
         });
 
-        colorPicker.valueProperty().addListener((ObservableValue<? extends Color> colorListener, Color oldColor, Color newColor) -> {
-            try {
-                gc.clearRect(0,0,3000,2000);
-                draw_Array();
-            }
-            catch (Exception e){
-                e.getStackTrace();
-            }
+
+        colorPicker.valueProperty().addListener((ObservableValue<? extends Color> timerListener, Color oldColor, Color newColor) -> {
+            
+            gc.clearRect(0,0,3000,2000);
+            draw_Array();
+           
         });
 
         Grid.selectedProperty().addListener((observable) -> {
@@ -203,11 +200,11 @@ public class Controller implements Initializable {
 
     }
 
-/**
- * Start/stop Button
- * if the game is loaded, you can run the game by pressing the start button. 
- * if the game is running, the start button changes to a stop button
- */
+    /**
+     * Start/stop Button
+     * if the game is loaded, you can run the game by pressing the start button. 
+     * if the game is running, the start button changes to a stop button
+     */
      public void startStop() {
         if (loaded){
             if (!running){
@@ -269,10 +266,10 @@ public class Controller implements Initializable {
 
             TextField sizeField1 = new TextField();
             sizeField1.setPromptText("Enter Size");
-            sizeField1.setText("120");
+            sizeField1.setText("50");
             TextField sizeField2 = new TextField();
             sizeField2.setPromptText("Enter Size");
-            sizeField2.setText("120");
+            sizeField2.setText("50");
             
             sizeField1.setMaxWidth(90);
             sizeField2.setMaxWidth(90);
@@ -287,7 +284,7 @@ public class Controller implements Initializable {
                     int row = Integer.parseInt(sizeField1.getText());
                     int col = Integer.parseInt(sizeField1.getText());
                     setBoardMakerBoard(comboBox);
-                    boardMaker.makeClearBoard(row-1,col-1);
+                    boardMaker.makeClearBoard(row,col);
                     loaded(loaded = true);
                     newBoard.close();
                     BoardLabel.setText("");
@@ -301,12 +298,12 @@ public class Controller implements Initializable {
             randomBoard.setOnAction(( event) -> {
                 try {
                     int row = Integer.parseInt(sizeField1.getText());
-                    int col = Integer.parseInt(sizeField1.getText());
-                    setBoardMakerBoard(comboBox);
-                    boardMaker.randomBoard(row-1,col-1);
-                    loaded(loaded = true);
-                    newBoard.close();
-                    BoardLabel.setText("");
+                int col = Integer.parseInt(sizeField1.getText());
+                setBoardMakerBoard(comboBox);
+                boardMaker.randomBoard(row,col);
+                loaded(loaded = true);
+                newBoard.close();
+                BoardLabel.setText("");
                 } catch (Exception e) {
                     label1.setText("Not approved values");
                 }
@@ -337,10 +334,10 @@ public class Controller implements Initializable {
         newBoard.showAndWait();
 
     }
-/**
- * create popup load board. 
- * Load board, either from Disk or URL. 
- */
+    /**
+     * create popup load board. 
+     * Load board, either from Disk or URL. 
+     */
      public void loadBoard() {
         Stage loadBoard =new Stage();
         loadBoard.getIcons().add(new Image("/Game/Icon.PNG"));
@@ -408,17 +405,12 @@ public class Controller implements Initializable {
                 loadBoard.close();
             });
 
-
-
         VBox layout= new VBox(20);
-
         HBox url = new HBox(10);
         HBox okCancel = new HBox(10);
         HBox choosers = new HBox(10);
             okCancel.setAlignment(Pos.BASELINE_RIGHT);
             choosers.setAlignment(Pos.CENTER);
-
-
 
             url.getChildren().addAll(urlField,ok);
             url.setAlignment(Pos.CENTER);
@@ -426,12 +418,10 @@ public class Controller implements Initializable {
             choosers.getChildren().addAll();
 
             layout.getChildren().addAll(label1, url, choosers,okCancel);
-
             layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 200);
         loadBoard.setScene(scene1);
         loadBoard.showAndWait();
-
     }
 
      /**
@@ -450,11 +440,11 @@ public class Controller implements Initializable {
 
     }
 
-/**
- * Loads a new Board to Canvas. 
- * if there is nothing to load, it shows clear board. 
- * @param loaded decide if a board is loaded or not. 
- */
+    /**
+     * Loads a new Board to Canvas. 
+     * if there is nothing to load, or that somthing went wrong, it shows a clear board. 
+     * @param loaded decide if a board is loaded or not. 
+     */
      private void loaded(boolean loaded){
         nextGenThreads.setBoard(board);
         if (loaded){
@@ -478,6 +468,7 @@ public class Controller implements Initializable {
      * Draw array runs through the board and determines whether to draw the selected color or to draw white.
      * It calls on draw for display on screen.
      * At the same time, it sets the number of cells in the life of each generation.
+     * Grid is a ToggleButton controlling the grid.
      */
     private void draw_Array(){
         gc.clearRect(0,0,Canvas.getWidth(), Canvas.getHeight());
@@ -487,10 +478,6 @@ public class Controller implements Initializable {
                     draw(row  , col , colorPicker.getValue());
                     aliveCount ++;
                 }
-                else {
-                    //draw_ned(row , col , Color.WHITE);
-                }
-
             }
 
         }
@@ -520,12 +507,12 @@ public class Controller implements Initializable {
 
     
 
-/**
- * Fills all living cells with a color.
- * @param col Column of the board 
- * @param row   Row of the board
- * @param c    the color thats being used to colorize the board. 
- */
+    /**
+     * Fills all living cells with a color.
+     * @param col Column of the board 
+     * @param row   Row of the board
+     * @param c    the color thats being used to colorize the board. 
+     */
     private void draw( int col, int row, Color c) {
         gc.setFill(c);
         gc.fillRect((row * (size))+1 , (col  * (size))+1, ((size))-2, (size)-2);
@@ -533,7 +520,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Updates Canvas. 
+     * Updates Canvas. To the size of the board x the size the cell is drawn.
      */
      private void updateCanvas(){
 
@@ -544,13 +531,6 @@ public class Controller implements Initializable {
 
 
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -604,7 +584,7 @@ public class Controller implements Initializable {
     }
     
     /**
-     * 
+     * Gui related things are set to the state that they are needed.
      */
     private void initializeButtons(){
         StartStop.setDisable(true);
@@ -614,9 +594,8 @@ public class Controller implements Initializable {
         RuleDropDown.setItems(ChangeRules);
     }
     /**
-     * 
+     * Initializes Objects that ar needed to run the program. 
      */
-    
     private void initializeObjects(){
         metaData = new MetaData();
         boardMaker = new BoardMaker(metaData);
@@ -625,16 +604,17 @@ public class Controller implements Initializable {
         nextGenThreads = new NextGenThreads();
         
         board = new StaticBoard();
-        board.makeBoard(119,119);
+        board.makeBoard(200,200);
         nextGenThreads.setBoard(board);
         boardMaker.setBoardType(board);
         
     }
 
 
-/**
- * 
- */
+    /**
+     * Initializes the Run Service. 
+     * ScheduledService is cald on when run og stop i selected.
+     */
     private void initializeService(){
         scheduledService = new ScheduledService<Void>() {
             @Override
@@ -660,9 +640,11 @@ public class Controller implements Initializable {
     }
 
 
-/**
- * change scene.paint.color to Awkcolor
- */
+    /**
+     * change scene.paint.color to Awkcolor
+         * @param fx Color
+         * @return awt Color
+     */
    public java.awt.Color getAwkColor(javafx.scene.paint.Color fx){   
         java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),
                                              (float) fx.getGreen(),
@@ -672,10 +654,10 @@ public class Controller implements Initializable {
     }
 
 
-/**
- * Makes Gif from board, and saves it. 
- * Contains Modal
- */
+    /**
+     * Makes Gif from board, and saves it. 
+     * Contains Modal
+     */
     public void saveBoard(){
 
         //Pause game while saving
