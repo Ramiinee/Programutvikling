@@ -34,7 +34,9 @@ public abstract class Board{
     public abstract void setRow(int row);
    
     /**
-     *
+     * The rules of Game of life. 
+     * decide whats alive or not in the next generation
+     * scanns game from int Start to Int stop. 
      * @param start The start position of the board segment.
      * @param stop The end position of the board segment.
      * @param cyclicBarrier  The cyclic barrier.
@@ -42,7 +44,9 @@ public abstract class Board{
     public abstract void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier);
 
     /**
-     *
+     * Slowly cover Rules. 
+     * decide whats alive or not in the next generation
+     * scanns game from int Start to Int stop. 
      * @param start The start position of the board segment.
      * @param stop The end position of the board segment.
      * @param cyclicBarrier  The cyclic barrier.
@@ -50,7 +54,9 @@ public abstract class Board{
     public abstract void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier);
 
     /**
-     *
+     * No dead cell rule. det same as nextGeneration method, except that alive cells doesnt die. 
+     * decide which cell who comes to life
+     * scanns game from int Start to Int stop.
      * @param start The start position of the board segment.
      * @param stop The end position of the board segment.
      * @param cyclicBarrier  The cyclic barrier.

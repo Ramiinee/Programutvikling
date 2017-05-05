@@ -37,7 +37,13 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
     
   }
 
-    
+    /**
+     * Method that makes a gif. 
+     * checks if the cell is alive. if the cell is alive, the square get filled with a color. 
+     * makes a board out of the colored squares, and insert into a gif. 
+     * @return 
+     * @throws Exception 
+     */
     public lieng.GIFWriter GifWriter() throws Exception {
         int i = 10;
 		
@@ -92,6 +98,14 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
                 return gwriter;
 		
 	}
+    /**
+     * calculate the available height and width for the GIF
+     * @param availableHeight available height
+     * @param availableWidth available width
+     * @param rows rows from board
+     * @param columns columns from board
+     * @return return smaller of sizewith and sizeheight
+     */
      private double calculateSize(double availableHeight, double availableWidth,
             int rows, int columns) {
                  double sizeHeight = availableHeight / rows;
