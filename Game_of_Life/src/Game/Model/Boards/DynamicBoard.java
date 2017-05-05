@@ -119,8 +119,8 @@ public class DynamicBoard extends Board{
      * @param cyclicBarrier 
      */
     @Override
-    public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
-        for (int row = 0; row < board.size(); row++) {
+    public void noDeadCellsRule(int start, int stop, CyclicBarrier cyclicBarrier){
+        for (int row = 0; row < stop; row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
                 int neighbors = countNeighbor(col,row);
                 if ( board.get(row).get(col) == 0 && (neighbors == 3)){
