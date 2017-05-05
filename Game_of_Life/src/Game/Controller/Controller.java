@@ -268,7 +268,7 @@ public class Controller implements Initializable {
         newBoard.getIcons().add(new Image("/Game/Icon.PNG"));
         newBoard.initModality(Modality.APPLICATION_MODAL);
         newBoard.setTitle("Load");
-            Label label1= new Label("How do you want to load?");
+            Label labelload= new Label("How do you want to load?");
             ComboBox<String> comboBox = new ComboBox<>();
             comboBox.setValue("Static");
             comboBox.setItems(ChangeBoard);
@@ -306,7 +306,7 @@ public class Controller implements Initializable {
                     newBoard.close();
                     BoardLabel.setText("");
                 } catch (Exception e) {
-                    label1.setText("Not approved values");
+                    labelload.setText("Not approved values");
                     
                 }
                 
@@ -323,7 +323,7 @@ public class Controller implements Initializable {
                     BoardLabel.setText("");
 
                 } catch (Exception e) {
-                    label1.setText("Not approved values");
+                    labelload.setText("Not approved values");
                 }
                 
 
@@ -344,7 +344,7 @@ public class Controller implements Initializable {
             okCancel.getChildren().addAll(clearBoard,randomBoard,cancel);
             okCancel.setAlignment(Pos.BASELINE_RIGHT);
 
-            layout.getChildren().addAll(label1, Size,okCancel);
+            layout.getChildren().addAll(labelload, Size,okCancel);
 
             layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 150);
@@ -362,7 +362,7 @@ public class Controller implements Initializable {
         loadBoard.initModality(Modality.APPLICATION_MODAL);
         loadBoard.setTitle("Load");
 
-            Label label1= new Label("How do you want to load?");
+            Label labelLoadUrl= new Label("How do you want to load?");
 
             Button browse = new Button("Browse from Disk");
 
@@ -407,14 +407,18 @@ public class Controller implements Initializable {
                         loaded(loaded);
                         loadBoard.close();
                     }else {
-                        label1.setText("Not an valid Url.");
+                        labelLoadUrl.setText("Not an valid Url.");
                     }
 
 
 
                 }
                 if (loaded){
-                    BoardLabel.setText(metaData.getAuthor() + ", " + metaData.getName());
+                    String author = "";
+                    if(metaData.getAuthor() != ""){
+                        author = metaData.getAuthor() +" , ";
+                    }
+                    BoardLabel.setText(author + metaData.getName());
                     System.out.println(metaData.getComment());
                 }
             });
@@ -435,7 +439,7 @@ public class Controller implements Initializable {
             okCancel.getChildren().addAll(comboBox,browse,cancel);
             choosers.getChildren().addAll();
 
-            layout.getChildren().addAll(label1, url, choosers,okCancel);
+            layout.getChildren().addAll(labelLoadUrl, url, choosers,okCancel);
             layout.setAlignment(Pos.CENTER);
         Scene scene1= new Scene(layout, 300, 200);
         loadBoard.setScene(scene1);
@@ -542,10 +546,10 @@ public class Controller implements Initializable {
      */
      private void updateCanvas(){
 
-        if (!(Canvas.getWidth() == board.getRow()*size && Canvas.getHeight() == board.getColumn()*size)){
-            Canvas.setWidth(board.getColumn()*size);
-            Canvas.setHeight(board.getRow()*size);
-        }
+
+        Canvas.setWidth(board.getColumn()*size);
+        Canvas.setHeight(board.getRow()*size);
+
 
 
     }

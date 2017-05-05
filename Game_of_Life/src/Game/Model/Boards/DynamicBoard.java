@@ -10,6 +10,8 @@ public class DynamicBoard extends Board{
 
     private int MIN_ROW;
     private int MIN_COL;
+    private int MAX_ROW;
+    private int MAX_COL;
 
     public List<List<Byte>> board;
     private List<List<Byte>> nextGeneration;
@@ -256,7 +258,7 @@ public class DynamicBoard extends Board{
 
         if (add != 0) {
             addTopRow(1);
-        } else if (remove == 0 && board.size() > MIN_ROW) {
+        } else if (remove == 0 && board.size() > MIN_ROW && board.size()< MAX_ROW) {
             removeTopRow(1);
         }
     }
@@ -285,7 +287,7 @@ public class DynamicBoard extends Board{
 
         if (add != 0) {
            addLeftColumn(1);
-        } else if(remove == 0 && board.get(0).size() > MIN_COL){
+        } else if(remove == 0 && board.get(0).size() > MIN_COL && board.get(0).size()< MAX_COL){
             removeLeftColumn(1);
         }
     }
@@ -314,7 +316,7 @@ public class DynamicBoard extends Board{
 
         if (add != 0) {
             addRightColumn(1);
-        } else if (remove == 0 && board.get(0).size() > MIN_COL){
+        } else if (remove == 0 && board.get(0).size() > MIN_COL && board.get(0).size()< MAX_COL){
             removeRightColumn(1);
         }
     }
@@ -358,7 +360,7 @@ public class DynamicBoard extends Board{
 
         if (add != 0) {
             addBottomRow(1);
-        } else if(remove == 0 && board.size() > MIN_ROW) {
+        } else if(remove == 0 && board.size() > MIN_ROW && board.size()< MAX_ROW) {
             removeBottomRow(1);
         }
     }
