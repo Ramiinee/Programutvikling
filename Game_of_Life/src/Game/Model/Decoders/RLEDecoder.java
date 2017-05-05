@@ -18,6 +18,7 @@ public class RLEDecoder {
     private Pattern XPattern = Pattern.compile("([xX][\\s][=][\\s])([\\d]+)");
     private  int row = 0, col = 0;
 
+    //contructor
     public RLEDecoder(BufferedReader reader, Board board, MetaData metaData) {
        this.board = board;
        this.reader = reader;
@@ -29,7 +30,11 @@ public class RLEDecoder {
         BoardReader(reader);
         //board.makeBoard(byteBoard);
     }
-
+     
+    /*
+    * Reads from the .rle file and sets author, name and comment, there it should. 
+    * Gets the size of the board and makes a new board, than sets the required values for the board.
+    */
     private void MetaDataReader(BufferedReader reader) throws IOException {
         StringBuilder name = new StringBuilder();
         StringBuilder author = new StringBuilder();
@@ -65,7 +70,13 @@ public class RLEDecoder {
             line = reader.readLine();
         }
     }
-
+    
+    
+    /*
+     *   Reads text from a character-input stream,
+     *   buffering characters so as to provide for the efficient reading of characters. 
+    */
+    
     private void BoardReader(BufferedReader reader) throws IOException {
         int NumberOfCells = 0;
         char lineBreak = '$';

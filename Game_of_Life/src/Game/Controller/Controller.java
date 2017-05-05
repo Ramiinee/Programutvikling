@@ -268,12 +268,13 @@ public class Controller implements Initializable {
             sizeField1.setPromptText("Enter Size");
 
 
+
             sizeField1.setText("120");
             TextField sizeField2 = new TextField();
             sizeField2.setPromptText("Enter Size");
             sizeField2.setText("120");
 
-            
+
             sizeField1.setMaxWidth(90);
             sizeField2.setMaxWidth(90);
 
@@ -288,7 +289,9 @@ public class Controller implements Initializable {
                     int col = Integer.parseInt(sizeField1.getText());
                     setBoardMakerBoard(comboBox);
 
+
                     boardMaker.makeClearBoard(row-1,col-1);
+
 
                     loaded(loaded = true);
                     newBoard.close();
@@ -611,7 +614,7 @@ public class Controller implements Initializable {
         nextGenThreads = new NextGenThreads();
         
         board = new StaticBoard();
-        board.makeBoard(119,119);
+        board.makeBoard(200,200);
         nextGenThreads.setBoard(board);
         boardMaker.setBoardType(board);
         
@@ -647,11 +650,11 @@ public class Controller implements Initializable {
     }
 
 
-/**
- * change scene.paint.color to Awkcolor
-     * @param fx Color
-     * @return awt Color
- */
+    /**
+     * change scene.paint.color to Awkcolor
+         * @param fx Color
+         * @return awt Color
+     */
    public java.awt.Color getAwkColor(javafx.scene.paint.Color fx){   
         java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),
                                              (float) fx.getGreen(),
@@ -661,10 +664,10 @@ public class Controller implements Initializable {
     }
 
 
-/**
- * Makes Gif from board, and saves it. 
- * Contains Modal
- */
+    /**
+     * Makes Gif from board, and saves it. 
+     * Contains Modal
+     */
     public void saveBoard(){
 
         //Pause game while saving
