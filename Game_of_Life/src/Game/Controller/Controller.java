@@ -541,11 +541,10 @@ public class Controller implements Initializable {
      * Updates Canvas. To the size of the board x the size the cell is drawn.
      */
      private void updateCanvas(){
-
-        if (!(Canvas.getWidth() == board.getRow()*size && Canvas.getHeight() == board.getColumn()*size)){
-            Canvas.setWidth(board.getColumn()*size);
-            Canvas.setHeight(board.getRow()*size);
-        }
+       
+        Canvas.setWidth(board.getColumn()*size);
+        Canvas.setHeight(board.getRow()*size);
+        
 
 
     }
