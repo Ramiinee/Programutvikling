@@ -100,7 +100,7 @@ public class Controller implements Initializable {
             scheduledService.setPeriod(duration);
         });
 
-        colorPicker.valueProperty().addListener((ObservableValue<? extends Color> timerListener, Color oldColor, Color newColor) -> {
+        colorPicker.valueProperty().addListener((ObservableValue<? extends Color> colorListener, Color oldColor, Color newColor) -> {
             try {
                 gc.clearRect(0,0,3000,2000);
                 draw_Array();
@@ -108,6 +108,9 @@ public class Controller implements Initializable {
             catch (Exception e){
                 e.getStackTrace();
             }
+        });
+        Grid.selectedProperty().addListener((observable) -> {
+            draw_Array();
         });
         Canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
             if (e.isControlDown()){
