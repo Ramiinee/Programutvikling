@@ -116,15 +116,15 @@ public class Controller implements Initializable {
                 scrollpane.setPannable(true);
             }else {
                 scrollpane.setPannable(false);
-                int y = (int)(e.getX()/size);
-                int x = (int)(e.getY()/size);
-                if(board.getCellAliveState(x,y)==1){
-                    board.setCellAliveState(x,y,(byte)0);
-                    draw(x,y,Color.WHITE);
+                int y = (int)(e.getY()/size);
+                int x = (int)(e.getX()/size);
+                if(board.getCellAliveState(y,x)==1){
+                    board.setCellAliveState(y,x,(byte)0);
+                    draw(y,x,Color.WHITE);
                 }
                 else {
-                    board.setCellAliveState(x,y,(byte)1);
-                    draw(x,y,colorPicker.getValue());
+                    board.setCellAliveState(y,x,(byte)1);
+                    draw(y,x,colorPicker.getValue());
                 }
                 StartStop.setDisable(false);
                 loaded = true;
@@ -136,15 +136,25 @@ public class Controller implements Initializable {
                 scrollpane.setPannable(true);
             }
             else {
-
                 scrollpane.setPannable(false);
-                int y = (int)(e.getX()/size);
-                int x = (int)(e.getY()/size);
+                int y = (int)(e.getY()/size);
+                int x = (int)(e.getX()/size);
+
+                if (y > board.getRow() || y > board.getRow()+1){
+                    y = board.getRow()-1;
+                }else if (y < 0){
+                    y = 0;
+                }
+                if (x > board.getColumn()|| (x > board.getColumn()+1)){
+                    x = board.getColumn()-1;
+                }else if (x < 0){
+                    x = 0;
+                }
                 try {
-                    board.setCellAliveState(x,y,(byte)1);
-                    draw(x,y,colorPicker.getValue());
+                    board.setCellAliveState(y,x,(byte)1);
+                    draw(y,x,colorPicker.getValue());
                 } catch (Exception el) {
-                    System.err.println("Why you out of canvas? " + y + " | "+x );
+                    System.err.println("Why you out of canvas? " + y + " | "+x + " | " + board.getRow()+"x"+board.getColumn() );
                 }
             }
         });
