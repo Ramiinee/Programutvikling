@@ -114,8 +114,13 @@ public class StaticBoardTest {
         int stop = 0;
         CyclicBarrier cyclicBarrier = null;
         StaticBoard instance = new StaticBoard();
+        instance.setBoard();
+        instance.setCellAliveState(0, 2, (byte)1);
+        instance.setCellAliveState(1, 2, (byte)1);
+        instance.setCellAliveState(2, 2, (byte)1);
         instance.nextGeneration(start, stop, cyclicBarrier);
-        org.junit.Assert.assertEquals("00010001000100000", gol.toString());
+  
+        org.junit.Assert.assertEquals("000001110000000", instance.toString());
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

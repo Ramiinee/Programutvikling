@@ -469,4 +469,9 @@ public class DynamicBoard extends Board{
 
     }
 
+    @Override
+    public byte[][] getBoard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

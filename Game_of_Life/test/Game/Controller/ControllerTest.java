@@ -57,7 +57,7 @@ public class ControllerTest {
    @Test
     public void nextGenerationtest(){
         byte[][] board = {
-            {0,0,1,0},
+            {0,0,1,0},              
             {0,0,1,0},
             {0,0,1,0},
             {0,0,0,0}
@@ -65,8 +65,7 @@ public class ControllerTest {
         
 StaticBoard gol = new StaticBoard();
 gol.setBoard(board);
-gol.(); 
-org.junit.Assert.assertEquals("00010001000100000", gol.toString());
+org.junit.Assert.assertEquals("000001110000000", gol.toString());
     }
    /**
      * Test of Clear method, of class Controller.
