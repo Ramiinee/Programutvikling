@@ -1,5 +1,6 @@
 package Game.Model;
 
+//this class saves the metadata from load
 public class MetaData {
     private String author = "";
     private String name = "";

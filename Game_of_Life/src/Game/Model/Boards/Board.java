@@ -12,7 +12,8 @@ public abstract class Board{
    public abstract int getRow();
 
    public abstract void setRow(int row);
-
+   
+   //abstract methods
    public abstract void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier);
    public abstract void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier);
    public abstract void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier);

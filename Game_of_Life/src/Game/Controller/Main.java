@@ -33,6 +33,7 @@ public class Main extends Application {
         scene = new Scene(root);
 
 
+        
 
         //stage.setResizable(false);
         stage.setTitle("Game Of Life");

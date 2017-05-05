@@ -17,12 +17,13 @@ public class GifWriter {
     public Board board;
     private Color c;
     
+    
     public ComboBox RuleDropDown;
     public String filename;
     private NextGenThreads nextGenThreads;
     public int value;
 
-
+    //constructor for this class
 public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int value, NextGenThreads nextGenThreads ){
     this.board = board;
     this.c = c;
@@ -92,6 +93,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
                 return gwriter;
 		
 	}
+    //calculate the available height and width for the GIF
      private double calculateSize(double availableHeight, double availableWidth,
             int rows, int columns) {
                  double sizeHeight = availableHeight / rows;
