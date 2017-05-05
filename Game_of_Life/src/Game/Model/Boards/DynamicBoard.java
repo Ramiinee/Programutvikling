@@ -226,21 +226,38 @@ public class DynamicBoard extends Board{
      * Remove one row if all sqaures on the top-row is dead 
      */
     public void checkTop(){
-        int count = 0;
+        final int sum1 = board
+                .get(0)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum2 = board
+                .get(1)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum3 = board
+                .get(2)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum4 = board
+                .get(3)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum5 = board
+                .get(4)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int remove = sum1 + sum2 + sum3 + sum4 + sum5;
+        final int add = sum1 + sum2;
 
-        for (int topadd = 0; topadd < board.get(0).size(); topadd++) {
-            for (int topdelete = 0; topdelete < board.get(0).size(); topdelete++) {
-                if(board.get(0).get(topdelete) == 1){
-                    count ++; 
-                }
-            }
-            if(count == 0){
+        if (add != 0) {
+            addTopRow(1);
+        } else if (remove == 0 && board.size() > MIN_ROW) {
             removeTopRow(1);
-            }
-            if(board.get(0).get(topadd) == 1){
-                addTopRow(1);
-                return;
-            }
         }
     }
     
@@ -249,25 +266,27 @@ public class DynamicBoard extends Board{
     * Remove one column if all sqaures on the left side is dead 
     */
     public void checkLeft(){
-        
-        int count = 0;
-           
-       
-        for(int leftadd = 0; leftadd < board.size(); leftadd ++){
-             for(int leftdelete = 0; leftdelete < board.size(); leftdelete ++){
-            if(board.get(leftdelete).get(0) == 1){
-                count++;
-            }
-            }
-             if(count == 0){
-             removeLeftColumn(1);
-             
-             }
-       
-            if(board.get(leftadd).get(0) == 1){
-                addLeftColumn(1);
-                return;
-            }
+        final int rows = board.size();
+        int sum1 = 0;
+        int sum2 = 0;
+        int sum3 = 0;
+        int sum4 = 0;
+        int sum5 = 0;
+
+        for (int row = 0; row < rows; row++) {
+            sum1 += board.get(row).get(0);
+            sum2 += board.get(row).get(1);
+            sum3 += board.get(row).get(2);
+            sum4 += board.get(row).get(3);
+            sum5 += board.get(row).get(4);
+        }
+        final int remove = sum1 + sum2 + sum3 +sum4 + sum5;
+        final int add = sum1 + sum2;
+
+        if (add != 0) {
+           addLeftColumn(1);
+        } else if(remove == 0 && board.get(0).size() > MIN_COL){
+            removeLeftColumn(1);
         }
     }
    
@@ -276,19 +295,21 @@ public class DynamicBoard extends Board{
     * Remove one column if all sqaures on the right side is dead 
     */
     public void checkRight(){
-        int sum1 = 0;
+         int sum1 = 0;
         int sum2 = 0;
-
-   
-
+        int sum3 = 0;
+        int sum4 = 0;
+        int sum5 = 0;
         final int columns = board.get(0).size();
 
         for (List<Byte> e : board) {
             sum1 += e.get(columns - 1);
             sum2 += e.get(columns - 2);
-
+            sum3 += e.get(columns - 3);
+            sum4 += e.get(columns - 4);
+            sum5 += e.get(columns - 5);
         }
-        final int remove = sum1 + sum2;
+        final int remove = sum1 + sum2 + sum3 + sum4 + sum5;
         final int add = sum1 + sum2;
 
         if (add != 0) {
@@ -306,7 +327,7 @@ public class DynamicBoard extends Board{
     */
     
     public void checkBottom(){
-         final int rows = board.size();
+        final int rows = board.size();
         final int sum1 = board
                 .get(rows -1)
                 .stream()
@@ -317,8 +338,22 @@ public class DynamicBoard extends Board{
                 .stream()
                 .mapToInt(w -> Integer.parseInt(w.toString()))
                 .sum();
-
-        final int remove = sum1 + sum2;
+        final int sum3 = board
+                .get(rows -3)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum4 = board
+                .get(rows -4)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int sum5 = board
+                .get(rows -5)
+                .stream()
+                .mapToInt(w -> Integer.parseInt(w.toString()))
+                .sum();
+        final int remove = sum1 + sum2 + sum3 + sum4 + sum5;
         final int add = sum1 + sum2;
 
         if (add != 0) {
