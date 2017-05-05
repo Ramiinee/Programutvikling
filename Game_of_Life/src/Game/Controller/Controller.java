@@ -547,8 +547,10 @@ public class Controller implements Initializable {
      private void updateCanvas(){
 
 
+
         Canvas.setWidth(board.getColumn()*size);
         Canvas.setHeight(board.getRow()*size);
+
 
 
 
