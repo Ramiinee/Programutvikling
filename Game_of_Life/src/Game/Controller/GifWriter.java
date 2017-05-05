@@ -4,22 +4,28 @@ package Game.Controller;
 
 import Game.Model.Boards.Board;
 import java.awt.Color;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.transform.Scale;
 
-
+/**
+ *
+ * @author Joachim-Privat
+ */
 public class GifWriter {
+    private Canvas Canvas;
     public Slider size;
     public Board board;
-    private final Color c;
-    
+    private Color c;
     
     public ComboBox RuleDropDown;
     public String filename;
-    private final NextGenThreads nextGenThreads;
+    private NextGenThreads nextGenThreads;
     public int value;
 
-    //constructor for this class
+
 public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int value, NextGenThreads nextGenThreads ){
     this.board = board;
     this.c = c;
@@ -31,13 +37,7 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
     
   }
 
-    /**
-     * Method that makes a gif. 
-     * checks if the cell is alive. if the cell is alive, the square get filled with a color. 
-     * makes a board out of the colored squares, and insert into a gif. 
-     * @return 
-     * @throws Exception 
-     */
+    
     public lieng.GIFWriter GifWriter() throws Exception {
         int i = 5;
 		
@@ -79,9 +79,12 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
 		gwriter.insertAndProceed();
 
                     //System.out.println("rule");
-                nextGenThreads.GenerationWorkers(RuleDropDown);
+                    nextGenThreads.split();
+                    nextGenThreads.GenerationWorkers(RuleDropDown);
                     i--;
                 }
+                
+              
 		
 		
 		System.out.println("done!");
@@ -89,7 +92,6 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
                 return gwriter;
 		
 	}
-    //calculate the available height and width for the GIF
      private double calculateSize(double availableHeight, double availableWidth,
             int rows, int columns) {
                  double sizeHeight = availableHeight / rows;

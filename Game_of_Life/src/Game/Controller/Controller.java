@@ -775,7 +775,8 @@ public class Controller implements Initializable {
             GifSave.showAndWait();
 
      //-------------------------------------------------
-       try { if(run){ int value = 0;
+       try { if(run){
+            int value = 0;
             if ((DurName.getValue() == "0.25")){
                  value = 250;
                 }else if( DurName.getValue() == "0.5") {
