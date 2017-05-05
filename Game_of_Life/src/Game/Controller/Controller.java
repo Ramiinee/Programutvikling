@@ -9,6 +9,7 @@ import Game.Model.Boards.Board;
 import Game.Model.Boards.DynamicBoard;
 import Game.Model.Boards.StaticBoard;
 import Game.Model.MetaData;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
@@ -723,18 +724,25 @@ public class Controller implements Initializable {
             });
 
         Browse.setOnAction((event) -> {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new java.io.File("."));
-                chooser.setDialogTitle("choosertitle");
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                chooser.setAcceptAllFileFilterUsed(false);
+            
+            File recordsDir = new File(System.getProperty("user.dir"));
+            recordsDir.mkdirs();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(recordsDir);
+            FileChooser.ExtensionFilter fileExtensions =
+                    new FileChooser.ExtensionFilter(
+                        "Gif", "*.gif");
+            fileChooser.getExtensionFilters().add(fileExtensions);
+            File selectedFile = fileChooser.showSaveDialog(GifSave);
+            
 
-        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                 place = chooser.getSelectedFile().toString() + "\\Game_of_life";
+        if (selectedFile != null) {
+                 place = selectedFile.getAbsolutePath();
 
         }else{
                 System.out.println("No Selection ");
             }
+
         saveName.setText(place);
 
 
