@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 
 
 
@@ -21,7 +22,7 @@ public class Main extends Application {
 
 
         stage = primaryStage;
-
+        stage.getIcons().add(new Image("/Game/Icon.PNG"));
 
         loader = new FXMLLoader(getClass().getResource("GOL_new.fxml"));
         Parent root = loader.load();

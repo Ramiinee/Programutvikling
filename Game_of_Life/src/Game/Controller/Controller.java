@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -244,6 +245,7 @@ public class Controller implements Initializable {
     }
     public void newBoard() {
         Stage newBoard =new Stage();
+        newBoard.getIcons().add(new Image("/Game/Icon.PNG"));
         newBoard.initModality(Modality.APPLICATION_MODAL);
         newBoard.setTitle("Load");
             Label label1= new Label("How do you want to load?");
@@ -304,6 +306,7 @@ public class Controller implements Initializable {
 
      public void loadBoard() {
         Stage loadBoard =new Stage();
+        loadBoard.getIcons().add(new Image("/Game/Icon.PNG"));
         loadBoard.initModality(Modality.APPLICATION_MODAL);
         loadBoard.setTitle("Load");
 
@@ -616,6 +619,7 @@ public class Controller implements Initializable {
 
     //-----------------------------------------------
         Stage GifSave = new Stage();
+        GifSave.getIcons().add(new Image("/Game/Icon.PNG"));
         GridPane grid = new GridPane();
         grid.setMaxSize(42, 327);
 
