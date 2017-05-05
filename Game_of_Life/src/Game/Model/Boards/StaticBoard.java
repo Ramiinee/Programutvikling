@@ -56,6 +56,7 @@ public class StaticBoard extends Board{
  * @param stop where the row ends.  
  * @param cyclicBarrier 
  */
+    @Override
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
 
         for (int row = start; row < stop ; row++) {
