@@ -611,10 +611,10 @@ public class Controller implements Initializable {
     }
 
 
-/**
- * Initializes the Run Service. 
- * ScheduledService is cald on when run og stop i selected.
- */
+    /**
+     * Initializes the Run Service. 
+     * ScheduledService is cald on when run og stop i selected.
+     */
     private void initializeService(){
         scheduledService = new ScheduledService<Void>() {
             @Override
