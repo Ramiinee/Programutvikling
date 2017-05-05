@@ -115,6 +115,7 @@ public class StaticBoardTest {
         CyclicBarrier cyclicBarrier = null;
         StaticBoard instance = new StaticBoard();
         instance.nextGeneration(start, stop, cyclicBarrier);
+        org.junit.Assert.assertEquals("00010001000100000", gol.toString());
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
