@@ -92,8 +92,8 @@ public class Controller implements Initializable {
     
 
     /**
-     * Her er det satt opp listeners som reagerer hver gang en slider eller colorpicker endrer verdi.
-     */
+     *Here there are listeners who respond every time a slider or colorpicker changes value.
+     *      */
     private void listeners(){
         timer.valueProperty().addListener((ObservableValue<? extends Number> timerListener, Number oldtime, Number newtime) -> {
             Duration duration = new Duration(1000/newtime.intValue());
@@ -109,6 +109,7 @@ public class Controller implements Initializable {
                 e.getStackTrace();
             }
         });
+
         Grid.selectedProperty().addListener((observable) -> {
             draw_Array();
         });
@@ -202,7 +203,11 @@ public class Controller implements Initializable {
 
     }
 
-
+/**
+ * Start/stop Button
+ * if the game is loaded, you can run the game by pressing the start button. 
+ * if the game is running, the start button changes to a stop button
+ */
      public void startStop() {
         if (loaded){
             if (!running){
@@ -230,6 +235,9 @@ public class Controller implements Initializable {
         }
 
     }
+     /**
+      * If the game is loaded (is filled with black squares), the clear method Clears board.
+      */
      public void Clear() {
         if (loaded){
             running=false;
@@ -246,6 +254,9 @@ public class Controller implements Initializable {
             showClearBoard();
         }
     }
+     /**
+      * Create a new board, either clear board or random. 
+      */
     public void newBoard() {
         Stage newBoard =new Stage();
         newBoard.getIcons().add(new Image("/Game/Icon.PNG"));
@@ -262,7 +273,7 @@ public class Controller implements Initializable {
 
             Button clearBoard = new Button("Clear Board");
             Button randomBoard = new Button("Randome Board");
-            Button cancel = new Button("Cancle");
+            Button cancel = new Button("Cancel");
 
             clearBoard.setOnAction(event -> {
                 setBoardMakerBoard(comboBox);
@@ -287,7 +298,7 @@ public class Controller implements Initializable {
             cancel.setOnAction(event -> newBoard.close());
             cancel.setCancelButton(true);
             randomBoard.setDefaultButton(true);
-
+               
 
             VBox layout= new VBox(20);
             HBox Size = new HBox(10);
@@ -306,7 +317,10 @@ public class Controller implements Initializable {
         newBoard.showAndWait();
 
     }
-
+/**
+ * create popup load board. 
+ * Load board, either from Disk or URL. 
+ */
      public void loadBoard() {
         Stage loadBoard =new Stage();
         loadBoard.getIcons().add(new Image("/Game/Icon.PNG"));
@@ -400,6 +414,10 @@ public class Controller implements Initializable {
 
     }
 
+     /**
+      * Set the Board to either Dynamic or Static. 
+      * @param comboBox is used to select Dynamic or Static. 
+      */
     private void setBoardMakerBoard(ComboBox comboBox){
         if (!(comboBox.getValue() == "Static")){
             board = new DynamicBoard();
@@ -412,7 +430,11 @@ public class Controller implements Initializable {
 
     }
 
-
+/**
+ * Loads a new Board to Canvas. 
+ * if there is nothing to load, it shows clear board. 
+ * @param loaded decide if a board is loaded or not. 
+ */
      private void loaded(boolean loaded){
         nextGenThreads.setBoard(board);
         if (loaded){
@@ -433,9 +455,9 @@ public class Controller implements Initializable {
 
 
     /**
-     * Draw array kjører gjennom brettet og bestemmer om det skal tegnes den valgte fargen eller om det skal tegnes hvit.
-     * den kaller på draw eller draw, for visning på skjerm.
- Samtidig så setter den antall celler som er i livet i hver generation.
+     * Draw array runs through the board and determines whether to draw the selected color or to draw white.
+     * It calls on draw for display on screen.
+     * At the same time, it sets the number of cells in the life of each generation.
      */
     private void draw_Array(){
         gc.clearRect(0,0,Canvas.getWidth(), Canvas.getHeight());
@@ -478,14 +500,21 @@ public class Controller implements Initializable {
 
     
 
-
+/**
+ * Fills all living cells with a color.
+ * @param col Column of the board 
+ * @param row   Row of the board
+ * @param c    the color thats being used to colorize the board. 
+ */
     private void draw( int col, int row, Color c) {
         gc.setFill(c);
         gc.fillRect((row * (size))+1 , (col  * (size))+1, ((size))-2, (size)-2);
 
     }
 
-
+    /**
+     * Updates Canvas. 
+     */
      private void updateCanvas(){
 
         if (!(Canvas.getWidth() == board.getRow()*size && Canvas.getHeight() == board.getColumn()*size)){
@@ -505,7 +534,7 @@ public class Controller implements Initializable {
 
 
     /**
-     * Generer ett blankt brett for så å tegne det.
+     * Generate a blank board and then draw it.
      */
     private void showClearBoard(){
         boardMaker.makeClearBoard(200,200);
@@ -515,7 +544,7 @@ public class Controller implements Initializable {
 
 
     /**
-     * Reset går over verdier som brukeren har endret på og setter de tilbake til standar verdier.
+     * Reset exceeds values that the user has changed and resets to default values.
      */
     public void reset(){
         size = 5;
@@ -534,8 +563,8 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Her blir objekter laget og regler for hvordan guiet skal oppføre seg strammet inn.
-     * Det setter også i gang listners og mouse input.
+     * Here, objects are created and rules for how GUI will behave tightly.
+     * It also launches listeners and mouse input.
      */
      @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -553,6 +582,10 @@ public class Controller implements Initializable {
         draw_Array();
         
     }
+    
+    /**
+     * 
+     */
     private void initializeButtons(){
         StartStop.setDisable(true);
         Grid.setSelected(true);
@@ -560,6 +593,9 @@ public class Controller implements Initializable {
         RuleDropDown.setValue("Game of Life");
         RuleDropDown.setItems(ChangeRules);
     }
+    /**
+     * 
+     */
     
     private void initializeObjects(){
         metaData = new MetaData();
@@ -576,7 +612,9 @@ public class Controller implements Initializable {
     }
 
 
-
+/**
+ * 
+ */
     private void initializeService(){
         scheduledService = new ScheduledService<Void>() {
             @Override
@@ -602,7 +640,9 @@ public class Controller implements Initializable {
     }
 
 
-
+/**
+ * change scene.paint.color to Awkcolor
+ */
    public java.awt.Color getAwkColor(javafx.scene.paint.Color fx){   
         java.awt.Color awtColor = new java.awt.Color((float) fx.getRed(),
                                              (float) fx.getGreen(),
@@ -612,15 +652,16 @@ public class Controller implements Initializable {
     }
 
 
-
+/**
+ * Makes Gif from board, and saves it. 
+ * Contains Modal
+ */
     public void saveBoard(){
-        String checkGif = ".gif";
-
 
         //Pause game while saving
         scheduledService.cancel();
 
-    //-----------------------------------------------
+    //------ Modal -----------------------------------------
         Stage GifSave = new Stage();
         GifSave.getIcons().add(new Image("/Game/Icon.PNG"));
         GridPane grid = new GridPane();
@@ -666,7 +707,13 @@ public class Controller implements Initializable {
                     run = true; 
                    GifSave.close();
                 }}
-            catch(NullPointerException e){System.out.print("Your name is not valid"); }     
+                
+            catch(NullPointerException e){
+                saveas.setText("Invalid name");
+                
+                }   
+                
+               
           });
 
         Cancel.setOnAction((event) -> {
@@ -694,8 +741,6 @@ public class Controller implements Initializable {
             GifSave.setScene(scene);
             GifSave.showAndWait();
 
-
-
      //-------------------------------------------------
        try { if(run){ int value = 0;
             if ((DurName.getValue() == "0.25")){
@@ -722,7 +767,7 @@ public class Controller implements Initializable {
 
        }catch(NullPointerException e){
            System.out.print("you do not have a valid name");
-           return;
+          
        }
     }
    

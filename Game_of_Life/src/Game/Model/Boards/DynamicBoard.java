@@ -33,6 +33,15 @@ public class DynamicBoard extends Board{
     }
 
 
+/**
+ * The rules of Game of life. 
+ * decide whats alive or not in the next generation
+ * scanns game from int Start to Int stop. 
+ * @param start where therow starts from 
+ * @param stop where the row ends.  
+ * @param cyclicBarrier 
+ */
+    @Override
     public void nextGeneration(int start, int stop, CyclicBarrier cyclicBarrier){
         //addTopRow(10);
 
@@ -63,6 +72,15 @@ public class DynamicBoard extends Board{
         }
     }
 
+    /**
+     * Slowly cover Rules. 
+     * decide whats alive or not in the next generation
+     * scanns game from int Start to Int stop. 
+     * @param start where row starts
+     * @param stop where row ends
+     * @param cyclicBarrier 
+     */
+    @Override
     public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
 
 
@@ -92,7 +110,15 @@ public class DynamicBoard extends Board{
         }
     }
      
-
+/**
+     * No dead cell rule. det same as nextGeneration method, except that alive cells doesnt die. 
+     * decide which cell who comes to life
+     * scanns game from int Start to Int stop. 
+     * @param start where col starts from  in board
+     * @param stop where col ends board
+     * @param cyclicBarrier 
+     */
+    @Override
     public void noDeadCellsRule(int start, int slutt, CyclicBarrier cyclicBarrier){
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
@@ -132,7 +158,12 @@ public class DynamicBoard extends Board{
         }
     }
 
-
+     /**
+     * Count the closest cells to a cell. 
+     * @param row rows in the board 
+     * @param col columns in the board. 
+     * @return returns the number of alive cells
+     */
     protected int countNeighbor(int col, int row){
         int neighbors = 0;
         // Check cell on the right.
@@ -177,6 +208,10 @@ public class DynamicBoard extends Board{
 
         return neighbors;
     }
+    
+    /**
+     * Check sides of the board, to check if some of them should expand or shrink
+     */
     public void CheckSides(){
         checkTop();
         checkLeft();
@@ -184,7 +219,10 @@ public class DynamicBoard extends Board{
         checkBottom();
       
     }
-
+/**
+ * Adds one row to the top if 1 square at the top is alive
+ * remove one row if all sqaures on the top-row is dead 
+ */
     public void checkTop(){
         int count = 0;
 
@@ -204,6 +242,10 @@ public class DynamicBoard extends Board{
         }
     }
     
+    /**
+ * Adds one column to the left if 1 square at the left side is alive
+ * remove one column if all sqaures on the left side is dead 
+ */
     public void checkLeft(){
         
         int count = 0;
@@ -227,7 +269,10 @@ public class DynamicBoard extends Board{
         }
     }
    
-    
+     /**
+ * Adds one column to the right if 1 square at the right side is alive
+ * remove one column if all sqaures on the right side is dead 
+ */
     public void checkRight(){
         int sum1 = 0;
         int sum2 = 0;
@@ -253,7 +298,10 @@ public class DynamicBoard extends Board{
     
     
     
-  
+   /**
+ * Adds one row to the bottom if 1 square at the bottom is alive
+ * remove one row if all sqaures on the bottom-row is dead 
+ */
     
     public void checkBottom(){
          final int rows = board.size();
@@ -277,7 +325,9 @@ public class DynamicBoard extends Board{
             removeBottomRow(1);
         }
     }
-
+/**
+     * board get the information of the new board (nextgeneration ), and the nextgeneration sets back to null
+    */
     private void setCurrentGen(){
         for (int row = 0; row < board.size(); row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
@@ -288,6 +338,10 @@ public class DynamicBoard extends Board{
         nextGeneration.clear();
     }
 
+    /**
+     * adds extra rows to the top. 
+     * @param numberOfRows number of rows you want to add at ones. 
+     */
     private void addTopRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.add(0, new ArrayList<>());
@@ -297,16 +351,28 @@ public class DynamicBoard extends Board{
         }
     }
 
+    /**
+     * adds extra columns to the right side. 
+     * @param numberOfColumns number of columns you want to add at ones. 
+     */
     private void addRightColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             board.stream().forEach((col) -> col.add((byte) 0));
         }
     }
+    /**
+     * adds extra columns to the left side. 
+     * @param numberOfColumns number of columns you want to add at ones. 
+     */
     private void addLeftColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             board.stream().forEach((col) -> col.add(0, (byte) 0));
         }
     }
+    /**
+     * adds extra rows to the bottom. 
+     * @param numberOfRows number of rows you want to add at ones. 
+     */
     private void addBottomRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.add(new ArrayList<>());
@@ -315,11 +381,19 @@ public class DynamicBoard extends Board{
             }
         }
     }
+    /**
+     * delete a row to the top. 
+     * @param numberOfRows number of rows you want to delete at ones. 
+     */
     private void removeTopRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.remove(0);
         }
     }
+    /**
+     * delete a Column to the left side. 
+     * @param numberOfRows number of columns you want to delete at ones. 
+     */
     private void removeLeftColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             for (List<Byte> row : board) {
@@ -327,6 +401,10 @@ public class DynamicBoard extends Board{
             }
         }
     }
+    /**
+     * delete a column to the right side. 
+     * @param numberOfRows number of columns you want to delete at ones. 
+     */
     private void removeRightColumn(int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             for (List<Byte> row : board) {
@@ -334,6 +412,10 @@ public class DynamicBoard extends Board{
             }
         }
     }
+    /**
+     * delete a row to the bottom. 
+     * @param numberOfRows number of rows you want to delete at ones. 
+     */
     private void removeBottomRow(int numberOfRows) {
         for (int i = 0; i < numberOfRows; i++) {
             board.remove(board.size() - 1);
@@ -341,7 +423,12 @@ public class DynamicBoard extends Board{
     }
 
 
-
+/**
+     * Checks if the current cell is alive or not. 
+     * @param column column in the board
+     * @param row row in the baord
+     * @return returns the value 1 for alive or 0 for dead cell. 
+     */
     @Override
     public byte getCellAliveState(int row, int column) {
         if (row > getRow() - 1 || row < 0 || column > getColumn() - 1 || column < 0) {
@@ -350,6 +437,13 @@ public class DynamicBoard extends Board{
             return board.get(row).get(column);
         }
     }
+    /**
+     * Set the cell to either 1 (alive ) or 0 ( dead) in the board. 
+     * column and row is used to navigate where you are placed on the board.
+     * @param row row in the board
+     * @param column column in the board 
+     * @param aliveState either 1 or 0 
+     */
 
     @Override
     public void setCellAliveState(int row, int column, byte aliveState) {

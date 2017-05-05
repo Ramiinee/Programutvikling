@@ -10,10 +10,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Scale;
 
-/**
- *
- * @author Joachim-Privat
- */
+
 public class GifWriter {
     private Canvas Canvas;
     public Slider size;
@@ -37,7 +34,13 @@ public GifWriter(Board board,Color c,ComboBox RuleDropDown,String filename, int 
     
   }
 
-    
+    /**
+     * Method that makes a gif. 
+     * checks if the cell is alive. if the cell is alive, the square get filled with a color. 
+     * makes a board out of the colored squares, and insert into a gif. 
+     * @return 
+     * @throws Exception 
+     */
     public lieng.GIFWriter GifWriter() throws Exception {
         int i = 5;
 		
