@@ -277,11 +277,15 @@ public class Controller implements Initializable {
 
             TextField sizeField1 = new TextField();
             sizeField1.setPromptText("Enter Size");
-            sizeField1.setText("50");
+
+
+
+            sizeField1.setText("120");
             TextField sizeField2 = new TextField();
             sizeField2.setPromptText("Enter Size");
-            sizeField2.setText("50");
-            
+            sizeField2.setText("120");
+
+
             sizeField1.setMaxWidth(90);
             sizeField2.setMaxWidth(90);
 
@@ -295,7 +299,11 @@ public class Controller implements Initializable {
                     int row = Integer.parseInt(sizeField1.getText());
                     int col = Integer.parseInt(sizeField1.getText());
                     setBoardMakerBoard(comboBox);
-                    boardMaker.makeClearBoard(row,col);
+
+
+                    boardMaker.makeClearBoard(row-1,col-1);
+
+
                     loaded(loaded = true);
                     newBoard.close();
                     BoardLabel.setText("");
@@ -309,12 +317,14 @@ public class Controller implements Initializable {
             randomBoard.setOnAction(( event) -> {
                 try {
                     int row = Integer.parseInt(sizeField1.getText());
-                int col = Integer.parseInt(sizeField1.getText());
-                setBoardMakerBoard(comboBox);
-                boardMaker.randomBoard(row,col);
-                loaded(loaded = true);
-                newBoard.close();
-                BoardLabel.setText("");
+
+                    int col = Integer.parseInt(sizeField1.getText());
+                    setBoardMakerBoard(comboBox);
+                    boardMaker.randomBoard(row-1,col-1);
+                    loaded(loaded = true);
+                    newBoard.close();
+                    BoardLabel.setText("");
+
                 } catch (Exception e) {
                     label1.setText("Not approved values");
                 }

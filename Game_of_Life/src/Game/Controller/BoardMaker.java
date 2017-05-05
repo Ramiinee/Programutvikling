@@ -37,7 +37,7 @@ public class BoardMaker {
     }
 
    /**
-    * place alivecell on random places in board. 
+    * place alive cells, random places on the board. 
     * @param Row Row in board 
     * @param Col column in board
     */
@@ -77,14 +77,14 @@ public class BoardMaker {
         return new Thread() ;
     }
 
-
+    //This method insert the Rle into board
     public boolean InsertRleIntoBoard( BufferedReader reader) throws IOException{
         RLEDecoder decoder = new RLEDecoder(reader, board, metaData);
         decoder.decode();
         return true;
     }
 
-
+   
     public void setBoardType(Board board) {
         this.board = board;
     }
