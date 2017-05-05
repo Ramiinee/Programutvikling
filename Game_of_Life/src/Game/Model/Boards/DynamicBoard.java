@@ -77,7 +77,9 @@ public class DynamicBoard extends Board{
      */
     @Override
     public void slowlyCover(int start, int stop, CyclicBarrier cyclicBarrier){
-         for (int row = start; row < stop ; row++) {
+
+
+        for (int row = start; row < stop ; row++) {
             for (int col = 0; col < board.get(row).size(); col++) {
                 int neighbors = countNeighbor(row,col);
                 if (board.get(row).get(col)==1){

@@ -133,9 +133,8 @@ private static class NextGenerationRun implements Runnable {
             this.RuleDropDown = RuleDropDown;
 
         }
-
         
-        @Override
+       @Override
         public void run() {
             if(RuleDropDown.getValue() == "Game of Life"){
                 board.nextGeneration(start,stop,cyclicBarrier);
@@ -146,8 +145,6 @@ private static class NextGenerationRun implements Runnable {
             else if(RuleDropDown.getValue() == "Cover"){
                 board.slowlyCover(start,stop,cyclicBarrier);
             }
-
-
         }
 
 
