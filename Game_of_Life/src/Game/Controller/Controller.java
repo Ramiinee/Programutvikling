@@ -267,30 +267,50 @@ public class Controller implements Initializable {
             comboBox.setValue("Static");
             comboBox.setItems(ChangeBoard);
 
-            TextField sizeField = new TextField();
-            sizeField.setPromptText("Enter Size");
-            sizeField.setText("50");
+            TextField sizeField1 = new TextField();
+            sizeField1.setPromptText("Enter Size");
+            sizeField1.setText("120");
+            TextField sizeField2 = new TextField();
+            sizeField2.setPromptText("Enter Size");
+            sizeField2.setText("120");
+            
+            sizeField1.setMaxWidth(90);
+            sizeField2.setMaxWidth(90);
 
             Button clearBoard = new Button("Clear Board");
             Button randomBoard = new Button("Randome Board");
             Button cancel = new Button("Cancel");
 
             clearBoard.setOnAction(event -> {
-                setBoardMakerBoard(comboBox);
-                int value = Integer.parseInt(sizeField.getText());
-                boardMaker.makeClearBoard(value,value);
-                loaded(loaded = true);
-                newBoard.close();
-                BoardLabel.setText("");
+                
+                try {                    
+                    int row = Integer.parseInt(sizeField1.getText());
+                    int col = Integer.parseInt(sizeField1.getText());
+                    setBoardMakerBoard(comboBox);
+                    boardMaker.makeClearBoard(row-1,col-1);
+                    loaded(loaded = true);
+                    newBoard.close();
+                    BoardLabel.setText("");
+                } catch (Exception e) {
+                    label1.setText("Not approved values");
+                    
+                }
+                
             });
 
             randomBoard.setOnAction(( event) -> {
-                setBoardMakerBoard(comboBox);
-                int value = Integer.parseInt(sizeField.getText());//sjekke om det er tall eller ikke
-                boardMaker.randomBoard(value,value);
-                loaded(loaded = true);
-                newBoard.close();
-                BoardLabel.setText("");
+                try {
+                    int row = Integer.parseInt(sizeField1.getText());
+                    int col = Integer.parseInt(sizeField1.getText());
+                    setBoardMakerBoard(comboBox);
+                    boardMaker.randomBoard(row-1,col-1);
+                    loaded(loaded = true);
+                    newBoard.close();
+                    BoardLabel.setText("");
+                } catch (Exception e) {
+                    label1.setText("Not approved values");
+                }
+                
 
             });
 
@@ -301,10 +321,10 @@ public class Controller implements Initializable {
                
 
             VBox layout= new VBox(20);
-            HBox Size = new HBox(10);
+            HBox Size = new HBox(5);
             HBox okCancel = new HBox(10);
 
-            Size.getChildren().addAll(sizeField, comboBox);
+            Size.getChildren().addAll(sizeField1, sizeField2, comboBox);
 
             okCancel.getChildren().addAll(clearBoard,randomBoard,cancel);
             okCancel.setAlignment(Pos.BASELINE_RIGHT);
@@ -605,7 +625,7 @@ public class Controller implements Initializable {
         nextGenThreads = new NextGenThreads();
         
         board = new StaticBoard();
-        board.makeBoard(200,200);
+        board.makeBoard(119,119);
         nextGenThreads.setBoard(board);
         boardMaker.setBoardType(board);
         
