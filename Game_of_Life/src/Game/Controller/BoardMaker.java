@@ -8,6 +8,7 @@ import Game.Model.MetaData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  *
@@ -19,10 +20,15 @@ public class BoardMaker {
     private Board board;
     private final MetaData metaData;
 
+    private final int numWorkers =  Runtime.getRuntime().availableProcessors();
+    private final int[] splitedBoard;
+    private final Thread[] workers;
     
 
     public BoardMaker(MetaData metaData) {
         this.metaData = metaData;
+        workers = new Thread[numWorkers];
+        splitedBoard = new int[numWorkers];
     }
 
 
@@ -42,30 +48,41 @@ public class BoardMaker {
     */
      public void randomBoard(int Row, int Col){
         board.makeBoard(Row,Col);
-        int start1 = Row/4;
-        int stop1 = Row/4 + start1;
-        int stop2 = Row/4 + start1 +start1;
-        Thread t = new Thread(test(0,start1));
-        Thread t1 = new Thread(test(start1,stop1));
-        Thread t2 = new Thread(test(stop1,stop2));
-        Thread t3 = new Thread(test(stop2,Row));
+        int length = board.getRow();
+        int splited = length/numWorkers;
+        for (int i = 1; i <splitedBoard.length  ; i++) {
+            splitedBoard[i-1] = splited * i;
+        }
+        splitedBoard[splitedBoard.length-1] = board.getRow();
+        
+        for (int i = 0; i < numWorkers; i++) {
+            int start;
+            int stop;
+            if (i == 0){
+                start = 0;
+                stop = splitedBoard[i];
+            }else{
+                start = splitedBoard[i-1];
+                stop = splitedBoard[i];
+            }
 
-        t.start();
-        t1.start();
-        t2.start();
-        t3.start();
+            workers[i] = new Thread(RandomRun(start,stop ));
+
+        }
+       for (Thread worker : workers) {
+            worker.start();
+        }
 
         try {
-            t.join();
-            t1.join();
-            t2.join();
-            t3.join();
+             for (Thread worker : workers) {
+            worker.join();
+        }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
     }
-      private Thread test(int start, int stop){
+      private Thread RandomRun(int start, int stop){
         Random r = new Random();
         for (int row = start; row <stop ; row++) {
             for (int col = 0; col <board.getColumn() ; col++) {
